@@ -43,7 +43,7 @@ function(byd__EP__define_general_step package)
 
     __byd__EP__reset_step(                ${package} ${step_name})
     __byd__EP__add_package_arg(           ${package} ${step_name} DEPENDS)
-    __byd__EP__add_package_or_default_arg(${package} ${step_name} PREFIX)
+    __byd__EP__add_package_arg(           ${package} ${step_name} PREFIX)
     __byd__EP__add_package_arg(           ${package} ${step_name} LIST_SEPARATOR)
     __byd__EP__add_package_arg(           ${package} ${step_name} TMP_DIR)
     __byd__EP__add_package_arg(           ${package} ${step_name} STAMP_DIR)

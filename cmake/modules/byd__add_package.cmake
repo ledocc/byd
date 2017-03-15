@@ -5,6 +5,7 @@ include("${CMUT_ROOT}/utils/cmut__utils__parse_version.cmake")
 
 include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
 
 
 
@@ -53,7 +54,15 @@ macro(byd__add_package name)
         __byd__define_version(${name} ${__BYD__ADD_PACKAGE_VERSION})
     endif()
 
-    byd__set_property(BYD__EP__GENERAL__PREFIX__${name} ${name})
+
+    set(prefix "packages/${name}")
+    byd__get_property(BYD__PREFIX global_prefix)
+    if(global_prefix)
+        set(prefix "${global_prefix}/${name}")
+    endif()
+
+    byd__EP__set_package_arg(${name} GENERAL PREFIX "${prefix}")
+
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##

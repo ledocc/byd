@@ -1,6 +1,7 @@
 
 
 
+include("${BYD_ROOT}/cmake/modules/package/byd__package__get_property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
 
@@ -33,6 +34,11 @@ function(byd__cmake__generate_configure_cmake_args package)
     set(__property_name BYD__EP__CONFIGURE__CMAKE_ARGS__${package})
 
     set(__cmake__args)
+
+    if(CMAKE_INSTALL_PREFIX)
+        set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/lib")
+    endif()
+
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_C_COMPILER)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_CXX_COMPILER)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_TOOLCHAIN_FILE)
@@ -61,18 +67,20 @@ function(byd__cmake__generate_build_command package)
     set(__property_name BYD__EP__BUILD__BUILD_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
 
+    byd__package__get_script_dir(${package} script_dir)
+
 
     __byd__cmake__get_cmake_build_args(__build_options)
     set(command "${CMAKE_COMMAND}" --build . ${__build_options})
 
 
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/build.cmake")
+    byd__script__begin("${script_dir}/build.cmake")
         byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/build.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/build.cmake")
 
 endfunction()
 
@@ -83,18 +91,19 @@ function(byd__cmake__generate_install_command package)
     set(__property_name BYD__EP__INSTALL__INSTALL_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
 
+    byd__package__get_script_dir(${package} script_dir)
+
 
     __byd__cmake__get_cmake_build_args(__build_options)
     set(command "${CMAKE_COMMAND}" --build . --target install ${__build_options})
 
-
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/install.cmake")
+    byd__script__begin("${script_dir}/install.cmake")
         byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/install.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/install.cmake")
 
 endfunction()
 
@@ -105,18 +114,19 @@ function(byd__cmake__generate_test_command package)
     set(__property_name BYD__EP__TEST__TEST_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
 
+    byd__package__get_script_dir(${package} script_dir)
+
 
     __byd__cmake__get_cmake_build_args(__build_options)
     set(command "${CMAKE_COMMAND}" --build . --target test ${__build_options})
 
-
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/test.cmake")
+    byd__script__begin("${script_dir}/test.cmake")
         byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/test.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/test.cmake")
 
 endfunction()
 

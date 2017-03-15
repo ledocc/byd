@@ -17,17 +17,13 @@ function(byd__package__define_dependencies name)
 
     set(__depends)
     foreach(dependency ${ARGN})
-        list(APPEND __depends ${dependency})
+        if(BYD__${dependency})
+            list(APPEND __depends "${dependency}")
+        endif()
     endforeach()
 
-    __byd__is_dependencies_defined(${name} is_dependencies_defined)
-    if(NOT is_dependencies_defined)
-        define_property(GLOBAL
-            PROPERTY BYD__${name}_DEPENDS
-            BRIEF_DOCS "${name} dependency list"
-            FULL_DOCS  "list of module that ${name} depend")
-    endif()
-    set_property(GLOBAL PROPERTY BYD__${name}_DEPENDENCIES ${__depends})
+    byd__set_property(BYD__${name}_DEPENDENCIES "${__depends}")
+    byd__set_property(BYD__EP__GENERAL__DEPENDS__${name} "${__depends}")
 
     cmut_debug("byd__package__define_dependencies : result = ${__depends}")
     cmut_debug("byd__package__define_dependencies(${name}) -- end")

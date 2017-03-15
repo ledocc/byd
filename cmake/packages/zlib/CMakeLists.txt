@@ -11,9 +11,9 @@ byd__package__set_id(
 
 byd__package__add_version(
     ${package} 1.2.11-unowhy
-    GIT_REPOSITORY "https://github.com/ledocc/zlib.git"
-    GIT_TAG "1.2.11-unowhy"
-    )
+    URL https://github.com/ledocc/zlib/archive/1.2.11-unowhy.tar.gz
+    URL_HASH SHA1=dc613f50140492f61fecea1ba5539b0e49abdd48
+)
 
 
 byd__cmake__add(${package})

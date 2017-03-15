@@ -5,7 +5,7 @@ include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
 
 macro(__byd__include_package_dependencies name)
 
-    set(__dependencies_file "${BYD_ROOT}/packages/${name}/dependencies.cmake")
+    set(__dependencies_file "${BYD_ROOT}/cmake/packages/${name}/dependencies.cmake")
 
     if (EXISTS "${__dependencies_file}")
         cmut_debug("${name} dependencies file : ${__dependencies_file} found")
@@ -58,7 +58,7 @@ function(__byd__make_depends name)
 endfunction()
 
 
-macro(__byd__build_package_dependencies name)
+function(__byd__build_package_dependencies name)
 
     __byd__make_depends(${name})
 
@@ -66,11 +66,11 @@ macro(__byd__build_package_dependencies name)
         __byd__build_package(${package})
     endforeach()
 
-endmacro()
+endfunction()
 
 
 
-macro(__byd__build_package name)
+function(__byd__build_package name)
 
 
     cmut_debug("__byd__build_package(${name})")
@@ -83,7 +83,7 @@ macro(__byd__build_package name)
         foreach(package ${build_package_stack})
             cmut_info(${package})
         endforeach()
-        cmut_error("loop dependency detected !!! ")
+        cmut_fatal("loop dependency detected !!! ")
     endif()
 
 
@@ -97,8 +97,6 @@ macro(__byd__build_package name)
 
     # add to build_stack
     byd__add_to_property("__BYD__BUILD_PACKAGE_STACK" ${name})
-    cmut_debug("__byd__build_package : build_package_stack ${__byd__build_package_stack}")
-
     if(NOT BYD__${package})
         cmut_info("__byd__build_package : package ${name} not defined (skipped).")
         return()
@@ -114,7 +112,7 @@ macro(__byd__build_package name)
     include("${BYD_ROOT}/cmake/packages/${name}/CMakeLists.txt")
 
     # mark as done
-    byd__add_to_property("__BYD__BUILD_PACKAGE_LIST_DONE" ${name})
+    byd__add_to_property("__BYD__BUILD_PACKAGE_DONE_LIST" ${name})
     cmut_debug("__byd__build_package : build_package_done_list ${__byd__build_package_done_list}")
 
     # remove from build_stack
@@ -124,7 +122,7 @@ macro(__byd__build_package name)
 
     cmut_debug("__byd__build_package(${name}) done")
 
-endmacro()
+endfunction()
 
 
 

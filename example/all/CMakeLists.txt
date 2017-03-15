@@ -12,9 +12,12 @@ include("${BYD_ROOT}/byd.cmake")
 set(CMUT_DEBUG 1)
 
 
+byd__EP__set_default_log(ON)
+
 byd__add_package(zlib)
-byd__add_package(OpenSSL)
 byd__add_package(icu)
-byd__add_package(Boost)
+byd__add_package(OpenSSL)
 byd__add_package(Poco)
+byd__add_package(Boost)
+
 byd__run()

@@ -1,6 +1,7 @@
 
 
 
+include("${BYD_ROOT}/cmake/modules/package/byd__package__get_property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
 
@@ -15,6 +16,7 @@ function(byd__openssl__generate_configure_command package)
     set(__property_name BYD__EP__CONFIGURE__CONFIGURE_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
 
+    byd__package__get_script_dir(${package} script_dir)
 
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -88,7 +90,7 @@ function(byd__openssl__generate_configure_command package)
 
 
 
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/configure.cmake")
+    byd__script__begin("${script_dir}/configure.cmake")
         byd__script__add_run_command_or_abort_function()
 
         byd__script__command("${command}")
@@ -98,7 +100,7 @@ function(byd__openssl__generate_configure_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/configure.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/configure.cmake")
 
 endfunction()
 
@@ -109,6 +111,8 @@ function(byd__openssl__generate_build_command package)
     set(__property_name BYD__EP__BUILD__BUILD_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
 
+    byd__package__get_script_dir(${package} script_dir)
+
 
     if(UNIX)
         set(command make -j${BYD__BUILD__NUM_CORE_AVAILABLE})
@@ -116,13 +120,13 @@ function(byd__openssl__generate_build_command package)
         set(command nmake -f "ms\\ntdll.mak")
     endif()
 
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/build.cmake")
+    byd__script__begin("${script_dir}/build.cmake")
         byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/build.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/build.cmake")
 
 endfunction()
 
@@ -133,6 +137,9 @@ function(byd__openssl__generate_install_command package)
     set(__property_name BYD__EP__INSTALL__INSTALL_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
 
+    byd__package__get_script_dir(${package} script_dir)
+
+
 
     if(UNIX)
         set(command make install_sw -j${BYD__BUILD__NUM_CORE_AVAILABLE})
@@ -141,13 +148,13 @@ function(byd__openssl__generate_install_command package)
     endif()
 
 
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/install.cmake")
+    byd__script__begin("${script_dir}/install.cmake")
         byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/install.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/install.cmake")
 
 endfunction()
 
@@ -157,6 +164,9 @@ function(byd__openssl__generate_test_command package)
 
     set(__property_name BYD__EP__TEST__TEST_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
+
+    byd__package__get_script_dir(${package} script_dir)
+
 
 
     if(UNIX)
@@ -168,13 +178,13 @@ function(byd__openssl__generate_test_command package)
 
 
 
-    byd__script__begin("${CMAKE_BINARY_DIR}/${package}/src/${package}-script/test.cmake")
+    byd__script__begin("${script_dir}/test.cmake")
         byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "../${package}-script/test.cmake")
+    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/test.cmake")
 
 endfunction()
 

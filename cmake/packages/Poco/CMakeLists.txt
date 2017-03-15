@@ -13,6 +13,9 @@ else()
     byd__cmake__add_cmake_arg(${package} POCO_STATIC ON)
 endif()
 
+byd__cmake__add_cmake_arg(${package} HUNTER_ENABLED OFF)
+
+
 #byd__cmake__add_option(${package}
 #    ENABLE_CPPUNIT OFF
 #    ENABLE_MONGODB OFF
@@ -27,3 +30,9 @@ endif()
 
 
 byd__cmake__add(${package} SKIP test)
+
+
+if(APPLE)
+    include("${PROJECT_SOURCE_DIR}/cmake/fixup_dylib.cmake")
+    fixup_dylib(${module})
+endif()

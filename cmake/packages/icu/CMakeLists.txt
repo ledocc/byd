@@ -52,7 +52,7 @@ endif()
 
 byd__autotool__configure__add_args(${package} ${${package}_PLATFORM})
 
-#byd__autotool__configure__add_args(${package} --disable-tests)
+byd__autotool__configure__add_args(${package} --enable-tests)
 byd__autotool__configure__add_args(${package} --disable-samples)
 
 byd__autotool__configure__add_args(${package} --enable-rpath)
@@ -72,7 +72,7 @@ if(MSVC)
 
 else()
     byd__autotool__configure__set_configure_cmd(${package} "source/runConfigureICU")
-    byd__autotool__add(${package})
+    byd__autotool__add(${package} TEST_TARGET check)
 endif()
 
 
