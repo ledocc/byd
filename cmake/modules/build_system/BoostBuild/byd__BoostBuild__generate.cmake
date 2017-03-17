@@ -50,18 +50,57 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(__byd__BoostBuild__script__generate_user_config_jam)
+
+    if(ANDROID)
+
+        if(BOOST_TOOLSET STREQUAL "clang")
+            if(CMAKE_CXX_COMPILER_TARGET)
+                set(compile_flags "${compile_flags} --target=${CMAKE_CXX_COMPILER_TARGET}")
+            endif()
+            if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
+                set(compile_flags "${compile_flags} --gcc-toolchain=${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+            endif()
+        endif()
+        if(CMAKE_SYSROOT)
+            set(compile_flags "${compile_flags} --sysroot=${CMAKE_SYSROOT}")
+        endif()
+
+        if(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES)
+            foreach(include_dir ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
+                set(compile_flags "${compile_flags} -isystem ${include_dir}")
+            endforeach()
+        endif()
+
+    endif()
+
+
+
+    byd__script__write("using ${BOOST_TOOLSET}")
+    byd__script__write("    : ${CMAKE_CXX_COMPILER_VERSION}")
+    byd__script__write("    : \"${CMAKE_CXX_COMPILER}\"")
+    byd__script__write("    : <cflags>\"${CMAKE_C_FLAGS}\"")
+    byd__script__write("      <cxxflags>\"${CMAKE_CXX_FLAGS}\"")
+    byd__script__write("      <compileflags>\"${compile_flags}\"")
+    byd__script__write("      <linkflags>\"${CMAKE_EXE_LINKER_FLAGS}\"")
+    byd__script__write("    ;")
+
+endfunction()
+
+
 function(byd__BoostBuild__generate_configure_command package)
 
     set(__property_name BYD__EP__CONFIGURE__CONFIGURE_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
     byd__package__get_script_dir(${package} script_dir)
-
+    byd__package__get_build_dir(${package} build_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
 
     if(WIN32)
-        set(configure_cmd bootstrap.bat)
+        set(configure_cmd ${source_dir}/bootstrap.bat)
     else()
-        set(configure_cmd ./bootstrap.sh)
+        set(configure_cmd ${source_dir}/bootstrap.sh)
     endif()
     set(command ${configure_cmd})
 
@@ -83,10 +122,19 @@ function(byd__BoostBuild__generate_build_command package)
     set(__property_name BYD__EP__BUILD__BUILD_COMMAND__${package})
     byd__private__error_if_property_is_defined(${__property_name})
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_build_dir(${package} build_dir)
 
 
 
     set(build_args "")
+
+    set(user_config_jam_file "user-config.jam")
+    set(user_config_jam_path "${script_dir}/${user_config_jam_file}")
+    byd__script__begin("${user_config_jam_path}")
+        __byd__BoostBuild__script__generate_user_config_jam()
+    byd__script__end()
+
+    list(APPEND build_args "--user-config=${user_config_jam_path}")
 
     list(APPEND build_args "toolset=${BOOST_TOOLSET}")
 
@@ -108,7 +156,7 @@ function(byd__BoostBuild__generate_build_command package)
         list(APPEND build_args "--prefix=${CMAKE_INSTALL_PREFIX}")
     endif()
 
-
+        list(APPEND build_args "--debug-configuration")
     list(APPEND build_args "--build_type=minimal")
     list(APPEND build_args "--build_dir=../${package}-build")
     list(APPEND build_args "--layout=tagged")
@@ -131,6 +179,7 @@ function(byd__BoostBuild__generate_build_command package)
     endif()
 
     byd__private__get_num_core_available(num_core)
+    set(command_mv_user_config_jam ${CMAKE_COMMAND} -E copy "${user_config_jam_path}" "${build_dir}/${user_config_jam_file}")
     set(command ${build_cmd} -j${num_core} "${build_args}" "${build_args_${package}}")
     __byd__BoostBuild__set_build_command_line(${package} "${command}")
 
@@ -138,6 +187,7 @@ function(byd__BoostBuild__generate_build_command package)
 
     byd__script__begin("${script_dir}/build.cmake")
         byd__script__add_run_command_or_abort_function()
+#        byd__script__command("${command_mv_user_config_jam}")
         byd__script__command("${command}")
     byd__script__end()
 

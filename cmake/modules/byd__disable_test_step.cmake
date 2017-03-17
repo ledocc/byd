@@ -1,40 +1,29 @@
 
 
 
-include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
-
-include("${BYD_ROOT}/cmake/modules/build_system/cmake/byd__cmake__generate.cmake")
-include("${BYD_ROOT}/cmake/modules/EP/byd__EP__add.cmake")
-
+include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__cmake__add package)
+function(byd__disable_test_step value)
 
-    cmut__utils__parse_arguments(
-       byd__cmake__add
-        PARAM
-        ""
-        ""
-        "SKIP"
-        "${ARGN}"
-        )
+    byd__set_property(BYD__DISABLE_TEST_STEP ${value})
 
-    byd__cmake__generate_configure_cmake_args(${package})
-    byd__cmake__generate_build_command(${package})
-    byd__cmake__generate_install_command(${package})
+endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
 
-    byd__is_disable_test_step(disable_test)
+function(byd__is_disable_test_step result)
 
-    if((NOT "test" IN_LIST PARAM_SKIP) AND (NOT disable_test))
-        byd__cmake__generate_test_command(${package})
+    byd__get_property(BYD__DISABLE_TEST_STEP value)
+    if(NOT value)
+        set(value 0)
     endif()
 
-    byd__EP__add(${package})
+    set(${result} ${value} PARENT_SCOPE)
 
 endfunction()
 

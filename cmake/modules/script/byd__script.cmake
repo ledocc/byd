@@ -79,6 +79,16 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__script__write string)
+
+    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+"${string}
+"
+        )
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__script__env__append variable value)
 
     byd__script__env__get_separator(separator)
