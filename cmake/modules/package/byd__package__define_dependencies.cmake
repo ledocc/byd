@@ -1,31 +1,19 @@
 
 
 
-function(__byd__is_dependencies_defined name result)
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 
-    get_property(__result GLOBAL PROPERTY BYD__${name}_DEPENDENCIES SET)
 
-    set(${result} ${__result} PARENT_SCOPE)
+
+function(byd__package__define_dependency package)
+
+    __byd__package__set_property(DEPENDENCY "${ARGN}")
 
 endfunction()
 
+function(byd__package__get_dependency package result)
 
-
-function(byd__package__define_dependencies name)
-
-    cmut_debug("byd__package__define_dependencies(${name}) -- begin")
-
-    set(__depends)
-    foreach(dependency ${ARGN})
-        if(BYD__${dependency})
-            list(APPEND __depends "${dependency}")
-        endif()
-    endforeach()
-
-    byd__set_property(BYD__${name}_DEPENDENCIES "${__depends}")
-    byd__set_property(BYD__EP__GENERAL__DEPENDS__${name} "${__depends}")
-
-    cmut_debug("byd__package__define_dependencies : result = ${__depends}")
-    cmut_debug("byd__package__define_dependencies(${name}) -- end")
+    __byd__package__get_property(DEPENDENCY dependency)
+    set(${result} "${dependency}" PARENT_SCOPE)
 
 endfunction()

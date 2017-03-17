@@ -2,8 +2,9 @@
 
 
 include("${BYD_ROOT}/cmake/modules/build_system/BoostBuild/compiler_ID_to_toolset.cmake")
-include("${BYD_ROOT}/cmake/modules/package/byd__package__get_property.cmake")
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
+include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
 
 
@@ -128,7 +129,9 @@ function(byd__BoostBuild__generate_build_command package)
     else()
         set(build_cmd ./b2)
     endif()
-    set(command ${build_cmd} "${build_args}" "${build_args_${package}}")
+
+    byd__private__get_num_core_available(num_core)
+    set(command ${build_cmd} -j${num_core} "${build_args}" "${build_args_${package}}")
     __byd__BoostBuild__set_build_command_line(${package} "${command}")
 
 

@@ -1,8 +1,9 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/package/byd__package__get_property.cmake")
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
+include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
 
 
@@ -75,6 +76,10 @@ function(byd__autotool__generate_configure_command package)
     byd__package__get_script_dir(${package} script_dir)
 
 
+    if((CMAKE_INSTALL_PREFIX) AND (NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX}))
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_PREFIX}")
+    endif()
+
 
     if(CMAKE_BUILD_TYPE)
         string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
@@ -94,7 +99,6 @@ function(byd__autotool__generate_configure_command package)
         set(pkg2_dir    "${prefix_dir}/share/pkgconfig")
     endif()
 
-    byd__autotool__configure__get_configure_args(${package} configure_args)
     if(BUILD_SHARED_LIBS)
         list(APPEND configure_args --enable-shared --disable-static)
     else()
@@ -105,9 +109,11 @@ function(byd__autotool__generate_configure_command package)
         list(APPEND configure_args "--prefix=${CMAKE_INSTALL_PREFIX}")
     endif()
 
+    byd__autotool__configure__get_configure_args(${package} custom_configure_args)
+
 
     byd__autotool__configure__get_final_configure_cmd(${package} configure_cmd)
-    set(command ../${package}/${configure_cmd} "${configure_args}")
+    set(command ../${package}/${configure_cmd} "${configure_args}" "${custom_configure_args}")
 
     byd__script__begin("${script_dir}/configure.cmake")
         byd__script__add_run_command_or_abort_function()
@@ -160,7 +166,8 @@ function(byd__autotool__generate_build_command package)
     byd__package__get_script_dir(${package} script_dir)
 
 
-    set(command make -j${BYD__BUILD__NUM_CORE_AVAILABLE})
+    byd__private__get_num_core_available(num_core)
+    set(command make -j${num_core})
 
 
     byd__script__begin("${script_dir}/build.cmake")
@@ -183,7 +190,8 @@ function(byd__autotool__generate_install_command package)
     byd__package__get_script_dir(${package} script_dir)
 
 
-    set(command make install -j${BYD__BUILD__NUM_CORE_AVAILABLE})
+    byd__private__get_num_core_available(num_core)
+    set(command make install -j${num_core})
 
 
     byd__script__begin("${script_dir}/install.cmake")
@@ -223,7 +231,8 @@ function(byd__autotool__generate_test_command package)
 
 
 
-    set(command make ${TARGET} -j${BYD__BUILD__NUM_CORE_AVAILABLE})
+    byd__private__get_num_core_available(num_core)
+    set(command make ${TARGET} -j${num_core})
 
 
     byd__script__begin("${script_dir}/test.cmake")

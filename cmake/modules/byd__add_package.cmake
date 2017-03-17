@@ -3,9 +3,13 @@
 
 include("${CMUT_ROOT}/utils/cmut__utils__parse_version.cmake")
 
+include("${BYD_ROOT}/cmake/modules/byd__find_package_directory.cmake")
+include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
+include("${BYD_ROOT}/cmake/modules/package/byd__package__is_build.cmake")
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
+include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
 
 
 
@@ -18,52 +22,70 @@ macro(__byd__add_package_to_build_list name)
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
-
-macro(__byd__define_version name version)
-
-    set(BYD__${name}_VERSION ${version} CACHE STRING "${name} version to build")
-
-    __byd__private__version_to_name(${BYD__${name}_VERSION} BYD__${name}_VERSION_NAME)
-
-#    cmut__utils__parse_version(${version} BYD__${name}_VERSION_MAJOR
-#                                          BYD__${name}_VERSION_MINOR
-#                                          BYD__${name}_VERSION_PATCH)
-endmacro()
-
-##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-macro(byd__add_package name)
+function(byd__add_package package)
 
-    set(BYD__${name} ON)
-    __byd__add_package_to_build_list(${name})
-
-
+    # parse arguments
     set(options "")
     set(oneValueArgs VERSION)
-    set(multiValueArgs OPTIONS)
-    cmake_parse_arguments(
-        __BYD__ADD_PACKAGE
+    set(multiValueArgs COMPONENTS)
+    cmut__utils__parse_arguments(
+        byd__add_package
+        PARAM
         "${options}" "${oneValueArgs}" "${multiValueArgs}"
         ${ARGN}
-    )
+        )
 
 
-    if(__BYD__ADD_PACKAGE_VERSION)
-        __byd__define_version(${name} ${__BYD__ADD_PACKAGE_VERSION})
+
+    # look for package directory
+    byd__find_package_directory(${package} package_dir)
+    cmut_debug("[byd] - [${package}] : use info from ${package_dir}.")
+
+
+    # include package version file
+    set(version_file "${package_dir}/version.cmake")
+    if(NOT EXISTS "${version_file}")
+        cmut_fatal("[byd] - [${package}] : ${version_file} not found.")
+    endif()
+    cmut_debug("[byd] - [${package}] : include ${package_dir}/version.cmake.")
+    include("${package_dir}/version.cmake")
+
+
+    # define version to build
+    if(NOT PARAM_VERSION)
+        byd__package__get_default_version(${package} PARAM_VERSION)
+    endif()
+    cmut_info("[byd] - [${package}] : version to build ${PARAM_VERSION}")
+    byd__package__set_version_to_build(${package} "${PARAM_VERSION}")
+
+
+    # define components to build
+    if(PARAM_COMPONENTS)
+        cmut_info("[byd] - [${package}] : component to build :")
+        foreach(component IN LISTS PARAM_COMPONENTS)
+            cmut_info(" - ${component}")
+        endforeach()
+        byd__package__set_components_to_build(${package} "${PARAM_COMPONENTS}")
     endif()
 
 
-    set(prefix "packages/${name}")
-    byd__get_property(BYD__PREFIX global_prefix)
+    # define prefix (where to download/configure/build)
+    set(prefix "packages/${package}")
+    byd__get_prefix(global_prefix)
     if(global_prefix)
-        set(prefix "${global_prefix}/${name}")
+        set(prefix "${global_prefix}/${prefix}")
     endif()
+    byd__EP__set_package_arg(${package} GENERAL PREFIX "${prefix}")
 
-    byd__EP__set_package_arg(${name} GENERAL PREFIX "${prefix}")
 
-endmacro()
+    # add to build list
+    byd__package__set_build(${package})
+    __byd__add_package_to_build_list(${package})
+
+endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##

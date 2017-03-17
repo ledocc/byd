@@ -34,7 +34,11 @@ function(byd__EP__add package)
     __byd__EP__accum_step_info(LOG)
 
 
-    cmut_debug("ExternalProject_Add(\n${package}\n${__BYD__EP__${package}_ARGS}")
+    cmut_debug("[byd][EP] - [${package}] : ExternalProject_Add(${package}")
+    foreach(arg IN LISTS __BYD__EP__${package}_ARGS)
+        cmut_debug("[byd][EP] - [${package}] :     ${arg}")
+    endforeach()
+    cmut_debug("[byd][EP] - [${package}] : )")
 
 
     ExternalProject_Add(

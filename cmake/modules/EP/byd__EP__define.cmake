@@ -1,36 +1,37 @@
 
+
+
+include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
+
+
+
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__EP__reset_step package step)
-    set(BYD__EP__${step}_STEP__${package})
+    byd__set_property(BYD__EP__${step}_STEP__${package} "")
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__EP__add_package_arg package step arg)
-    byd__get_property(BYD__EP__${step}__${arg}__${package} __property_value)
-    if(__property_value)
-        cmut_debug("${package} ${arg} = ${__property_value}")
-        byd__add_to_property(BYD__EP__${step}_STEP__${package} ${arg} "${__property_value}")
+    byd__EP__get_package_or_default_arg(${package} ${step} ${arg} property_value)
+    if(property_value)
+        byd__add_to_property(BYD__EP__${step}_STEP__${package} "${arg}" "${property_value}")
     endif()
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__EP__add_package_or_default_arg package step arg)
-    byd__get_property(BYD__EP__${step}__${arg}__${package} __property_value)
-    if(__property_value)
-        cmut_debug("${package} ${arg} = ${__property_value}")
-        byd__add_to_property(BYD__EP__${step}_STEP__${package} ${arg} "${__property_value}")
-    else()
-        byd__get_property(BYD__EP__${step}__${arg} __property_value)
-        if(__property_value)
-            cmut_debug("${arg} = ${__property_value}")
-            byd__add_to_property(BYD__EP__${step}_STEP__${package} ${arg} "${BYD__EP__${step}__${arg}}")
-        endif()
+
+    byd__EP__get_package_or_default_arg(${package} ${step} ${arg} property_value)
+
+    if(property_value)
+        byd__add_to_property(BYD__EP__${step}_STEP__${package} "${arg}" "${property_value}")
     endif()
+
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -50,7 +51,6 @@ function(byd__EP__define_general_step package)
     __byd__EP__add_package_arg(           ${package} ${step_name} EXCLUDE_FROM_ALL)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -100,7 +100,6 @@ function(byd__EP__define_download_step package)
     __byd__EP__add_package_arg(           ${package} ${step_name} DOWNLOAD_NO_EXTRACT)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -116,7 +115,6 @@ function(byd__EP__define_update_step package)
     __byd__EP__add_package_arg(           ${package} ${step_name} PATCH_COMMAND)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -129,7 +127,7 @@ function(byd__EP__define_configure_step package)
     __byd__EP__reset_step(                ${package} ${step_name})
     __byd__EP__add_package_arg(           ${package} ${step_name} SOURCE_DIR)
     __byd__EP__add_package_arg(           ${package} ${step_name} SOURCE_SUBDIR)
-    __byd__EP__add_package_arg(           ${package} ${step_name} CONFIGURE_COMMAND)
+    __byd__EP__add_package_or_default_arg(${package} ${step_name} CONFIGURE_COMMAND)
     __byd__EP__add_package_or_default_arg(${package} ${step_name} CMAKE_COMMAND)
     __byd__EP__add_package_arg(           ${package} ${step_name} CMAKE_GENERATOR)
     __byd__EP__add_package_arg(           ${package} ${step_name} CMAKE_GENERATOR_PLATFORM)
@@ -139,7 +137,6 @@ function(byd__EP__define_configure_step package)
     __byd__EP__add_package_arg(           ${package} ${step_name} CMAKE_CACHE_DEFAULT_ARGS)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -151,13 +148,12 @@ function(byd__EP__define_build_step package)
 
     __byd__EP__reset_step(                ${package} ${step_name})
     __byd__EP__add_package_arg(           ${package} ${step_name} BINARY_DIR)
-    __byd__EP__add_package_arg(           ${package} ${step_name} BUILD_COMMAND)
+    __byd__EP__add_package_or_default_arg(${package} ${step_name} BUILD_COMMAND)
     __byd__EP__add_package_arg(           ${package} ${step_name} BUILD_IN_SOURCE)
     __byd__EP__add_package_arg(           ${package} ${step_name} BUILD_ALWAYS)
     __byd__EP__add_package_arg(           ${package} ${step_name} BUILD_BYPRODUCTS)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -169,10 +165,9 @@ function(byd__EP__define_install_step package)
 
     __byd__EP__reset_step(                ${package} ${step_name})
     __byd__EP__add_package_arg(           ${package} ${step_name} INSTALL_DIR)
-    __byd__EP__add_package_arg(           ${package} ${step_name} INSTALL_COMMAND)
+    __byd__EP__add_package_or_default_arg(${package} ${step_name} INSTALL_COMMAND)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -186,10 +181,9 @@ function(byd__EP__define_test_step package)
     __byd__EP__add_package_arg(           ${package} ${step_name} TEST_BEFORE_INSTALL)
     __byd__EP__add_package_arg(           ${package} ${step_name} TEST_AFTER_INSTALL)
     __byd__EP__add_package_arg(           ${package} ${step_name} TEST_EXCLUDE_FROM_MAIN)
-    __byd__EP__add_package_arg(           ${package} ${step_name} TEST_COMMAND)
+    __byd__EP__add_package_or_default_arg(${package} ${step_name} TEST_COMMAND)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 
@@ -208,7 +202,6 @@ function(byd__EP__define_log_step package)
     __byd__EP__add_package_or_default_arg(${package} ${step_name} LOG_INSTALL)
 
     byd__get_property(BYD__EP__${step_name}_STEP__${package} __property_value)
-    cmut_debug("BYD__EP__${step_name}_STEP__${package} = ${__property_value}")
 
 endfunction()
 

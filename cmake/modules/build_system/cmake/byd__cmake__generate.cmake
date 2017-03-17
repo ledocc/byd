@@ -1,8 +1,9 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/package/byd__package__get_property.cmake")
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
+include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
 
 
@@ -11,12 +12,13 @@ include("${BYD_ROOT}/cmake/modules/script.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(__byd__cmake__get_cmake_build_args args)
+function(__byd__cmake__get_cmake_build_args result)
     set(__args)
     if(${CMAKE_MAKE_PROGRAM} MATCHES ".*/make$")
-        set(__args -- -j${BYD__BUILD__NUM_CORE_AVAILABLE})
+        byd__private__get_num_core_available(num_core)
+        set(__args -- -j${num_core})
     endif()
-    set(${args} "${__args}" PARENT_SCOPE)
+    set(${result} "${__args}" PARENT_SCOPE)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -55,8 +57,15 @@ function(byd__cmake__generate_configure_cmake_args package)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_OSX_SYSROOT)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_MACOSX_RPATH)
 
-    cmut_debug("__cmake_args = ${__cmake_args}")
+
     byd__add_to_property(${__property_name} "${__cmake_args}")
+
+
+    cmut_debug("[byd][cmake] - [${package}] : cmake_args :")
+    byd__EP__get_package_arg(${package} CONFIGURE CMAKE_ARGS cmake_args)
+    foreach(arg IN LISTS cmake_args)
+        cmut_debug("[byd][cmake] - [${package}] :     ${arg}")
+    endforeach()
 
 endfunction()
 
