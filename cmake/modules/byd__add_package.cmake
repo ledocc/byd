@@ -25,7 +25,7 @@ endmacro()
 
 function(byd__add_package package)
 
-    byd__is_package_added(${package} already_added)
+    byd__private__is_package_added(${package} already_added)
     if(already_added)
         cmut_debug("[byd] - [package] : already added. skip.")
         return()
@@ -86,7 +86,7 @@ function(byd__add_package package)
 
 
     # add to build list
-    byd__set_package_added(${package})
+    byd__private__set_package_added(${package})
     __byd__add_package_to_build_list(${package})
 
 endfunction()
