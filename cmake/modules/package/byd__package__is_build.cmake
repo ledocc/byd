@@ -9,7 +9,7 @@ include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 
 function(byd__package__set_build package)
 
-    __byd__package__get_property(IS_BUILD 1)
+    __byd__package__set_property(IS_BUILD 1)
 
 endfunction()
 
@@ -22,7 +22,7 @@ function(byd__package__is_build package result)
         set(is_build 0)
     endif()
 
-    set(${result} ${is_build} PARENT_SCOPE)
+    byd__func__return(is_build)
 
 endfunction()
 

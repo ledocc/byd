@@ -1,10 +1,14 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+include("${BYD_ROOT}/cmake/modules/package.cmake")
+include("${BYD_ROOT}/cmake/modules/private.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
+
+include("${BYD_ROOT}/cmake/modules/build_system/autotool/byd__autotool__configure.cmake")
+include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__collect_flags.cmake")
+include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__default.cmake")
 
 
 
@@ -36,38 +40,6 @@ endmacro()
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__autotool__configure__add_args package)
-
-    byd__add_to_property(BYD__AUTOTOOL__CONFIGURE__ARGS__${package} ${ARGN})
-
-endfunction()
-
-function(byd__autotool__configure__get_configure_args package result)
-
-    byd__get_property(BYD__AUTOTOOL__CONFIGURE__ARGS__${package} __result)
-    set(${result} "${__result}" PARENT_SCOPE)
-
-endfunction()
-
-
-function(byd__autotool__configure__set_configure_cmd package)
-
-    byd__set_property(BYD__AUTOTOOL__CONFIGURE__CONFIGURE_CMD__${package} ${ARGN})
-
-endfunction()
-
-function(byd__autotool__configure__get_final_configure_cmd package result)
-
-    byd__is_property(BYD__AUTOTOOL__CONFIGURE__CONFIGURE_CMD__${package} is_custom_configure)
-    if(is_custom_configure)
-        byd__get_property(BYD__AUTOTOOL__CONFIGURE__CONFIGURE_CMD__${package} custom_configure)
-        set(${result} ${custom_configure} PARENT_SCOPE)
-    else()
-        set(${result} configure PARENT_SCOPE)
-    endif()
-
-endfunction()
-
 function(byd__autotool__generate_configure_command package)
 
     set(__property_name BYD__EP__CONFIGURE__CONFIGURE_COMMAND__${package})
@@ -76,13 +48,7 @@ function(byd__autotool__generate_configure_command package)
     byd__package__get_script_dir(${package} script_dir)
 
 
-    if((CMAKE_INSTALL_PREFIX) AND (NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX}))
-        set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_PREFIX}")
-    endif()
-
-
     if(CMAKE_BUILD_TYPE)
-        string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
         if(CMAKE_BUILD_TYPE STREQUAL "Debug")
             list(APPEND configure_args --disable-release --enable-debug)
         else()
@@ -92,12 +58,13 @@ function(byd__autotool__generate_configure_command package)
 
     if(CMAKE_INSTALL_PREFIX)
         set(prefix_dir  "${CMAKE_INSTALL_PREFIX}")
-        set(include_dir "${prefix_dir}/include")
-        set(lib_dir     "${prefix_dir}/lib")
         set(bin_dir     "${prefix_dir}/bin")
         set(pkg1_dir    "${prefix_dir}/lib/pkgconfig")
         set(pkg2_dir    "${prefix_dir}/share/pkgconfig")
     endif()
+
+    byd__build_system__collect_flags(C c_compile_flags c_include_flags c_link_flags)
+    byd__build_system__collect_flags(CXX cxx_compile_flags cxx_include_flags cxx_link_flags)
 
     if(BUILD_SHARED_LIBS)
         list(APPEND configure_args --enable-shared --disable-static)
@@ -109,11 +76,17 @@ function(byd__autotool__generate_configure_command package)
         list(APPEND configure_args "--prefix=${CMAKE_INSTALL_PREFIX}")
     endif()
 
-    byd__autotool__configure__get_configure_args(${package} custom_configure_args)
+    if(CMAKE_CROSSCOMPILING)
+        list(APPEND configure_args "--host=${CMAKE_CXX_COMPILER_TARGET}")
+    endif()
+
+    byd__autotool__configure__add_components_to_arg(${package})
+    byd__autotool__configure__get_args(${package} custom_configure_args)
 
 
-    byd__autotool__configure__get_final_configure_cmd(${package} configure_cmd)
-    set(command ../${package}/${configure_cmd} "${configure_args}" "${custom_configure_args}")
+    byd__autotool__configure__get_configure_cmd(${package} configure_cmd)
+    byd__package__get_source_dir(${package} source_dir)
+    set(command ${source_dir}/${configure_cmd} "${configure_args}" "${custom_configure_args}")
 
     byd__script__begin("${script_dir}/configure.cmake")
         byd__script__add_run_command_or_abort_function()
@@ -132,27 +105,18 @@ function(byd__autotool__generate_configure_command package)
         __byd__autotool__script__prepend_env_var_if_defined("PKG_CONFIG:PATH" "pkg1_dir")
         __byd__autotool__script__prepend_env_var_if_defined("PKG_CONFIG:PATH" "pkg2_dir")
 
-        if(include_dir)
-            __byd__autotool__script__prepend_env_var("CPPFLAGS:PATH" "-I${include_dir}")
-        endif()
+#        __byd__autotool__script__prepend_env_var_if_defined("CPPFLAGS" "c_include_flags")
+        __byd__autotool__script__set_env_var_if_defined("CPPFLAGS" "cxx_include_flags")
 
-        __byd__autotool__script__prepend_env_var_if_defined("CFLAGS"   "CMAKE_C_FLAGS")
-        __byd__autotool__script__prepend_env_var_if_defined("CFLAGS"   "CMAKE_C_FLAGS_${BUILD_TYPE}")
-
-        __byd__autotool__script__prepend_env_var_if_defined("CXXFLAGS"   "CMAKE_CXX_FLAGS")
-        __byd__autotool__script__prepend_env_var_if_defined("CXXFLAGS"   "CMAKE_CXX_FLAGS_${BUILD_TYPE}")
-
-        if(lib_dir)
-            __byd__autotool__script__prepend_env_var("LDFLAGS"   "-L${lib_dir}")
-        endif()
-        __byd__autotool__script__prepend_env_var_if_defined("LDFLAGS"   "CMAKE_EXE_LINKER_FLAGS")
-        __byd__autotool__script__prepend_env_var_if_defined("LDFLAGS"   "CMAKE_EXE_LINKER_FLAGS_${BUILD_TYPE}")
+        __byd__autotool__script__set_env_var_if_defined("CFLAGS"   "c_compile_flags")
+        __byd__autotool__script__set_env_var_if_defined("CXXFLAGS" "cxx_compile_flags")
+        __byd__autotool__script__set_env_var_if_defined("LDFLAGS"  "cxx_link_flags")
 
         byd__script__command("${command}")
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/configure.cmake")
+    byd__build_system__default_configure_command(${package})
 
 endfunction()
 
@@ -167,8 +131,12 @@ function(byd__autotool__generate_build_command package)
 
 
     byd__private__get_num_core_available(num_core)
-    set(command make -j${num_core})
-
+    set(command make)
+    if(CMAKE_VERBOSE_MAKEFILE)
+        set(command ${command} VERBOSE=1)
+    endif()
+    byd__private__get_num_core_available(num_core)
+    set(command ${command} -j${num_core})
 
     byd__script__begin("${script_dir}/build.cmake")
         byd__script__add_run_command_or_abort_function()
@@ -176,7 +144,7 @@ function(byd__autotool__generate_build_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/build.cmake")
+    byd__build_system__default_build_command(${package})
 
 endfunction()
 
@@ -200,7 +168,7 @@ function(byd__autotool__generate_install_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/install.cmake")
+    byd__build_system__default_install_command(${package})
 
 endfunction()
 
@@ -241,7 +209,7 @@ function(byd__autotool__generate_test_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/test.cmake")
+    byd__build_system__default_test_command(${package})
 
 endfunction()
 

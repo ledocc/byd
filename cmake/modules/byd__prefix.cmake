@@ -1,6 +1,7 @@
 
 
-include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -8,14 +9,14 @@ include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__set_prefix prefix)
-    byd__set_property(BYD__PREFIX "${prefix}")
+    byd__func__set_property(BYD__PREFIX "${prefix}")
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__get_prefix result)
-    byd__get_property(BYD__PREFIX prefix)
-    set(${result} ${prefix} PARENT_SCOPE)
+    byd__func__get_property(BYD__PREFIX prefix)
+    byd__func__return(prefix)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##

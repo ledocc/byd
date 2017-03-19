@@ -1,5 +1,5 @@
 
-byd__package__define_dependency(Poco
+byd__package__set_dependency(Poco
     zlib
     OpenSSL
     )

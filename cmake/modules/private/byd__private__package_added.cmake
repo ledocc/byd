@@ -1,30 +1,23 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__disable_test_step value)
-
-    byd__func__set_property(BYD__DISABLE_TEST_STEP ${value})
-
+function(byd__set_package_added package)
+    byd__func__set_property(BYD__ADDED__${package} 1)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__is_disable_test_step result)
-
-    byd__func__get_property(BYD__DISABLE_TEST_STEP value)
-    if(NOT value)
-        set(value 0)
-    endif()
-
-    byd__func__return(value)
-
+function(byd__is_package_added package result)
+    byd__func__get_property(BYD__ADDED__${package} added)
+    byd__func__return(added)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##

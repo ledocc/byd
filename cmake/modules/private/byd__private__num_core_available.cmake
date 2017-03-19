@@ -3,7 +3,8 @@
 
 include("${CMUT_ROOT}/system/cmut__system__num_core_available.cmake")
 
-include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 
 
 
@@ -13,7 +14,7 @@ include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
 
 function(byd__private__set_num_core_available num_core)
 
-    byd__set_property(BYD__NUM_CORE_AVAILABLE ${num_core})
+    byd__func__set_property(BYD__NUM_CORE_AVAILABLE ${num_core})
 
 endfunction()
 
@@ -21,13 +22,13 @@ endfunction()
 
 function(byd__private__get_num_core_available result)
 
-    byd__get_property(BYD__NUM_CORE_AVAILABLE num_core)
+    byd__func__get_property(BYD__NUM_CORE_AVAILABLE num_core)
     if(NOT num_core)
         cmut__system__get_num_core_available(num_core)
         byd__private__set_num_core_available(${num_core})
     endif()
 
-    set(${result} ${num_core} PARENT_SCOPE)
+    byd__func__return(num_core)
 
 endfunction()
 

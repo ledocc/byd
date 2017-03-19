@@ -1,8 +1,9 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
 
@@ -29,7 +30,7 @@ function(byd__package__get_version_info package version result)
     __byd__private__version_to_name(${version} version_name)
 
     __byd__package__get_property(${version_name} info)
-    set(${result} "${info}" PARENT_SCOPE)
+    byd__func__return(info)
 
 endfunction()
 

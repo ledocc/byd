@@ -1,11 +1,13 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/build_system/BoostBuild/compiler_ID_to_toolset.cmake")
-include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+include("${BYD_ROOT}/cmake/modules/package.cmake")
+include("${BYD_ROOT}/cmake/modules/private.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
+
+include("${BYD_ROOT}/cmake/modules/build_system/BoostBuild/compiler_ID_to_toolset.cmake")
+include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__default.cmake")
 
 
 
@@ -16,7 +18,7 @@ include("${BYD_ROOT}/cmake/modules/script.cmake")
 
 function(byd__BoostBuild__build__add_args package)
 
-    byd__add_to_property(BYD__BOOSTBUILD__BUILD__ARGS__${package} "${ARGN}")
+    byd__func__add_to_property(BYD__BOOSTBUILD__BUILD__ARGS__${package} "${ARGN}")
 
 endfunction()
 
@@ -24,8 +26,8 @@ endfunction()
 
 function(byd__BoostBuild__build__get_args package result)
 
-    byd__get_property(BYD__BOOSTBUILD__BUILD__ARGS__${package} __result)
-    set(${result} "${__result}" PARENT_SCOPE)
+    byd__func__get_property(BYD__BOOSTBUILD__BUILD__ARGS__${package} __result)
+    byd__func__return(__result)
 
 endfunction()
 
@@ -33,7 +35,7 @@ endfunction()
 
 function(__byd__BoostBuild__set_build_command_line package)
 
-    byd__add_to_property(BYD__BOOSTBUILD__BUILD_COMMAND_LINE__${package} ${ARGN})
+    byd__func__add_to_property(BYD__BOOSTBUILD__BUILD_COMMAND_LINE__${package} ${ARGN})
 
 endfunction()
 
@@ -41,8 +43,8 @@ endfunction()
 
 function(__byd__BoostBuild__get_build_command_line package result)
 
-    byd__get_property(BYD__BOOSTBUILD__BUILD_COMMAND_LINE__${package} __result)
-    set(${result} "${__result}" PARENT_SCOPE)
+    byd__func__get_property(BYD__BOOSTBUILD__BUILD_COMMAND_LINE__${package} __result)
+    byd__func__return(__result)
 
 endfunction()
 
@@ -111,7 +113,7 @@ function(byd__BoostBuild__generate_configure_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/configure.cmake")
+    byd__build_system__default_configure_command(${package})
 
 endfunction()
 
@@ -192,7 +194,7 @@ function(byd__BoostBuild__generate_build_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/build.cmake")
+    byd__build_system__default_build_command(${package})
 
 endfunction()
 
@@ -214,7 +216,7 @@ function(byd__BoostBuild__generate_install_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/install.cmake")
+    byd__build_system__default_install_command(${package})
 
 endfunction()
 

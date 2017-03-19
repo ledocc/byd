@@ -1,9 +1,12 @@
 
 
-include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__assert_not_empty.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
+
+
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -12,14 +15,14 @@ include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
 function(__byd__package__set_property param value)
     byd__private__assert_not_empty(${package})
 
-    byd__set_property(BYD__PACKAGE__${param}__${package} "${value}")
+    byd__func__set_property(BYD__PACKAGE__${param}__${package} "${value}")
 endfunction()
 
 function(__byd__package__get_property param result)
     byd__private__assert_not_empty(${package})
 
-    byd__get_property(BYD__PACKAGE__${param}__${package} value)
-    set(${result} "${value}" PARENT_SCOPE)
+    byd__func__get_property(BYD__PACKAGE__${param}__${package} value)
+    byd__func__return(value)
 endfunction()
 
 ##---------------------------------------------------------------------------------------------------------------------##
@@ -77,7 +80,7 @@ endfunction()
 
 function(byd__package__get_default_version package result)
     __byd__package__get_property(DEFAULT_VERSION version)
-    set(${result} "${version}" PARENT_SCOPE)
+    byd__func__return(version)
 endfunction()
 
 
@@ -122,14 +125,14 @@ endfunction()
 function(byd__package__get_version_to_build package result)
 
     __byd__package__get_property(VERSION_TO_BUILD version)
-    set(${result} ${version} PARENT_SCOPE)
+    byd__func__return(version)
 
 endfunction()
 
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
-##  COMPONENTS  ------------------------------------------------------------------------------------------------------##
+##  COMPONENTS_TO_BUILD  ---------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__set_components_to_build package components)
@@ -143,7 +146,11 @@ endfunction()
 function(byd__package__get_components_to_build package result)
 
     __byd__package__get_property(COMPONENTS_TO_BUILD components)
-    set(${result} "${components}" PARENT_SCOPE)
+    if(NOT components)
+        byd__package__get_components(${package} components)
+    endif()
+
+    byd__func__return(components)
 
 endfunction()
 
@@ -164,7 +171,7 @@ function(byd__package__get_prefix package result)
         set(prefix "${CMAKE_BINARY_DIR}/${prefix}")
     endif()
 
-    set(${result} "${prefix}" PARENT_SCOPE)
+    byd__func__return(prefix)
 
 endfunction()
 
@@ -177,7 +184,7 @@ function(byd__package__get_script_dir package result)
 
     byd__package__get_prefix(${package} prefix)
 
-    set(${result} "${prefix}/src/${package}-script" PARENT_SCOPE)
+    byd__func__return_value("${prefix}/src/${package}-script")
 
 endfunction()
 
@@ -189,7 +196,7 @@ function(byd__package__get_source_dir package result)
 
     byd__package__get_prefix(${package} prefix)
 
-    set(${result} "${prefix}/src/${package}" PARENT_SCOPE)
+    byd__func__return_value("${prefix}/src/${package}")
 
 endfunction()
 
@@ -207,7 +214,7 @@ function(byd__package__get_build_dir package result)
         set(source_dir "${source_dir}-build")
     endif()
 
-    set(${result} "${source_dir}" PARENT_SCOPE)
+    byd__func__return(source_dir)
 
 endfunction()
 

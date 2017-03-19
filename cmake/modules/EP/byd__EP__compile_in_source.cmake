@@ -1,6 +1,7 @@
 
 
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 
 
 function(byd__EP__compile_in_source package value)
@@ -15,6 +16,6 @@ function(byd__EP__get_compile_in_source package result)
     if(NOT build_in_source)
         set(build_in_source 0)
     endif()
-    set(${result} ${build_in_source} PARENT_SCOPE)
+    byd__func__return(build_in_source)
 
 endfunction()

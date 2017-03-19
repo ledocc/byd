@@ -1,5 +1,5 @@
 include("${CMUT_ROOT}/cmut_message.cmake")
-include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
 
 
 
@@ -9,12 +9,12 @@ include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
 
 
 
-function(byd__script__env__get_separator separator)
+function(byd__script__env__get_separator result)
 
     if(UNIX)
-        set(${separator} ":" PARENT_SCOPE)
+        byd__func__return_value(":")
     else()
-        set(${separator} ";" PARENT_SCOPE)
+        byd__func__return_value(";")
     endif()
 
 endfunction()
@@ -61,8 +61,8 @@ endfunction()
 
 function(byd__script__begin script_name)
 
-    byd__set_property(BYD__SCRIPT__CURRENT_SCRIPT_NAME "${script_name}")
-    byd__set_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT "")
+    byd__func__set_property(BYD__SCRIPT__CURRENT_SCRIPT_NAME "${script_name}")
+    byd__func__set_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT "")
 
 endfunction()
 
@@ -70,8 +70,8 @@ endfunction()
 
 function(byd__script__end)
 
-    byd__get_property(BYD__SCRIPT__CURRENT_SCRIPT_NAME    script_name)
-    byd__get_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT script_content)
+    byd__func__get_property(BYD__SCRIPT__CURRENT_SCRIPT_NAME    script_name)
+    byd__func__get_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT script_content)
 
     file(WRITE "${script_name}" "${script_content}")
 
@@ -81,7 +81,7 @@ endfunction()
 
 function(byd__script__write string)
 
-    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+    byd__func__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
 "${string}
 "
         )
@@ -94,14 +94,14 @@ function(byd__script__env__append variable value)
     byd__script__env__get_separator(separator)
     byd__script__env__handle_variable_type(${variable} ${value} variable value)
 
-    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+    byd__func__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
 "
 set(__new_value \"${value}\")
 set(__tmp_value \$ENV{${variable}})
 if(__tmp_value)
     set(__new_value \"\${__tmp_value}${separator}\${_new_value}\")
 endif()
-set(\$ENV{${variable}} \"\${__new_value}\")
+set(ENV{${variable}} \"\${__new_value}\")
 "
         )
 endfunction()
@@ -113,14 +113,14 @@ function(byd__script__env__prepend variable value)
     byd__script__env__get_separator(separator)
     byd__script__env__handle_variable_type("${variable}" "${value}" variable value)
 
-    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+    byd__func__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
 "
 set(__new_value \"${value}\")
 set(__tmp_value \$ENV{${variable}})
 if(__tmp_value)
     set(__new_value \"\${__tmp_value}${separator}\${_new_value}\")
 endif()
-set(\$ENV{${variable}} \"\${__new_value}\")
+set(ENV{${variable}} \"\${__new_value}\")
 "
         )
 endfunction()
@@ -130,8 +130,8 @@ endfunction()
 function(byd__script__env__set variable value)
     byd__script__env__handle_variable_type("${variable}" "${value}" variable value)
 
-    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
-        "set(\$ENV{${variable}} \"${value}\")\n"
+    byd__func__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+        "set(ENV{${variable}} \"${value}\")\n"
         )
 endfunction()
 
@@ -139,7 +139,7 @@ endfunction()
 
 function(byd__script__command)
 
-    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+    byd__func__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
         "run_command_or_abort(\"${ARGN}\")\n"
         )
 
@@ -149,7 +149,7 @@ endfunction()
 
 function(byd__script__add_run_command_or_abort_function)
 
-    byd__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
+    byd__func__concat_to_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
 "
 function(run_command_or_abort command)
     execute_process(COMMAND \${command} RESULT_VARIABLE result)

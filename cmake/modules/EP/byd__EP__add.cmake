@@ -12,7 +12,7 @@ include("${BYD_ROOT}/cmake/modules/EP/byd__EP__define.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__EP__accum_step_info step)
-    byd__get_property(BYD__EP__${step}_STEP__${package} step_info)
+    byd__func__get_property(BYD__EP__${step}_STEP__${package} step_info)
     set(__BYD__EP__${package}_ARGS ${__BYD__EP__${package}_ARGS} ${step_info})
 endmacro()
 ##--------------------------------------------------------------------------------------------------------------------##

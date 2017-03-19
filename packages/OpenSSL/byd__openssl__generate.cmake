@@ -1,9 +1,10 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__default.cmake")
+include("${BYD_ROOT}/cmake/modules/package.cmake")
+include("${BYD_ROOT}/cmake/modules/private.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
 
 
@@ -90,7 +91,6 @@ function(byd__openssl__generate_configure_command package)
     endif()
 
 
-
     set(command "perl" "Configure" "${configure_args}")
 
 
@@ -105,7 +105,7 @@ function(byd__openssl__generate_configure_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/configure.cmake")
+    byd__build_system__default_configure_command(${package})
 
 endfunction()
 
@@ -132,7 +132,7 @@ function(byd__openssl__generate_build_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/build.cmake")
+    byd__build_system__default_build_command(${package})
 
 endfunction()
 
@@ -161,7 +161,7 @@ function(byd__openssl__generate_install_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/install.cmake")
+    byd__build_system__default_install_command(${package})
 
 endfunction()
 
@@ -191,7 +191,7 @@ function(byd__openssl__generate_test_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/test.cmake")
+    byd__build_system__default_test_command(${package})
 
 endfunction()
 

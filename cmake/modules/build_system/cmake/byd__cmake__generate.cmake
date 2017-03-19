@@ -1,10 +1,12 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_defined.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+include("${BYD_ROOT}/cmake/modules/package.cmake")
+include("${BYD_ROOT}/cmake/modules/private.cmake")
 include("${BYD_ROOT}/cmake/modules/script.cmake")
+
+include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__default.cmake")
 
 
 
@@ -18,7 +20,7 @@ function(__byd__cmake__get_cmake_build_args result)
         byd__private__get_num_core_available(num_core)
         set(__args -- -j${num_core})
     endif()
-    set(${result} "${__args}" PARENT_SCOPE)
+    byd__func__return(__args)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -58,7 +60,7 @@ function(byd__cmake__generate_configure_cmake_args package)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_MACOSX_RPATH)
 
 
-    byd__add_to_property(${__property_name} "${__cmake_args}")
+    byd__func__add_to_property(${__property_name} "${__cmake_args}")
 
 
     cmut_debug("[byd][cmake] - [${package}] : cmake_args :")
@@ -89,7 +91,7 @@ function(byd__cmake__generate_build_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/build.cmake")
+    byd__build_system__default_build_command(${package})
 
 endfunction()
 
@@ -112,7 +114,7 @@ function(byd__cmake__generate_install_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/install.cmake")
+    byd__build_system__default_install_command(${package})
 
 endfunction()
 
@@ -135,7 +137,7 @@ function(byd__cmake__generate_test_command package)
     byd__script__end()
 
 
-    byd__set_property(${__property_name} "${CMAKE_COMMAND}" -P "${script_dir}/test.cmake")
+    byd__build_system__default_install_command(${package})
 
 endfunction()
 

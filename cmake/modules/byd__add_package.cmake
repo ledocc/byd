@@ -3,13 +3,11 @@
 
 include("${CMUT_ROOT}/utils/cmut__utils__parse_version.cmake")
 
-include("${BYD_ROOT}/cmake/modules/byd__find_package_directory.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
-include("${BYD_ROOT}/cmake/modules/byd__property.cmake")
-include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
-include("${BYD_ROOT}/cmake/modules/package/byd__package__is_build.cmake")
-include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+include("${BYD_ROOT}/cmake/modules/EP.cmake")
+include("${BYD_ROOT}/cmake/modules/package.cmake")
+include("${BYD_ROOT}/cmake/modules/private.cmake")
 
 
 
@@ -18,7 +16,7 @@ include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__add_package_to_build_list name)
-    byd__add_to_property(__BYD__PACKAGE_TO_BUILD ${name})
+    byd__func__add_to_property(__BYD__PACKAGE_TO_BUILD ${name})
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -26,6 +24,12 @@ endmacro()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__add_package package)
+
+    byd__is_package_added(${package} already_added)
+    if(already_added)
+        cmut_debug("[byd] - [package] : already added. skip.")
+        return()
+    endif()
 
     # parse arguments
     set(options "")
@@ -41,7 +45,7 @@ function(byd__add_package package)
 
 
     # look for package directory
-    byd__find_package_directory(${package} package_dir)
+    byd__private__find_package_directory(${package} package_dir)
     cmut_debug("[byd] - [${package}] : use info from ${package_dir}.")
 
 
@@ -66,7 +70,7 @@ function(byd__add_package package)
     if(PARAM_COMPONENTS)
         cmut_info("[byd] - [${package}] : component to build :")
         foreach(component IN LISTS PARAM_COMPONENTS)
-            cmut_info(" - ${component}")
+            cmut_info("[byd] - [${package}] : - ${component}")
         endforeach()
         byd__package__set_components_to_build(${package} "${PARAM_COMPONENTS}")
     endif()
@@ -82,7 +86,7 @@ function(byd__add_package package)
 
 
     # add to build list
-    byd__package__set_build(${package})
+    byd__set_package_added(${package})
     __byd__add_package_to_build_list(${package})
 
 endfunction()

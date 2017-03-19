@@ -1,54 +1,12 @@
 include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 
-
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL Linux)
-    set(${package}_PLATFORM "Linux")
-elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL Darwin)
-    set(${package}_PLATFORM "MacOSX")
-elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL Windows)
-    set(${package}_PLATFORM "MSYS/MSVC")
-else()
-    cmut_fatal("You try to build ${package} on platform not handle by this script. fix it and try again.")
-    return()
-endif()
+include("${CMAKE_CURRENT_LIST_DIR}/determine_platform.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/determine_toolset.cmake")
 
 
 
 
-if (MSVC)
-    if (MSVC60)
-	set(ICU_TOOLSET "v60")
-    elseif(MSVC70)
-	set(ICU_TOOLSET "v70")
-    elseif(MSVC71)
-	set(ICU_TOOLSET "v71")
-    elseif(MSVC80)
-	set(ICU_TOOLSET "v80")
-    elseif(MSVC90)
-	set(ICU_TOOLSET "v90")
-    elseif(MSVC10)
-	set(ICU_TOOLSET "v100")
-    elseif(MSVC11)
-	set(ICU_TOOLSET "v110")
-    elseif(MSVC12)
-	set(ICU_TOOLSET "v120")
-    elseif(MSVC13)
-	set(ICU_TOOLSET "v130")
-    elseif(MSVC14)
-	set(ICU_TOOLSET "v140")
-    else()
-	cmut_fatal("You try to build ${package} on platform not ahndle by this script. fix it and try again.")
-	return()
-    endif()
-endif()
 
-
-#byd__autotool__configure__add_args(${package} ${${package}_PLATFORM})
-
-byd__autotool__configure__add_args(${package} --enable-tests)
-byd__autotool__configure__add_args(${package} --disable-samples)
-
-byd__autotool__configure__add_args(${package} --enable-rpath)
 
 
 
@@ -64,6 +22,21 @@ if(MSVC)
 
 
 else()
+    byd__package__get_components(${package} components)
+    byd__package__get_components_to_build(${package} components_to_build)
+    foreach(component IN LISTS components)
+        if(component IN LIST components_to_build)
+            set(action enable)
+        else()
+            set(action disable)
+        endif()
+        byd__autotool__configure__add_args(${package} --${action}-${component})
+    endforeach()
+
+    byd__autotool__configure__add_args(${package} --enable-tests)
+    byd__autotool__configure__add_args(${package} --disable-samples)
+    byd__autotool__configure__add_args(${package} --enable-rpath)
+
     byd__autotool__configure__set_configure_cmd(${package} "source/runConfigureICU" ${${package}_PLATFORM})
     byd__autotool__add(${package} TEST_TARGET check)
 endif()
