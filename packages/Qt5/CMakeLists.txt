@@ -25,7 +25,6 @@ endif()
 byd__Qt5__generate_configure_command(${package})
 byd__Qt5__generate_build_command(${package})
 byd__Qt5__generate_install_command(${package})
-byd__Qt5__generate_test_command(${package})
 
 byd__EP__add(${package})
 

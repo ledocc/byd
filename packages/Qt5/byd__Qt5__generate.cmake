@@ -155,7 +155,7 @@ function(byd__Qt5__generate_configure_command package)
     list(APPEND configure_arg "-largefile")
     list(APPEND configure_arg "-accessibility")
 
-    list(APPEND configure_arg "-make" "tests")
+#    list(APPEND configure_arg "-make" "tests")
     list(APPEND configure_arg "-nomake" "examples")
 
 
