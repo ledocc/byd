@@ -37,18 +37,18 @@ set(ABSOLUTE_SCRIPT_DIR ${SOURCE_DIR}/${SCRIPT_DIR})
 
 byd__package__get_script_dir(${package} script_dir)
 ExternalProject_Add_Step(
-  ${package}
-  install_qt_conf
-  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/bin/qt.conf"
-  DEPENDEES install
-  ALWAYS 1
-  )
+    ${package}
+    install_qt_conf
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/bin/qt.conf"
+    DEPENDEES install
+    ALWAYS 1
+    )
 
 ExternalProject_Add_Step(
-  ${package}
-  custom_patch
-  COMMAND git apply "${VERSION_DIR}/patch/multicast.patch"
-  DEPENDEES update
-  DEPENDERS configure
-  WORKING_DIRECTORY ${SOURCE_DIR}
-  )
+    ${package}
+    custom_patch
+    COMMAND git apply "${VERSION_DIR}/patch/multicast.patch"
+    DEPENDEES update
+    DEPENDERS configure
+    WORKING_DIRECTORY ${SOURCE_DIR}
+    )
