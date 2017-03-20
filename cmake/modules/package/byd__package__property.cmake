@@ -224,7 +224,7 @@ endfunction()
 
 function(byd__package__is_added package result)
     byd__private__is_package_added(${package} added)
-    byd__func__return(${added})
+    byd__func__return(added)
 endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
