@@ -1,0 +1,50 @@
+diff -Naur qt-everywhere-opensource-src-5.7.1/qtbase/src/network/socket/qnativesocketengine_unix.cpp qt-everywhere-opensource-src-5.7.1_patch/qtbase/src/network/socket/qnativesocketengine_unix.cpp
+--- Qt5/qtbase/src/network/socket/qnativesocketengine_unix.cpp	2016-12-01 09:17:04.000000000 +0100
++++ Qt5_patch/qtbase/src/network/socket/qnativesocketengine_unix.cpp	2017-01-27 14:54:04.701120663 +0100
+@@ -629,8 +629,18 @@
+         if (interface.isValid()) {
+             const QList<QNetworkAddressEntry> addressEntries = interface.addressEntries();
++            bool ipV4AddressFound = false;
++            quint32 ipAddress = 0;
+             if (!addressEntries.isEmpty()) {
+-                QHostAddress firstIP = addressEntries.first().ip();
+-                mreq4.imr_interface.s_addr = htonl(firstIP.toIPv4Address());
+-            } else {
++                // looking for an ipv4 address
++                for (int i = 0; i < addressEntries.count(); ++i) {
++                    const QNetworkAddressEntry &entry = addressEntries.at(i);
++                    ipAddress = entry.ip().toIPv4Address(&ipV4AddressFound);
++                    if (ipV4AddressFound) {
++                        mreq4.imr_interface.s_addr = htonl(ipAddress);
++                        break;
++                    }
++                }
++            }
++            if (! ipV4AddressFound) {
+                 d->setError(QAbstractSocket::NetworkError,
+                             QNativeSocketEnginePrivate::NetworkUnreachableErrorString);
+diff -Naur qt-everywhere-opensource-src-5.7.1/qtbase/src/network/socket/qnativesocketengine_win.cpp qt-everywhere-opensource-src-5.7.1_patch/qtbase/src/network/socket/qnativesocketengine_win.cpp
+--- Qt5/qtbase/src/network/socket/qnativesocketengine_win.cpp	2016-12-01 09:17:04.000000000 +0100
++++ Qt5_patch/qtbase/src/network/socket/qnativesocketengine_win.cpp	2017-01-27 11:28:15.841824068 +0100
+@@ -951,8 +951,18 @@
+         if (iface.isValid()) {
+             const QList<QNetworkAddressEntry> addressEntries = iface.addressEntries();
++            bool ipV4AddressFound = false;
++            quint32 ipAddress = 0;
+             if (!addressEntries.isEmpty()) {
+-                QHostAddress firstIP = addressEntries.first().ip();
+-                mreq4.imr_interface.s_addr = htonl(firstIP.toIPv4Address());
+-            } else {
++                // looking for an ipv4 address
++                for (int i = 0; i < addressEntries.count(); ++i) {
++                    const QNetworkAddressEntry &entry = addressEntries.at(i);
++                    ipAddress = entry.ip().toIPv4Address(&ipV4AddressFound);
++                    if (ipV4AddressFound) {
++                        mreq4.imr_interface.s_addr = htonl(ipAddress);
++                        break;
++                    }
++                }
++            }
++            if (! ipV4AddressFound) {
+                 d->setError(QAbstractSocket::NetworkError,
+                             QNativeSocketEnginePrivate::NetworkUnreachableErrorString);

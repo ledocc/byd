@@ -1,0 +1,1 @@
+set(package Qt5)
