@@ -4,6 +4,7 @@
 include("${CMUT_ROOT}/utils/cmut__utils__parse_version.cmake")
 
 include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
+include("${BYD_ROOT}/cmake/modules/byd__initialize.cmake")
 include("${BYD_ROOT}/cmake/modules/func.cmake")
 include("${BYD_ROOT}/cmake/modules/EP.cmake")
 include("${BYD_ROOT}/cmake/modules/package.cmake")
@@ -24,6 +25,8 @@ endmacro()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__add_package package)
+
+    byd__initialize_if_not_done()
 
     byd__private__is_package_added(${package} already_added)
     if(already_added)

@@ -1,0 +1,115 @@
+
+
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__set_initialized)
+    byd__func__set_property(BYD__INITIALIZED 1)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__is_initialized result)
+    byd__func__get_property(BYD__INITIALIZED initialized)
+    byd__func__return(initialized)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__initialize_if_not_done)
+
+    byd__is_initialized(initialized)
+    if(NOT initialized)
+        byd__initialize()
+    endif()
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__initialize)
+
+    byd__set_initialized()
+
+
+
+    option(BUILD_SHARED_LIBS "Enable to build shared libraries")
+    # add BUILD_TESTING option
+    enable_testing()
+    if(NOT BUILD_TESTING)
+        byd__disable_test_step(1)
+    endif()
+
+
+
+    byd__EP__set_default_arg(DOWNLOAD TIMEOUT 3600)
+    byd__EP__set_default_log(ON)
+
+
+
+    byd__func__set_default(CMAKE_BUILD_TYPE Release)
+
+    if(CMAKE_INSTALL_PREFIX)
+        byd__filesystem__absolute("${CMAKE_INSTALL_PREFIX}" "${CMAKE_BINARY_DIR}" CMAKE_INSTALL_PREFIX)
+        set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
+    endif()
+
+
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - welcome to byd (Build Your Dependencies)")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - Build informations :")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - BUILD_SHARED_LIBS    = ${BUILD_SHARED_LIBS}")
+    cmut_info("[byd] - BUILD_TESTING        = ${BUILD_TESTING}")
+    cmut_info("[byd] - CMAKE_BUILD_TYPE     = ${CMAKE_BUILD_TYPE}")
+    cmut_info("[byd] - CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - System informations :")
+    cmut_info("[byd] - CMAKE_SYSTEM_NAME      = ${CMAKE_SYSTEM_NAME}")
+    cmut_info("[byd] - CMAKE_SYSTEM_VERSION   = ${CMAKE_SYSTEM_VERSION}")
+    cmut_info("[byd] - CMAKE_SYSTEM_PROCESSOR = ${CMAKE_SYSTEM_PROCESSOR}")
+    cmut_info("[byd] - CMAKE_SYSROOT          = ${CMAKE_SYSROOT}")
+    cmut_info("[byd] - CMAKE_STAGING_PREFIX   = ${CMAKE_STAGING_PREFIX}")
+    cmut_info("[byd] -")
+    cmut_info("[byd] -")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - Toolchain informations :")
+    if(ANDROID)
+    cmut_info("[byd] -")
+        cmut_info("[byd] - CMAKE_ANDROID_API = ${CMAKE_ANDROID_API}")
+        cmut_info("[byd] - CMAKE_ANDROID_ARCH_ABI = ${CMAKE_ANDROID_ARCH_ABI}")
+        cmut_info("[byd] - CMAKE_ANDROID_NDK = ${CMAKE_ANDROID_NDK}")
+        cmut_info("[byd] - CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION = ${CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION}")
+        cmut_info("[byd] - CMAKE_ANDROID_STL_TYPE = ${CMAKE_ANDROID_STL_TYPE}")
+    endif()
+    cmut_info("[byd] -")
+    cmut_info("[byd] - CMAKE_GENERATOR_TOOLSET   = ${CMAKE_GENERATOR_TOOLSET}")
+    cmut_info("[byd] - CMAKE_GENERATOR_PLATEFORM = ${CMAKE_GENERATOR_PLATFORM}")
+    foreach(lang C CXX)
+        cmut_info("[byd] -")
+        cmut_info("[byd] - CMAKE_${lang}_COMPILER        = ${CMAKE_${lang}_COMPILER}")
+        cmut_info("[byd] - CMAKE_${lang}_COMPILER_TARGET = ${CMAKE_${lang}_COMPILER_TARGET}")
+        cmut_info("[byd] - CMAKE_${lang}_COMPILER_EXTERNAL_TOOLCHAIN = ${CMAKE_${lang}_COMPILER_EXTERNAL_TOOLCHAIN}")
+        if(ANDROID)
+            cmut_info("[byd] - CMAKE_${lang}_ANDROID_TOOLCHAIN_PREFIX = ${CMAKE_${lang}_ANDROID_TOOLCHAIN_PREFIX}")
+            cmut_info("[byd] - CMAKE_${lang}_ANDROID_TOOLCHAIN_SUFFIX = ${CMAKE_${lang}_ANDROID_TOOLCHAIN_SUFFIX}")
+        endif()
+    endforeach()
+    cmut_info("[byd] -")
+    cmut_info("[byd] -")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
