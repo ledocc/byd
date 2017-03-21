@@ -16,10 +16,13 @@ endmacro()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__EP__add_package_arg package step arg)
+
     byd__EP__get_package_or_default_arg(${package} ${step} ${arg} property_value)
+
     if(property_value)
         byd__func__add_to_property(BYD__EP__${step}_STEP__${package} "${arg}" "${property_value}")
     endif()
+
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##

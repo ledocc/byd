@@ -42,6 +42,7 @@ ExternalProject_Add_Step(
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/bin/qt.conf"
     DEPENDEES install
     ALWAYS 1
+    WORKING_DIRECTORY ${SOURCE_DIR}
     )
 
 ExternalProject_Add_Step(

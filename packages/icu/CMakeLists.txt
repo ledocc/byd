@@ -38,16 +38,15 @@ else()
     byd__autotool__configure__add_args(${package} --enable-rpath)
 
     byd__autotool__configure__set_configure_cmd(${package} "source/runConfigureICU" ${${package}_PLATFORM})
+
+    if(APPLE)
+        byd__fixup_dylib(${package})
+    endif()
+
     byd__autotool__add(${package} TEST_TARGET check)
 endif()
 
 
-ExternalProject_Get_Property(${package} SOURCE_DIR)
-
-if(APPLE)
-    include(${PROJECT_SOURCE_DIR}/cmake/fixup_dylib.cmake)
-    fixup_dylib(${package} "${SOURCE_DIR}")
-endif()
 
 if(WIN32)
     file(

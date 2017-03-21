@@ -11,23 +11,29 @@ endif()
 byd__cmake__add_cmake_arg(${package} HUNTER_ENABLED OFF)
 
 
-#byd__cmake__add_option(${package}
-#    ENABLE_CPPUNIT OFF
-#    ENABLE_MONGODB OFF
-#    ENABLE_NETSSL OFF
-#    ENABLE_CRYPTO OFF
-#    ENABLE_DATA OFF
-#    ENABLE_PAGECOMPILER OFF
-#    ENABLE_PAGECOMPILER_FILE2PAGE OFF
-#    ENABLE_REDIS OFF
-#    )
+byd__package__get_components_to_build(${package} components_to_build)
+if(components_to_build)
 
+    include("${CMAKE_CURRENT_LIST_DIR}/component.cmake")
+    byd__package__get_components(${package} components)
 
+    foreach(component ${components})
 
-byd__cmake__add(${package} SKIP test)
+        string(TOUPPER ${component} COMPONENT)
+
+        if(component IN_LIST components_to_build)
+            set(enable ON)
+        else()
+            set(enable OFF)
+        endif()
+
+        byd__cmake__add_cmake_arg(${package} "ENABLE_${COMPONENT}" "${enable}")
+
+    endforeach()
+endif()
 
 
 if(APPLE)
-    include("${PROJECT_SOURCE_DIR}/cmake/fixup_dylib.cmake")
-    fixup_dylib(${module})
+    byd__fixup_dylib(${module})
 endif()
+byd__cmake__add(${package} SKIP test)

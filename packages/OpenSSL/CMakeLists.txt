@@ -2,11 +2,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/byd__openssl__generate.cmake")
 
 
-
-
-
-
-
 byd__EP__compile_in_source(${package} 1)
 
 byd__openssl__generate_configure_command(${package})
@@ -20,6 +15,5 @@ byd__EP__add(${package})
 
 
 if(APPLE)
-    include(${PROJECT_SOURCE_DIR}/cmake/fixup_dylib.cmake)
-    fixup_dylib(${package})
+    byd__fixup_dylib(${package})
 endif()

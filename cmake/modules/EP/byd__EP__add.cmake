@@ -15,11 +15,28 @@ macro(__byd__EP__accum_step_info step)
     byd__func__get_property(BYD__EP__${step}_STEP__${package} step_info)
     set(__BYD__EP__${package}_ARGS ${__BYD__EP__${package}_ARGS} ${step_info})
 endmacro()
+
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__EP__add package)
+
+    file(GLOB step_paths
+        "${BYD_ROOT}/cmake/modules/EP/step/*/add.cmake"
+        )
+    list(REMOVE_ITEM step_paths "${BYD_ROOT}/cmake/modules/EP/step/standard/add.cmake")
+    set(step_paths "${BYD_ROOT}/cmake/modules/EP/step/standard/add.cmake" ${step_paths})
+
+    foreach(path IN LISTS step_paths)
+        include("${path}")
+        byd__EP__step__provider_add(${package})
+    endforeach()
+
+endfunction()
+
+
+function(byd__EP__add__ package)
 
     byd__EP__define_steps(${package})
 

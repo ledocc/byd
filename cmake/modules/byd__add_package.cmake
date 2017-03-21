@@ -85,7 +85,7 @@ function(byd__add_package package)
     if(global_prefix)
         set(prefix "${global_prefix}/${prefix}")
     endif()
-    byd__EP__set_package_arg(${package} GENERAL PREFIX "${prefix}")
+    byd__EP__set_package_argument(${package} GENERAL PREFIX "${prefix}")
 
 
     # add to build list

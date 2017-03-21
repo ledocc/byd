@@ -18,6 +18,12 @@ function(__byd__package__set_property param value)
     byd__func__set_property(BYD__PACKAGE__${param}__${package} "${value}")
 endfunction()
 
+function(__byd__package__append_property param value)
+    byd__private__assert_not_empty(${package})
+
+    byd__func__add_to_property(BYD__PACKAGE__${param}__${package} "${value}")
+endfunction()
+
 function(__byd__package__get_property param result)
     byd__private__assert_not_empty(${package})
 
@@ -98,7 +104,7 @@ function(__byd__package__set_EP_download_arg package)
         set(idx0 ${current_arg_index})
         math(EXPR idx1 "${idx0} + 1")
 
-        byd__EP__set_package_arg(${package} DOWNLOAD "${ARGV${idx0}}" "${ARGV${idx1}}")
+        byd__EP__set_package_argument(${package} DOWNLOAD "${ARGV${idx0}}" "${ARGV${idx1}}")
 
         math(EXPR current_arg_index "${current_arg_index} + 2")
 
@@ -161,7 +167,7 @@ endfunction()
 
 function(byd__package__get_prefix package result)
 
-    byd__EP__get_package_arg(${package} GENERAL PREFIX prefix)
+    byd__EP__get_package_argument(${package} GENERAL PREFIX prefix)
 
     if(NOT prefix)
         set(prefix "${package}-prefix")

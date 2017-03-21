@@ -1,6 +1,10 @@
 
 
 
+include("${BYD_ROOT}/cmake/modules/func.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/define_step_info.cmake")
+
+
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -44,7 +48,7 @@ function(byd__initialize)
 
 
 
-    byd__EP__set_default_arg(DOWNLOAD TIMEOUT 3600)
+    byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)
     byd__EP__set_default_log(ON)
 
 
@@ -107,6 +111,10 @@ function(byd__initialize)
     endforeach()
     cmut_info("[byd] -")
     cmut_info("[byd] -")
+
+
+
+    byd__EP__define_step_info()
 
 endfunction()
 

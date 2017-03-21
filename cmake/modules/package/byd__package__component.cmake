@@ -2,6 +2,7 @@
 
 
 include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
+include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
 
 
 
@@ -20,6 +21,7 @@ function(byd__package__add_component package component)
         )
 
     __byd__package__append_property(COMPONENTS "${component}")
+    byd__package__get_components(${package} comps)
 
     if(PARAM_VERSION)
         __byd__package__set_property(COMPONENT_${component} "${version}")

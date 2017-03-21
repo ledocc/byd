@@ -64,7 +64,7 @@ function(byd__cmake__generate_configure_cmake_args package)
 
 
     cmut_debug("[byd][cmake] - [${package}] : cmake_args :")
-    byd__EP__get_package_arg(${package} CONFIGURE CMAKE_ARGS cmake_args)
+    byd__EP__get_package_argument(${package} CONFIGURE CMAKE_ARGS cmake_args)
     foreach(arg IN LISTS cmake_args)
         cmut_debug("[byd][cmake] - [${package}] :     ${arg}")
     endforeach()

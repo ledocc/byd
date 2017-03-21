@@ -19,16 +19,16 @@ function(byd__EP__set_default_log value)
         )
 
     foreach(arg IN LISTS args)
-        byd__EP__set_default_arg(${step_name} ${arg} ${value})
+        byd__EP__set_default_argument(${step_name} ${arg} ${value})
     endforeach()
 
 endfunction()
 
 function(byd__EP__set_empty_command package)
 
-    byd__EP__set_package_arg(${package} CONFIGURE CONFIGURE_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no configure step")
-    byd__EP__set_package_arg(${package} BUILD     BUILD_COMMAND     "${CMAKE_COMMAND}" "-E" "echo" "no build step")
-    byd__EP__set_package_arg(${package} INSTALL   INSTALL_COMMAND   "${CMAKE_COMMAND}" "-E" "echo" "no install step")
-    byd__EP__set_package_arg(${package} TEST      TEST_COMMAND      "${CMAKE_COMMAND}" "-E" "echo" "no test step")
+    byd__EP__set_package_argument(${package} CONFIGURE CONFIGURE_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no configure step")
+    byd__EP__set_package_argument(${package} BUILD     BUILD_COMMAND     "${CMAKE_COMMAND}" "-E" "echo" "no build step")
+    byd__EP__set_package_argument(${package} INSTALL   INSTALL_COMMAND   "${CMAKE_COMMAND}" "-E" "echo" "no install step")
+    byd__EP__set_package_argument(${package} TEST      TEST_COMMAND      "${CMAKE_COMMAND}" "-E" "echo" "no test step")
 
 endfunction()
