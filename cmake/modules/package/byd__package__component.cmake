@@ -21,8 +21,6 @@ function(byd__package__add_component package component)
         )
 
     __byd__package__append_property(COMPONENTS "${component}")
-    byd__package__get_components(${package} comps)
-
     if(PARAM_VERSION)
         __byd__package__set_property(COMPONENT_${component} "${version}")
     endif()
