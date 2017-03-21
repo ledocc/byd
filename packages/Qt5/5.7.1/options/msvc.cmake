@@ -1,9 +1,13 @@
 
-cmut_EP_add_config_arg_if(CMUT_EP_icu -icu -no-icu)
+byd__Qt5__configure__add_arg_if_dependency_is_added(${package} icu)
 
-cmut_EP_add_config_arg(-directwrite)
-cmut_EP_add_config_arg(-opengl dynamic)
-cmut_EP_add_config_arg(-audio-backend)
-cmut_EP_add_config_arg(-mp)
 
-cmut_EP_add_config_arg_if(CMAKE_VERBOSE_MAKEFILE -verbose "")
+byd__Qt5__configure__add_args(${package} -directwrite)
+byd__Qt5__configure__add_args(${package} -opengl dynamic)
+byd__Qt5__configure__add_args(${package} -audio-backend)
+byd__Qt5__configure__add_args(${package} -mp)
+
+
+if(CMAKE_VERBOSE_MAKEFILE)
+    byd__Qt5__configure__add_args(${package} -verbose)
+endif()
