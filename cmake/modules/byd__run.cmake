@@ -14,6 +14,7 @@ include("${BYD_ROOT}/cmake/modules/byd__initialize.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+
 function(__byd__include_package_dependency_file package)
 
     byd__private__find_package_directory(${package} package_dir)
@@ -116,7 +117,7 @@ function(__byd__build_package package)
 
     byd__private__is_package_generated(${package} already_generated)
     if(already_generated)
-        cmut_debug("[byd] - [package] : already generated. skip.")
+        cmut_debug("[byd] - [${package}] : already generated. skip.")
         return()
     endif()
 

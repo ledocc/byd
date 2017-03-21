@@ -30,7 +30,7 @@ function(byd__add_package package)
 
     byd__private__is_package_added(${package} already_added)
     if(already_added)
-        cmut_debug("[byd] - [package] : already added. skip.")
+        cmut_debug("[byd] - [${package}] : already added. skip.")
         return()
     endif()
 
