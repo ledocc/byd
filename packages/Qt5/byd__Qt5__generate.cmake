@@ -26,12 +26,12 @@ macro(__byd__Qt5__script__add_env_var)
         endif()
     endif()
 
-    if(prefix)
+    if(CMAKE_INSTALL_PREFIX)
         byd__script__env__prepend(${RUNTIME_PATH_ENV_VAR}:PATH "${prefix}/${LIBRARY_TO_LOAD_PATH}")
-        byd__script__env__prepend(INCLUDE "${prefix}/include")
-        byd__script__env__prepend(LIB "${prefix}/lib")
-        byd__script__env__prepend(PKG_CONFIG_PATH "${prefix}/lib/pkgconfig")
-        byd__script__env__prepend(PKG_CONFIG_PATH "${prefix}/share/pkgconfig")
+        byd__script__env__prepend(INCLUDE "${CMAKE_INSTALL_PREFIX}/include")
+        byd__script__env__prepend(LIB "${CMAKE_INSTALL_PREFIX}/lib")
+        byd__script__env__prepend(PKG_CONFIG_PATH "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+        byd__script__env__prepend(PKG_CONFIG_PATH "${CMAKE_INSTALL_PREFIX}/share/pkgconfig")
     endif()
 
     if(WIN32)
@@ -126,18 +126,9 @@ function(byd__Qt5__generate_configure_command package)
 
     byd__package__get_script_dir(${package} script_dir)
 
-    if(CMAKE_INSTALL_PREFIX)
-        set(prefix ${CMAKE_INSTALL_PREFIX})
-        if(NOT IS_ABSOLUTE "${CMAKE_INSTALL_PREFIX}")
-            set(prefix "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_PREFIX}")
-        endif()
-    endif()
-
-
-
     set(configure_arg)
-    if(prefix)
-        list(APPEND configure_arg "-prefix" "${prefix}")
+    if(CMAKE_INSTALL_PREFIX)
+        list(APPEND configure_arg "-prefix" "${CMAKE_INSTALL_PREFIX}")
     endif()
 
     if(CMAKE_BUILD_TYPE STREQUAL Debug)
