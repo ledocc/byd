@@ -34,6 +34,6 @@ endif()
 
 
 if(APPLE)
-    byd__fixup_dylib(${module})
+    byd__fixup_dylib(${package})
 endif()
 byd__cmake__add(${package} SKIP test)
