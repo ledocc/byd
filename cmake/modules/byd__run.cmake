@@ -69,7 +69,7 @@ function(__byd__build_package_dependency package)
         __byd__build_package(${dependency})
     endforeach()
 
-    byd__EP__set_package_argument(${package} GENERAL DEPENDS ${dependencies})
+    byd__EP__set_package_argument(${package} GENERAL DEPENDS "${dependencies}")
 
 endfunction()
 

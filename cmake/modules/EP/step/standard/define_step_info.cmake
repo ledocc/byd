@@ -13,7 +13,7 @@ function(byd__EP__step__standard__define_general_step_parameters)
 
     set(step_name GENERAL)
 
-    byd__EP__step__set_parameter_source(${step_name} DEPEND           package)
+    byd__EP__step__set_parameter_source(${step_name} DEPENDS          package)
     byd__EP__step__set_parameter_source(${step_name} PREFIX           package)
     byd__EP__step__set_parameter_source(${step_name} LIST_SEPARATOR   package)
     byd__EP__step__set_parameter_source(${step_name} TMP_DIR          package)
