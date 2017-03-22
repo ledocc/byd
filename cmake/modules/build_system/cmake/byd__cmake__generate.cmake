@@ -40,7 +40,7 @@ function(byd__cmake__generate_configure_cmake_args package)
     set(__cmake__args)
 
     if(CMAKE_INSTALL_PREFIX)
-        set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}/lib")
+        set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
     endif()
 
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_C_COMPILER)
