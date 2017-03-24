@@ -101,8 +101,8 @@ function(byd__autotool__generate_configure_command package)
         __byd__autotool__script__set_env_var_if_defined("CXX:PATH"     "CMAKE_CXX_COMPILER")
 
         __byd__autotool__script__prepend_env_var_if_defined("PATH:PATH"   "bin_dir")
-        __byd__autotool__script__prepend_env_var_if_defined("PKG_CONFIG:PATH" "pkg1_dir")
-        __byd__autotool__script__prepend_env_var_if_defined("PKG_CONFIG:PATH" "pkg2_dir")
+        __byd__autotool__script__prepend_env_var_if_defined("PKG_CONFIG_PATH:PATH" "pkg1_dir")
+        __byd__autotool__script__prepend_env_var_if_defined("PKG_CONFIG_PATH:PATH" "pkg2_dir")
 
 #        __byd__autotool__script__prepend_env_var_if_defined("CPPFLAGS" "c_include_flags")
         __byd__autotool__script__set_env_var_if_defined("CPPFLAGS" "cxx_include_flags")
