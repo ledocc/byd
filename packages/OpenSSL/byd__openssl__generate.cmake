@@ -97,8 +97,6 @@ function(byd__openssl__generate_configure_command package)
 
 
     byd__script__begin("${script_dir}/configure.cmake")
-        byd__script__add_run_command_or_abort_function()
-
         byd__script__command("${command}")
         if(WIN32 AND MSVC)
             byd__script__command("ms\\do_ms")
@@ -128,7 +126,6 @@ function(byd__openssl__generate_build_command package)
     endif()
 
     byd__script__begin("${script_dir}/build.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -157,7 +154,6 @@ function(byd__openssl__generate_install_command package)
 
 
     byd__script__begin("${script_dir}/install.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -187,7 +183,6 @@ function(byd__openssl__generate_test_command package)
 
 
     byd__script__begin("${script_dir}/test.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 

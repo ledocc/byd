@@ -1,5 +1,5 @@
-include("${BYD_ROOT}/cmake/modules/func.cmake")
 include("${BYD_ROOT}/cmake/modules/script/byd__script__function.cmake")
+include("${BYD_ROOT}/cmake/modules/script/byd__script.cmake")
 
 
 
@@ -7,34 +7,33 @@ include("${BYD_ROOT}/cmake/modules/script/byd__script__function.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__script__begin script_name)
+function(byd__script__define_function__run_command_or_abort)
 
-    byd__func__set_property(BYD__SCRIPT__CURRENT_SCRIPT_NAME "${script_name}")
-    byd__func__set_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT "")
-
-    byd__script__reset_function_defined()
-
+    byd__script__return_if_function_defined_else_define("run_command_or_abort")
+    byd__script__write(
+"
+function(run_command_or_abort command)
+    execute_process(COMMAND \${command} RESULT_VARIABLE result)
+    if(result)
+        set(msg \"Command failed (\${result}):\\n\")
+        foreach(arg IN LISTS \${command})
+            set(msg \"\${msg} \'\${arg}\'\")
+        endforeach()
+        message(FATAL_ERROR \"\${msg}\")
+    endif()
 endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
-function(byd__script__end)
-
-    byd__func__get_property(BYD__SCRIPT__CURRENT_SCRIPT_NAME    script_name)
-    byd__func__get_property(BYD__SCRIPT__CURRENT_SCRIPT_CONTENT script_content)
-
-    file(WRITE "${script_name}" "${script_content}")
-
-endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
-function(byd__script__write string)
-
-    byd__func__concat_to_property(
-        BYD__SCRIPT__CURRENT_SCRIPT_CONTENT
-        "${string}\n"
+"
         )
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__script__command)
+
+    byd__script__define_function__run_command_or_abort()
+    byd__script__write("run_command_or_abort(\"${ARGN}\")")
+
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##

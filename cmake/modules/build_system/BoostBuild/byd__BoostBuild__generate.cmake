@@ -108,7 +108,6 @@ function(byd__BoostBuild__generate_configure_command package)
 
 
     byd__script__begin("${script_dir}/configure.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -188,7 +187,6 @@ function(byd__BoostBuild__generate_build_command package)
 
 
     byd__script__begin("${script_dir}/build.cmake")
-        byd__script__add_run_command_or_abort_function()
 #        byd__script__command("${command_mv_user_config_jam}")
         byd__script__command("${command}")
     byd__script__end()
@@ -211,7 +209,6 @@ function(byd__BoostBuild__generate_install_command package)
     list(APPEND command install)
 
     byd__script__begin("${script_dir}/install.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 

@@ -89,7 +89,6 @@ function(byd__autotool__generate_configure_command package)
     set(command ${source_dir}/${configure_cmd} "${configure_args}" "${custom_configure_args}")
 
     byd__script__begin("${script_dir}/configure.cmake")
-        byd__script__add_run_command_or_abort_function()
         __byd__autotool__script__set_env_var_if_defined("AR:PATH"      "CMAKE_AR")
         __byd__autotool__script__set_env_var_if_defined("AS:PATH"      "CMAKE_ASM_COMPILER")
         __byd__autotool__script__set_env_var_if_defined("LD:PATH"      "CMAKE_LINKER")
@@ -139,7 +138,6 @@ function(byd__autotool__generate_build_command package)
     set(command ${command} -j${num_core})
 
     byd__script__begin("${script_dir}/build.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -163,7 +161,6 @@ function(byd__autotool__generate_install_command package)
 
 
     byd__script__begin("${script_dir}/install.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -204,7 +201,6 @@ function(byd__autotool__generate_test_command package)
 
 
     byd__script__begin("${script_dir}/test.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 

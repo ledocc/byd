@@ -86,7 +86,6 @@ function(byd__cmake__generate_build_command package)
 
 
     byd__script__begin("${script_dir}/build.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -109,7 +108,6 @@ function(byd__cmake__generate_install_command package)
     set(command "${CMAKE_COMMAND}" --build . --target install ${__build_options})
 
     byd__script__begin("${script_dir}/install.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
@@ -132,7 +130,6 @@ function(byd__cmake__generate_test_command package)
     set(command "${CMAKE_COMMAND}" --build . --target test ${__build_options})
 
     byd__script__begin("${script_dir}/test.cmake")
-        byd__script__add_run_command_or_abort_function()
         byd__script__command("${command}")
     byd__script__end()
 
