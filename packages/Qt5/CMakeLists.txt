@@ -49,6 +49,7 @@ ExternalProject_Add_Step(
     ${package}
     custom_patch
     COMMAND git apply "${VERSION_DIR}/patch/multicast.patch"
+#    COMMAND git apply "${VERSION_DIR}/patch/static_dependencies.patch"
     DEPENDEES update
     DEPENDERS configure
     WORKING_DIRECTORY ${SOURCE_DIR}

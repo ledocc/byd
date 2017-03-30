@@ -5,14 +5,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/_unix.cmake")
 
 byd__Qt5__configure__add_arg_if_dependency_is_added(${package} icu)
 
-byd__Qt5__configure__add_args(${package} -no-mtdev)
-byd__Qt5__configure__add_args(${package} -no-journald)
-byd__Qt5__configure__add_args(${package} -no-syslog)
-byd__Qt5__configure__add_args(${package} -system-xcb)
-byd__Qt5__configure__add_args(${package} -glib)
-byd__Qt5__configure__add_args(${package} -pulseaudio)
-byd__Qt5__configure__add_args(${package} -alsa)
-byd__Qt5__configure__add_args(${package} -gtk)
 
 byd__Qt5__configure__add_args(${package} -no-cups)
 byd__Qt5__configure__add_args(${package} -iconv)
@@ -23,7 +15,6 @@ byd__Qt5__configure__add_args(${package} -strip)
 byd__Qt5__configure__add_args(${package} -no-pch)
 byd__Qt5__configure__add_args(${package} -no-ltcg)
 byd__Qt5__configure__add_args(${package} -dbus-linked)
-
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
    byd__Qt5__configure__add_args(${package} -use-gold-linker)
 endif()

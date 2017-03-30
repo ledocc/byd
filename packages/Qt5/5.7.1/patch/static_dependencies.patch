@@ -1,0 +1,32 @@
+diff -Naur Qt5/qtbase/config.tests/unix/libpng/libpng.pro Qt5_patched/qtbase/config.tests/unix/libpng/libpng.pro
+--- Qt5/qtbase/config.tests/unix/libpng/libpng.pro	2016-12-01 09:17:04.000000000 +0100
++++ Qt5_patched/qtbase/config.tests/unix/libpng/libpng.pro	2017-03-25 15:59:50.670945366 +0100
+@@ -4,5 +4,5 @@
+     CONFIG += link_pkgconfig
+     PKGCONFIG += libpng
+ } else {
+-    LIBS += -lpng
++    LIBS += -lpng -lz
+ }
+diff -Naur Qt5/qtbase/mkspecs/common/linux.conf Qt5_patched/qtbase/mkspecs/common/linux.conf
+--- Qt5/qtbase/mkspecs/common/linux.conf	2016-12-01 09:17:04.000000000 +0100
++++ Qt5_patched/qtbase/mkspecs/common/linux.conf	2017-03-25 15:43:59.108243428 +0100
+@@ -28,7 +28,7 @@
+
+ QMAKE_LIBS              =
+ QMAKE_LIBS_DYNLOAD      = -ldl
+-QMAKE_LIBS_X11          = -lXext -lX11 -lm
++QMAKE_LIBS_X11          = -lXext -lX11 -lm -lxcb -lXau -lXdmcp
+ QMAKE_LIBS_NIS          = -lnsl
+ QMAKE_LIBS_EGL          = -lEGL
+ QMAKE_LIBS_OPENGL       = -lGL
+diff -Naur Qt5/qtbase/src/3rdparty/icu_dependency.pri Qt5_patched/qtbase/src/3rdparty/icu_dependency.pri
+--- Qt5/qtbase/src/3rdparty/icu_dependency.pri	2016-12-01 09:17:04.000000000 +0100
++++ Qt5_patched/qtbase/src/3rdparty/icu_dependency.pri	2017-03-25 15:55:41.530242352 +0100
+@@ -9,5 +9,5 @@
+         LIBS_PRIVATE += -licuin -licuuc -licudt
+     }
+ } else {
+-    LIBS_PRIVATE += -licui18n -licuuc -licudata
++    LIBS_PRIVATE += -licui18n -licuuc -licudata -ldl
+ }

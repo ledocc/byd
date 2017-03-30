@@ -27,7 +27,7 @@ macro(__byd__Qt5__script__add_env_var)
     endif()
 
     if(CMAKE_INSTALL_PREFIX)
-        byd__script__env__prepend(${RUNTIME_PATH_ENV_VAR}:PATH "${prefix}/${LIBRARY_TO_LOAD_PATH}")
+        byd__script__env__prepend(${RUNTIME_PATH_ENV_VAR}:PATH "${CMAKE_INSTALL_PREFIX}/${LIBRARY_TO_LOAD_PATH}")
         byd__script__env__prepend(INCLUDE "${CMAKE_INSTALL_PREFIX}/include")
         byd__script__env__prepend(LIB "${CMAKE_INSTALL_PREFIX}/lib")
         byd__script__env__prepend(PKG_CONFIG_PATH "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
@@ -102,7 +102,11 @@ endfunction()
 
 function(byd__Qt5__configure__add_arg_if_dependency_is_added package dependency)
 
-    byd__package__is_added(${dependency} is_added)
+    set(dependency_byd_name "${dependency}")
+    if(NOT "x${ARGN}" STREQUAL "x")
+        set(dependency_byd_name "${ARGN}")
+    endif()
+    byd__package__is_added(${dependency_byd_name} is_added)
     if(is_added)
         byd__Qt5__configure__add_args(-${dependency})
     else()
@@ -111,8 +115,26 @@ function(byd__Qt5__configure__add_arg_if_dependency_is_added package dependency)
 
 endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__Qt5__configure__use_open_source package)
     byd__Qt5__configure__add_args(${package} -opensource -confirm-license)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__Qt5__configure__add_arg_system_or_qt package dependency)
+
+    set(dependency_byd_name "${dependency}")
+    if(NOT "x${ARGN}" STREQUAL "x")
+        set(dependency_byd_name "${ARGN}")
+    endif()
+    byd__package__is_added(${dependency_byd_name} is_added)
+    if(is_added)
+        byd__Qt5__configure__add_args(${package} -system-${dependency})
+    else()
+        byd__Qt5__configure__add_args(${package} -qt-${dependency})
+    endif()
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -125,17 +147,28 @@ function(byd__Qt5__generate_configure_command package)
     byd__private__error_if_property_is_defined(${__property_name})
 
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_script_dir(${package} source_dir)
+
 
     set(configure_arg)
     if(CMAKE_INSTALL_PREFIX)
         list(APPEND configure_arg "-prefix" "${CMAKE_INSTALL_PREFIX}")
     endif()
 
+
     if(CMAKE_BUILD_TYPE STREQUAL Debug)
         list(APPEND configure_arg "-debug" "-qml-debug")
     else()
         list(APPEND configure_arg "-release" "-no-qml-debug")
     endif()
+
+
+    if(CMAKE_VERBOSE_MAKEFILE)
+        byd__Qt5__configure__add_args(${package} -verbose)
+    else()
+        byd__Qt5__configure__add_args(${package} -silent)
+    endif()
+
 
     __byd__Qt5__get_platform_compiler(platform_compiler)
     list(APPEND configure_arg "-platform" "${platform_compiler}")
@@ -150,7 +183,7 @@ function(byd__Qt5__generate_configure_command package)
     list(APPEND configure_arg "-nomake" "examples")
 
 
-    set(configure_cmd "../Qt5/configure")
+    set(configure_cmd "${source_dir}/Qt5/configure")
     if(WIN32)
         set(configure_cmd "${configure_cmd}.bat")
     endif()
