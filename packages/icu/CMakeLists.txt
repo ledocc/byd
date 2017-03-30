@@ -12,13 +12,34 @@ include("${CMAKE_CURRENT_LIST_DIR}/determine_toolset.cmake")
 
 
 if(MSVC)
+    byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_script_dir(${package} source_dir)
+    byd__private__get_num_core_available(num_jobs)
+
     set(ICU_SLN source/allinone/allinone.sln)
     set(WINDOWS_INSTALL_SCRIPT install_on_windows.cmake)
 
     set(UPDATE_CMD devenv /Upgrade ${ICU_SLN})
-    set(CMUT_EP_${package}_CONFIGURE_CMD echo no configuration on windows)
-    set(CMUT_EP_${package}_BUILD_CMD     MSbuild /m:${CMUT_NUM_CORE_AVAILABLE} /p:Configuration=${CMAKE_BUILD_TYPE} /p:PlatformToolset=${ICU_TOOLSET} ${ICU_SLN})
-    set(CMUT_EP_${package}_INSTALL_CMD   ${CMAKE_COMMAND} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -P "..\\${WINDOWS_INSTALL_SCRIPT}")
+
+    byd__script__begin("${script_dir}/update.cmake")
+        byd__script__command("devenv" "/Upgrade" "${ICU_SLN}")
+    byd__script__end()
+    byd__build_system__default_update_command(${package})
+
+    byd__script__begin("${script_dir}/configure.cmake")
+        byd__script__command("${CMAKE_COMMAND}" -E echo "no configuration step")
+    byd__script__end()
+    byd__build_system__default_configure_command(${package})
+
+    byd__script__begin("${script_dir}/build.cmake")
+        byd__script__command(MSbuild /m:${num_jobs} /p:Configuration=${CMAKE_BUILD_TYPE} /p:PlatformToolset="${ICU_TOOLSET}" "${ICU_SLN}")
+    byd__script__end()
+    byd__build_system__default_build_command(${package})
+
+    byd__script__begin("${script_dir}/install.cmake")
+        byd__script__command("${CMAKE_COMMAND}" -DCMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}" -P "${source_dir}/${WINDOWS_INSTALL_SCRIPT}")
+    byd__script__end()
+    byd__build_system__default_install_command(${package})
 
 
 else()
