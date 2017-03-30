@@ -69,7 +69,7 @@ function(byd__script__env__define_function__add_env)
 
 
     byd__script__env__get_separator(separator)
-    byd__script__write(
+    byd__script__write_function(
 "
 cmake_policy(SET CMP0057 NEW)
 function(add_env variable value)

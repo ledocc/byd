@@ -10,7 +10,7 @@ include("${BYD_ROOT}/cmake/modules/script/byd__script.cmake")
 function(byd__script__define_function__run_command_or_abort)
 
     byd__script__return_if_function_defined_else_define("run_command_or_abort")
-    byd__script__write(
+    byd__script__write_function(
 "
 function(run_command_or_abort command)
     execute_process(COMMAND \${command} RESULT_VARIABLE result)
