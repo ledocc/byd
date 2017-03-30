@@ -3,12 +3,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 
 
 if(BUILD_SHARED_LIBS)
-    byd__cmake__add_cmake_arg(${package} POCO_STATIC OFF)
+    byd__cmake__configure__add_arg(${package} POCO_STATIC OFF)
 else()
-    byd__cmake__add_cmake_arg(${package} POCO_STATIC ON)
+    byd__cmake__configure__add_arg(${package} POCO_STATIC ON)
 endif()
 
-byd__cmake__add_cmake_arg(${package} HUNTER_ENABLED OFF)
+byd__cmake__configure__add_arg(${package} HUNTER_ENABLED OFF)
 
 
 byd__package__get_components_to_build(${package} components_to_build)
@@ -27,7 +27,7 @@ if(components_to_build)
             set(enable OFF)
         endif()
 
-        byd__cmake__add_cmake_arg(${package} "ENABLE_${COMPONENT}" "${enable}")
+        byd__cmake__configure__add_arg(${package} "ENABLE_${COMPONENT}" "${enable}")
 
     endforeach()
 endif()

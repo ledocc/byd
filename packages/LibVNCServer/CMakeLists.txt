@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 
 macro(LibVNCServer_add_config_arg package_name cmake_option)
     byd__package__is_build(${package_name} package_is_build)
-    byd__cmake__add_cmake_arg(${package} ${cmake_option} ${package_is_build})
+    byd__cmake__configure__add_arg(${package} ${cmake_option} ${package_is_build})
 endmacro()
 
 
@@ -18,7 +18,7 @@ if(components)
         set(LIBVNCSERVER_BUILD_${component} ON)
     endforeach()
     foreach(component vncserver vncclient)
-        byd__cmake__add_cmake_arg(${package} LIBVNCSERVER_BUILD_${component} ${LIBVNCSERVER_BUILD_${component}})
+        byd__cmake__configure__add_arg(${package} LIBVNCSERVER_BUILD_${component} ${LIBVNCSERVER_BUILD_${component}})
     endforeach()
 endif()
 

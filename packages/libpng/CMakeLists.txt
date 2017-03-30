@@ -10,7 +10,7 @@ if(BUILD_SHARED_LIBS)
     set(BUILD_STATIC_LIBS OFF)
 endif()
 
-byd__cmake__add_cmake_arg(${package} PNG_SHARED ${BUILD_SHARED_LIBS})
-byd__cmake__add_cmake_arg(${package} PNG_STATIC ${BUILD_STATIC_LIBS})
+byd__cmake__configure__add_arg(${package} PNG_SHARED ${BUILD_SHARED_LIBS})
+byd__cmake__configure__add_arg(${package} PNG_STATIC ${BUILD_STATIC_LIBS})
 
 byd__cmake__add(${package})
