@@ -3,6 +3,7 @@
 
 include("${BYD_ROOT}/cmake/modules/func.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/define_step_info.cmake")
+include("${BYD_ROOT}/cmake/modules/option.cmake")
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -46,6 +47,8 @@ function(byd__initialize)
         byd__disable_test_step(1)
     endif()
 
+
+    byd__option__jobs()
 
 
     byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)
