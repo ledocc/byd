@@ -2,6 +2,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 
 byd__package__add_version(
     ${package} 1.2.11-unowhy
-    URL "https://github.com/ledocc/zlib/archive/1.2.11-unowhy.tar.gz"
-    URL_HASH SHA1=dc613f50140492f61fecea1ba5539b0e49abdd48
+    URL "https://github.com/ledocc/zlib/archive/v1.2.11-unowhy.tar.gz"
+    URL_HASH SHA1=a511e8198ec8d72c7590d03fc9a01973acbbcfc8
 )
