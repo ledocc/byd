@@ -12,6 +12,12 @@ function(byd__package__set_dependency package)
 
 endfunction()
 
+function(byd__package__add_dependency package)
+
+    __byd__package__append_property(DEPENDENCY "${ARGN}")
+
+endfunction()
+
 function(byd__package__get_dependency package result)
 
     __byd__package__get_property(DEPENDENCY dependency)
