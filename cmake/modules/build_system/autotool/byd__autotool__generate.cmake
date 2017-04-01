@@ -9,6 +9,7 @@ include("${BYD_ROOT}/cmake/modules/script.cmake")
 include("${BYD_ROOT}/cmake/modules/build_system/autotool/byd__autotool__configure.cmake")
 include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__collect_flags.cmake")
 include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__default.cmake")
+include("${BYD_ROOT}/cmake/modules/build_system/byd__build_system__inject_env_var.cmake")
 
 
 
@@ -149,6 +150,7 @@ function(byd__autotool__generate_build_command package)
     set(command ${command} -j${num_core})
 
     byd__script__begin("${script_dir}/build.cmake")
+        byd__build_system__inject_env_var_in_script(${package} BUILD)
         byd__script__command("${command}")
     byd__script__end()
 
@@ -172,6 +174,7 @@ function(byd__autotool__generate_install_command package)
 
 
     byd__script__begin("${script_dir}/install.cmake")
+        byd__build_system__inject_env_var_in_script(${package} INSTALL)
         byd__script__command("${command}")
     byd__script__end()
 
@@ -212,6 +215,7 @@ function(byd__autotool__generate_test_command package)
 
 
     byd__script__begin("${script_dir}/test.cmake")
+        byd__build_system__inject_env_var_in_script(${package} TEST)
         byd__script__command("${command}")
     byd__script__end()
 
