@@ -24,6 +24,7 @@ function(byd__autotool__add package)
         )
 
 
+    byd__autotool__generate_update_command(${package})
     byd__autotool__generate_configure_command(${package})
     byd__autotool__generate_build_command(${package})
 

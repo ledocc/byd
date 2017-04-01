@@ -52,6 +52,30 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__autotool__generate_update_command package)
+
+    set(__property_name BYD__EP__UPDATE__UPDATE_COMMAND__${package})
+    byd__private__error_if_property_is_defined(${__property_name})
+
+    byd__package__get_script_dir(${package} script_dir)
+    __byd__autotool__get_source_dir(${package} source_dir)
+
+
+    byd__script__begin("${script_dir}/update.cmake")
+        byd__build_system__inject_env_var_in_script(${package} UPDATE)
+        byd__script__write("if(NOT EXISTS \"${source_dir}/configure\")")
+        byd__script__command("${source_dir}/autogen.sh")
+        byd__script__write("endif()")
+    byd__script__end()
+
+
+    byd__build_system__default_update_command(${package})
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__autotool__generate_configure_command package)
 
@@ -103,6 +127,7 @@ function(byd__autotool__generate_configure_command package)
     set(command "${source_dir}/${configure_cmd}" "${configure_args}" "${custom_configure_args}")
 
     byd__script__begin("${script_dir}/configure.cmake")
+        byd__build_system__inject_env_var_in_script(${package} CONFIGURE)
         __byd__autotool__script__set_env_var_if_defined("AR:PATH"      "CMAKE_AR")
         __byd__autotool__script__set_env_var_if_defined("AS:PATH"      "CMAKE_ASM_COMPILER")
         __byd__autotool__script__set_env_var_if_defined("LD:PATH"      "CMAKE_LINKER")
@@ -125,15 +150,6 @@ function(byd__autotool__generate_configure_command package)
         __byd__autotool__script__set_env_var_if_defined("CFLAGS"   "c_compile_flags")
         __byd__autotool__script__set_env_var_if_defined("CXXFLAGS" "cxx_compile_flags")
         __byd__autotool__script__set_env_var_if_defined("LDFLAGS"  "cxx_link_flags")
-
-        byd__script__write("if(NOT EXISTS \"${source_dir}/${configure_cmd}\")\n")
-        byd__script__write("    if(EXISTS \"${source_dir}/autogen.sh\")\n")
-        byd__script__command("${source_dir}/autogen.sh")
-        byd__script__write("    else()\n")
-        byd__script__write("        message(FATAL \"can't found configure or autogen.sh\")\n")
-        byd__script__write("    endif()\n")
-        byd__script__write("endif()\n")
-
 
         byd__script__command("${command}")
     byd__script__end()
