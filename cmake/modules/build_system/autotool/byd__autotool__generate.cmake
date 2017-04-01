@@ -38,6 +38,18 @@ macro(__byd__autotool__script__prepend_env_var_if_defined variable value)
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
+
+function(__byd__autotool__get_source_dir package result)
+    byd__package__get_source_dir(${package} source_dir)
+    byd__package__get_source_sub_dir(${package} source_sub_dir)
+
+    if(source_sub_dir)
+        set(source_dir "${source_dir}/${source_sub_dir}")
+    endif()
+
+    byd__func__return(source_dir)
+endfunction()
+
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
@@ -87,8 +99,8 @@ function(byd__autotool__generate_configure_command package)
 
 
     byd__autotool__configure__get_configure_cmd(${package} configure_cmd)
-    byd__package__get_source_dir(${package} source_dir)
-    set(command ${source_dir}/${configure_cmd} "${configure_args}" "${custom_configure_args}")
+    __byd__autotool__get_source_dir(${package} source_dir)
+    set(command "${source_dir}/${configure_cmd}" "${configure_args}" "${custom_configure_args}")
 
     byd__script__begin("${script_dir}/configure.cmake")
         __byd__autotool__script__set_env_var_if_defined("AR:PATH"      "CMAKE_AR")
