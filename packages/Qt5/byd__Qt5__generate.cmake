@@ -147,7 +147,7 @@ function(byd__Qt5__generate_configure_command package)
     byd__private__error_if_property_is_defined(${__property_name})
 
     byd__package__get_script_dir(${package} script_dir)
-    byd__package__get_script_dir(${package} source_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
 
     set(configure_arg)
@@ -183,7 +183,7 @@ function(byd__Qt5__generate_configure_command package)
     list(APPEND configure_arg "-nomake" "examples")
 
 
-    set(configure_cmd "${source_dir}/Qt5/configure")
+    set(configure_cmd "${source_dir}/configure")
     if(WIN32)
         set(configure_cmd "${configure_cmd}.bat")
     endif()
