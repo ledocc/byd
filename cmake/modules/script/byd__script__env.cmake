@@ -63,24 +63,18 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__script__env__define_function__add_env)
+function(byd__script__env__define_function__set_env)
 
-    byd__script__return_if_function_defined_else_define("add_env")
+    byd__script__return_if_function_defined_else_define("set_env")
 
-
-    byd__script__env__get_separator(separator)
     byd__script__write_function(
 "
 cmake_policy(SET CMP0057 NEW)
-function(add_env variable value)
-    set(__new_value \"\${value}\")
-    set(__tmp_value \$ENV{\${variable}})
-    if(NOT \"x\${__tmp_value}\" STREQUAL \"x\")
-        if(BEFORE IN_LIST ARGN)
-            set(__new_value \"\${__new_value}${separator}\${__tmp_value}\")
-        else()
-            set(__new_value \"\${__tmp_value}${separator}\${__new_value}\")
-        endif()
+function(set_env variable value)
+    if(PATH IN_LIST ARGN)
+        file(TO_NATIVE_PATH \"\${value}\" __new_value)
+    else()
+        set(__new_value \"\${value}\")
     endif()
     set(ENV{\${variable}} \"\${__new_value}\")
 endfunction()
@@ -91,12 +85,45 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__script__env__append variable value)
+function(byd__script__env__define_function__add_env)
 
+    byd__script__return_if_function_defined_else_define("add_env")
+
+
+    byd__script__env__get_separator(separator)
+    byd__script__write_function(
+"
+cmake_policy(SET CMP0057 NEW)
+function(add_env variable value)
+    if(PATH IN_LIST ARGN)
+        file(TO_NATIVE_PATH \"\${value}\" __new_value)
+    else()
+        set(__new_value \"\${value}\")
+    endif()
+
+    set(__tmp_value \$ENV{\${variable}})
+    if(NOT \"x\${__tmp_value}\" STREQUAL \"x\")
+        if(BEFORE IN_LIST ARGN)
+            set(__new_value \"\${__new_value}${separator}\${__tmp_value}\")
+        else()
+            set(__new_value \"\${__tmp_value}${separator}\${__new_value}\")
+        endif()
+    endif()
+    
+    set(ENV{\${variable}} \"\${__new_value}\")
+endfunction()
+"
+    )
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__script__env__append variable value)
     byd__script__env__define_function__add_env()
 
-    byd__script__env__handle_variable_type(${variable} ${value} variable value)
-    byd__script__write("add_env(${variable} \"${value}\")")
+    byd__script__env__get_variable_type("${variable}" variable_name variable_type)
+    byd__script__write("add_env(${variable_name} \"${value}\" ${variable_type})")
 
 endfunction()
 
@@ -104,18 +131,18 @@ endfunction()
 
 function(byd__script__env__prepend variable value)
     byd__script__env__define_function__add_env()
-
-    byd__script__env__handle_variable_type(${variable} ${value} variable value)
-    byd__script__write("add_env(${variable} \"${value}\" BEFORE)")
+    
+    byd__script__env__get_variable_type("${variable}" variable_name variable_type)
+    byd__script__write("add_env(${variable_name} \"${value}\" BEFORE ${variable_type})")
 
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__script__env__set variable value)
-
-    byd__script__env__handle_variable_type("${variable}" "${value}" variable value)
-    byd__script__write("set(ENV{${variable}} \"${value}\")")
+    byd__script__env__define_function__set_env()
+    byd__script__env__get_variable_type("${variable}" variable_name variable_type)
+    byd__script__write("set_env(${variable_name} \"${value}\" ${variable_type})")
 
 endfunction()
 
