@@ -61,6 +61,7 @@ function(byd__cmake__generate_configure_cmake_args package)
 
 
     byd__func__add_to_property(${__property_name} "${__cmake_args}")
+    byd__EP__set_package_argument(${package} CONFIGURE CMAKE_GENERATOR "${CMAKE_GENERATOR}")
 
 
     cmut_debug("[byd][cmake] - [${package}] : cmake_args :")
