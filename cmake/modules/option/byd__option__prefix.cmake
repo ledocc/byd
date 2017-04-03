@@ -1,5 +1,5 @@
 
-include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
+include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
 
 
 
