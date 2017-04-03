@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 
 
 byd__package__set_dependency(${package}
-#   doubleconvertion
+#    doubleconvertion
 #    freetype
 #    harfbuzz
     icu
@@ -18,24 +18,42 @@ byd__package__set_dependency(${package}
 if(UNIX AND NOT APPLE)
     byd__package__add_dependency(${package}
 #        alsa
-        glib
+#        expat
+#        fontconfig
+#        glib
 #        gtk
-        mtdev
+#        ICE
+#        libinput
+#        libxslt
+        libwebp
+#        mesa
+#        mtdev
 #        journald
 #        pulseaudio
 #        syslog
+#        SM
 #        xcb
 #        xcb-util-cursor
 #        xcb-util-errors
-#        xcb-util-image
 #        xcb-util-keysyms
+#        xcb-util-image
+#        xcb-util-renderutil
 #        xcb-util-wm
 #        xkbcommon
 #        xkbcommon-evdev
+#        xshmfence
 #        X11
-#        Xi
+#        Xcomposite
+#        Xcursor
+#        Xdamage
 #        Xext
+#        Xfixes
+#        Xi
+#        Xrandr
 #        Xrender
+#        Xtst
+#        Xxf86vm
+#        XScrnSaver
         )
 endif()
 
