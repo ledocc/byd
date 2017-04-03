@@ -77,8 +77,12 @@ function(__byd__BoostBuild__script__generate_user_config_jam)
 
 
 
-    byd__script__write("using ${BOOST_TOOLSET}")
-    byd__script__write("    : ${CMAKE_CXX_COMPILER_VERSION}")
+    byd__script__write("using ${BOOST_TOOLSET_NAME}")
+    if(MSVC AND BOOST_TOOLSET_VERSION)
+        byd__script__write("    : ${BOOST_TOOLSET_VERSION}")
+    else()
+        byd__script__write("    : ${CMAKE_CXX_COMPILER_VERSION}")
+    endif()
     byd__script__write("    : \"${CMAKE_CXX_COMPILER}\"")
     byd__script__write("    : <cflags>\"${CMAKE_C_FLAGS}\"")
     byd__script__write("      <cxxflags>\"${CMAKE_CXX_FLAGS}\"")
