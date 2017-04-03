@@ -64,7 +64,8 @@ else()
     byd__autotool__configure__add_args(${package} --disable-samples)
     byd__autotool__configure__add_args(${package} --enable-rpath)
 
-    byd__autotool__configure__set_configure_cmd(${package} "source/runConfigureICU" ${${package}_PLATFORM})
+    byd__package__set_source_sub_dir(${package} "source")
+    byd__autotool__configure__set_configure_cmd(${package} "runConfigureICU" ${${package}_PLATFORM})
 
     if(APPLE)
         byd__fixup_dylib(${package})
