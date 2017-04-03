@@ -3,17 +3,16 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 
 
 byd__package__set_dependency(${package}
-    zlib
-    libpng
-    libjpeg_turbo
 #   doubleconvertion
-    freetype
+#    freetype
 #    harfbuzz
-    OpenSSL
-    libproxy
-    pcre
     icu
-    libproxy
+#    libjpeg_turbo
+#    libpng
+#    libproxy
+    OpenSSL
+#    pcre
+    zlib
     )
 
 if(UNIX AND NOT APPLE)

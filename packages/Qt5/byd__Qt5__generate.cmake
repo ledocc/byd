@@ -163,12 +163,13 @@ function(byd__Qt5__generate_configure_command package)
     endif()
 
 
-    if(CMAKE_VERBOSE_MAKEFILE)
-        byd__Qt5__configure__add_args(${package} -verbose)
-    else()
-        byd__Qt5__configure__add_args(${package} -silent)
+    if(NOT WIN32)
+        if(CMAKE_VERBOSE_MAKEFILE)
+            byd__Qt5__configure__add_args(${package} -verbose)
+        else()
+            byd__Qt5__configure__add_args(${package} -silent)
+        endif()
     endif()
-
 
     __byd__Qt5__get_platform_compiler(platform_compiler)
     list(APPEND configure_arg "-platform" "${platform_compiler}")

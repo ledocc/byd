@@ -18,13 +18,14 @@ if(WIN32)
 
 
     byd__package__get_script_dir(${package} script_dir)
-    byd__package__get_script_dir(${package} source_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
+    
     byd__script__begin("${script_dir}/configure.cmake")
         byd__script__env__set(GYP_MSVS_VERSION ${MSVC_YEARS})
-        byd__script__command("${source_dir}/src/tools/gyp/gyp.bat" --no-circular-check)
-        byd__script__command("${source_dir}/src/client/windows/breakpad_client.gyp")
-        byd__script__command("${source_dir}/src/tools/windows/dump_syms/dump_syms.gyp")
+        byd__script__command("${source_dir}/src/tools/gyp/gyp.bat" --no-circular-check
+                             "${source_dir}/src/client/windows/breakpad_client.gyp"
+                             "${source_dir}/src/tools/windows/dump_syms/dump_syms.gyp")
     byd__script__end()
     byd__build_system__default_configure_command(${package})
 
@@ -43,6 +44,8 @@ if(WIN32)
     byd__script__end()
     byd__build_system__default_install_command(${package})
 
+    
+    byd__EP__add(${package})
 
 elseif(CMAKE_HOST_UNIX)
 

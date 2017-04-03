@@ -19,6 +19,7 @@ function(byd__openssl__generate_configure_command package)
     byd__private__error_if_property_is_defined(${__property_name})
 
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -66,11 +67,13 @@ function(byd__openssl__generate_configure_command package)
         list(APPEND configure_args "--prefix=${prefix}")
     endif()
 
-    if(BUILD_SHARED_LIBS)
+    
+    if(BUILD_SHARED_LIBS AND NOT WIN32)
         list(APPEND configure_args "shared")
     else()
         list(APPEND configure_args "no-shared")
     endif()
+    
 
     if(BYD__zlib)
         if(BUILD_SHARED_LIBS)
@@ -99,7 +102,7 @@ function(byd__openssl__generate_configure_command package)
     byd__script__begin("${script_dir}/configure.cmake")
         byd__script__command("${command}")
         if(WIN32 AND MSVC)
-            byd__script__command("ms\\do_ms")
+            byd__script__command("${source_dir}/ms/do_ms.bat")
         endif()
     byd__script__end()
 
@@ -116,13 +119,14 @@ function(byd__openssl__generate_build_command package)
     byd__private__error_if_property_is_defined(${__property_name})
 
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
 
     if(UNIX)
         byd__private__get_num_core_available(num_core)
         set(command make -j${num_core})
     elseif(WIN32 AND MSVC)
-        set(command nmake -f "ms\\ntdll.mak")
+        set(command nmake -f "${source_dir}/ms/ntdll.mak")
     endif()
 
     byd__script__begin("${script_dir}/build.cmake")
@@ -142,6 +146,7 @@ function(byd__openssl__generate_install_command package)
     byd__private__error_if_property_is_defined(${__property_name})
 
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
 
 
@@ -149,7 +154,7 @@ function(byd__openssl__generate_install_command package)
         byd__private__get_num_core_available(num_core)
         set(command make install_sw -j${num_core})
     elseif(WIN32 AND MSVC)
-        set(command nmake -f "ms\\ntdll.mak" install_sw)
+        set(command nmake -f "${source_dir}/ms/ntdll.mak" install)
     endif()
 
 
@@ -170,6 +175,7 @@ function(byd__openssl__generate_test_command package)
     byd__private__error_if_property_is_defined(${__property_name})
 
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_source_dir(${package} source_dir)
 
 
 
@@ -177,7 +183,7 @@ function(byd__openssl__generate_test_command package)
         # disable -j option ==>> fail the test
         set(command make test)
     elseif(WIN32 AND MSVC)
-        set(command nmake -f "ms\\ntdll.mak" test)
+        set(command nmake -f "${source_dir}/ms/ntdll.mak" test)
     endif()
 
 
