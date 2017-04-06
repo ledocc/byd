@@ -57,7 +57,10 @@ function(byd__add_package package)
 
     # define version to build
     if(NOT PARAM_VERSION)
-        byd__package__get_default_version(${package} PARAM_VERSION)
+        byd__package__get_version_to_build(${package} PARAM_VERSION)
+        if(NOT PARAM_VERSION)
+            byd__package__get_default_version(${package} PARAM_VERSION)
+        endif()
     endif()
     cmut_info("[byd] - [${package}] : version to build ${PARAM_VERSION}")
     byd__package__set_version_to_build(${package} "${PARAM_VERSION}")
