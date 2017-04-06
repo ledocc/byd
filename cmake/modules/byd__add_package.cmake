@@ -28,12 +28,6 @@ function(byd__add_package package)
 
     byd__initialize_if_not_done()
 
-    byd__private__is_package_added(${package} already_added)
-    if(already_added)
-        cmut_debug("[byd] - [${package}] : already added. skip.")
-        return()
-    endif()
-
     # parse arguments
     set(options "")
     set(oneValueArgs VERSION)
@@ -75,7 +69,7 @@ function(byd__add_package package)
         foreach(component IN LISTS PARAM_COMPONENTS)
             cmut_info("[byd] - [${package}] : - ${component}")
         endforeach()
-        byd__package__set_components_to_build(${package} "${PARAM_COMPONENTS}")
+        byd__package__add_components_to_build(${package} "${PARAM_COMPONENTS}")
     endif()
 
 
@@ -89,7 +83,6 @@ function(byd__add_package package)
 
 
     # add to build list
-    byd__private__set_package_added(${package})
     __byd__add_package_to_build_list(${package})
 
 endfunction()

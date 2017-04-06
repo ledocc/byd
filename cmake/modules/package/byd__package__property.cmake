@@ -1,5 +1,7 @@
 
 
+include("${CMUT_ROOT}/cmut_message.cmake")
+
 include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
 include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
@@ -117,6 +119,14 @@ endfunction()
 function(byd__package__set_version_to_build package version)
     byd__private__assert_not_empty("${version}")
 
+    __byd__package__get_property(VERSION_TO_BUILD current_version_to_build)
+    if(current_version_to_build)
+        if(NOT version STREQUAL current_version_to_build)
+            cmut_fatal("[byd][package] - [${package}] : version to build \"${version}\" not match current one \"${current_version_to_build}\".")
+            return()
+        endif()
+    endif()
+
     __byd__package__set_property(VERSION_TO_BUILD "${version}")
 
     __byd__private__version_to_name(${version} version_name)
@@ -141,9 +151,9 @@ endfunction()
 ##  COMPONENTS_TO_BUILD  ---------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__package__set_components_to_build package components)
+function(byd__package__add_components_to_build package components)
 
-    __byd__package__set_property(COMPONENTS_TO_BUILD "${components}")
+    __byd__package__append_property(COMPONENTS_TO_BUILD "${components}")
 
 endfunction()
 

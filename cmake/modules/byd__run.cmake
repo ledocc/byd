@@ -175,6 +175,8 @@ function(byd__run)
     byd__func__set_property("__BYD__BUILD_PACKAGE_STACK" "")
 
     byd__func__get_property(__BYD__PACKAGE_TO_BUILD packages)
+    list(REMOVE_DUPLICATES packages)
+
     foreach(package IN LISTS packages)
         __byd__build_package(${package})
     endforeach()
