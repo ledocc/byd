@@ -213,6 +213,7 @@ function(byd__Qt5__generate_build_command package)
     byd__package__get_script_dir(${package} script_dir)
 
 
+    byd__private__get_num_core_available(num_core)
     if(UNIX)
         byd__private__get_num_core_available(num_core)
         set(command make -j${num_core})
@@ -222,6 +223,7 @@ function(byd__Qt5__generate_build_command package)
 
     byd__script__begin("${script_dir}/build.cmake")
         __byd__Qt5__script__add_env_var()
+        byd__script__env__set(NINJAFLAGS "-j${num_core}")
         byd__script__command("${command}")
     byd__script__end()
 
