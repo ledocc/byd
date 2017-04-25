@@ -1,0 +1,62 @@
+diff -Naur boost_1_63_0/libs/locale/build/Jamfile.v2 boost_1_63_0_with_icu_and_msvc/libs/locale/build/Jamfile.v2
+--- boost_1_63_0/libs/locale/build/Jamfile.v2	2016-12-22 13:33:16.000000000 +0100
++++ boost_1_63_0_with_icu_and_msvc/libs/locale/build/Jamfile.v2	2017-04-03 02:19:05.434791300 +0200
+@@ -75,12 +75,6 @@
+                             <link>shared 
+                             <runtime-link>shared ;
+ 
+-    searched-lib icuuc : :  <toolset>msvc
+-                            <variant>debug
+-                            <name>icuucd
+-                            <search>$(ICU_PATH)/lib
+-                            <link>shared
+-                            <runtime-link>shared ;
+ 
+     searched-lib icuuc : :  <name>this_is_an_invalid_library_name ;
+ 
+@@ -102,15 +96,8 @@
+                             <link>shared
+                             <runtime-link>shared ;
+ 
+-    searched-lib icuin : :  <toolset>msvc
+-                            <variant>debug
+-                            <name>icuind
+-                            <search>$(ICU_PATH)/lib
+-                            <link>shared
+-                            <runtime-link>shared ;
+ 
+     searched-lib icuin : :  <toolset>msvc
+-                            <variant>release
+                             <name>icuin
+                             <search>$(ICU_PATH)/lib
+                             <link>shared
+diff -Naur boost_1_63_0/libs/regex/build/Jamfile.v2 boost_1_63_0_with_icu_and_msvc/libs/regex/build/Jamfile.v2
+--- boost_1_63_0/libs/regex/build/Jamfile.v2	2016-12-22 13:33:19.000000000 +0100
++++ boost_1_63_0_with_icu_and_msvc/libs/regex/build/Jamfile.v2	2017-04-03 02:20:41.372291300 +0200
+@@ -48,11 +48,7 @@
+    else
+    {
+       lib icuuc : :                                                               <runtime-link>shared <conditional>@path_options ;
+-      lib icuuc : : <toolset>msvc                     <variant>debug <name>icuucd <runtime-link>shared <conditional>@path_options ;
+-      lib icuuc : : <toolset>intel <target-os>windows <variant>debug <name>icuucd <runtime-link>shared <conditional>@path_options ;
+       lib icuuc : :                                                  <name>sicuuc <runtime-link>static <conditional>@path_options ;
+-      lib icuuc : : <toolset>msvc                     <variant>debug <name>sicuucd <runtime-link>static <conditional>@path_options ;
+-      lib icuuc : : <toolset>intel <target-os>windows <variant>debug <name>sicuucd <runtime-link>static <conditional>@path_options ;
+       lib icuuc : : <name>this_is_an_invalid_library_name ;
+ 
+       lib icudt : : <name>icudata                                   <runtime-link>shared <conditional>@path_options ;
+@@ -64,14 +60,10 @@
+       lib icudt : : <name>this_is_an_invalid_library_name ;
+ 
+       lib icuin : :                                                    <name>icui18n <runtime-link>shared <conditional>@path_options ;
+-      lib icuin : : <toolset>msvc                     <variant>debug   <name>icuind  <runtime-link>shared <conditional>@path_options ;
+       lib icuin : : <toolset>msvc                                      <name>icuin   <runtime-link>shared <conditional>@path_options ;
+-      lib icuin : : <toolset>intel <target-os>windows <variant>debug   <name>icuind  <runtime-link>shared <conditional>@path_options ;
+       lib icuin : : <toolset>intel <target-os>windows                  <name>icuin   <runtime-link>shared <conditional>@path_options ;
+       lib icuin : :                                                    <name>sicui18n <runtime-link>static <conditional>@path_options ;
+-      lib icuin : : <toolset>msvc                     <variant>debug   <name>sicuind  <runtime-link>static <conditional>@path_options ;
+       lib icuin : : <toolset>msvc                                      <name>sicuin   <runtime-link>static <conditional>@path_options ;
+-      lib icuin : : <toolset>intel <target-os>windows <variant>debug   <name>sicuind  <runtime-link>static <conditional>@path_options ;
+       lib icuin : : <toolset>intel <target-os>windows                  <name>sicuin   <runtime-link>static <conditional>@path_options ;
+       lib icuin : : <name>this_is_an_invalid_library_name ;
+ 
