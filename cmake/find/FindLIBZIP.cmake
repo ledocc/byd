@@ -65,14 +65,14 @@ set(LIBZIP_NAMES_DEBUG zipd)
 
 # Try each search configuration.
 foreach(search ${_LIBZIP_SEARCHES})
-  find_path(LIBZIP_INCLUDE_DIR NAMES zip.h ${${search}} PATH_SUFFIXES include)
+  find_path(LIBZIP_INCLUDE_DIR NAMES zip.h ${${search}} PATH_SUFFIXES include NO_CMAKE_FIND_ROOT_PATH)
 endforeach()
 
 # Allow LIBZIP_LIBRARY to be set manually, as the location of the libzip library
 if(NOT LIBZIP_LIBRARY)
   foreach(search ${_LIBZIP_SEARCHES})
-    find_library(LIBZIP_LIBRARY_RELEASE NAMES ${LIBZIP_NAMES} ${${search}} PATH_SUFFIXES lib)
-    find_library(LIBZIP_LIBRARY_DEBUG NAMES ${LIBZIP_NAMES_DEBUG} ${${search}} PATH_SUFFIXES lib)
+    find_library(LIBZIP_LIBRARY_RELEASE NAMES ${LIBZIP_NAMES} ${${search}} PATH_SUFFIXES lib NO_CMAKE_FIND_ROOT_PATH)
+    find_library(LIBZIP_LIBRARY_DEBUG NAMES ${LIBZIP_NAMES_DEBUG} ${${search}} PATH_SUFFIXES lib NO_CMAKE_FIND_ROOT_PATH)
   endforeach()
 
   include(SelectLibraryConfigurations)
