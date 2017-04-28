@@ -1,0 +1,10 @@
+diff -Naur qt5/qtdeclarative/src/qml/qml/qqmlcontext.h qt5-patch/qtdeclarative/src/qml/qml/qqmlcontext.h
+--- qt5/qtdeclarative/src/qml/qml/qqmlcontext.h	2016-11-11 07:18:01.000000000 +0100
++++ qt5-patch/qtdeclarative/src/qml/qml/qqmlcontext.h	2017-04-28 15:50:14.322432312 +0200
+@@ -101,6 +101,4 @@
+ };
+ QT_END_NAMESPACE
+ 
+-Q_DECLARE_METATYPE(QList<QObject*>)
+-
+ #endif // QQMLCONTEXT_H

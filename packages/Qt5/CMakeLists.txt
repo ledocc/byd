@@ -47,6 +47,7 @@ ExternalProject_Add_Step(
     ${package}
     custom_patch
     COMMAND git apply --ignore-whitespace "${VERSION_DIR}/patch/multicast.patch"
+    COMMAND git apply --ignore-whitespace "${VERSION_DIR}/patch/qml.patch"
 #    COMMAND git apply "${VERSION_DIR}/patch/static_dependencies.patch"
     DEPENDEES update
     DEPENDERS configure
