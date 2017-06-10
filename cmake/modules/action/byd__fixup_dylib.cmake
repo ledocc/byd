@@ -18,6 +18,13 @@ function(byd__fixup_dylib package)
     byd__package__get_script_dir(${package} script_dir)
     byd__package__get_source_dir(${package} source_dir)
 
+
+    if(NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX})
+        cmut_warn("CMAKE_INSTALL_PREFIX not absolute path. fixup_dylib will fail. use cmut__config__resolve_install_prefix to convert.")
+        cmut_warn("use cmut__config__resolve_install_prefix to convert CMAKE_INSTALL_PREFIX to absolute path.")
+    endif()
+
+
     configure_file(
         "${BYD_ROOT}/cmake/modules/EP/step/fixup_dylib/fixup_dylib.cmake.in"
         "${script_dir}/fixup_dylib.cmake"

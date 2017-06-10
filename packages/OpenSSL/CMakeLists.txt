@@ -11,9 +11,9 @@ byd__is_disable_test_step(disable_test)
 if(NOT disable_test)
     byd__openssl__generate_test_command(${package})
 endif()
-byd__EP__add(${package})
-
 
 if(APPLE)
     byd__fixup_dylib(${package})
 endif()
+
+byd__EP__add(${package})
