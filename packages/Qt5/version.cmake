@@ -17,3 +17,9 @@ byd__package__add_version(
     URL "https://download.qt.io/archive/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.xz"
     URL_HASH SHA1=1a056ca4f731798e4142a691d0448c2c853228ca
     )
+
+byd__package__add_version(
+    ${package} 5.9.0
+    URL "https://download.qt.io/archive/qt/5.9/5.9.0/single/qt-everywhere-opensource-src-5.9.0.tar.xz"
+    URL_HASH SHA1=6308cd1e95c64323490a9a526a7f0a380cdcfb6e
+    )

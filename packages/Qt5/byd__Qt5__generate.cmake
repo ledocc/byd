@@ -176,9 +176,6 @@ function(byd__Qt5__generate_configure_command package)
 
     # QtWebEngine is not supported in static mode, so always build in shared mode
     #cmut_EP_add_config_arg_if(BUILD_SHARED_LIBS "-shared" "-static")
-    list(APPEND configure_arg "-shared")
-    list(APPEND configure_arg "-largefile")
-    list(APPEND configure_arg "-accessibility")
 
 #    list(APPEND configure_arg "-make" "tests")
     list(APPEND configure_arg "-nomake" "examples")

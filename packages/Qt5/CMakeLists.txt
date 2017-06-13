@@ -10,6 +10,7 @@ byd__Qt5__configure__use_open_source(${package})
 include("${CMAKE_CURRENT_LIST_DIR}/handle_components_to_build.cmake")
 
 include("${VERSION_DIR}/options/dependencies.cmake")
+include("${VERSION_DIR}/options/all_platform.cmake")
 if(APPLE)
     include("${VERSION_DIR}/options/apple.cmake")
 elseif(MSVC)
@@ -43,13 +44,23 @@ ExternalProject_Add_Step(
     WORKING_DIRECTORY ${source_dir}
     )
 
-ExternalProject_Add_Step(
-    ${package}
-    custom_patch
-    COMMAND git apply --ignore-whitespace "${VERSION_DIR}/patch/multicast.patch"
-    COMMAND git apply --ignore-whitespace "${VERSION_DIR}/patch/qml.patch"
-#    COMMAND git apply "${VERSION_DIR}/patch/static_dependencies.patch"
-    DEPENDEES update
-    DEPENDERS configure
-    WORKING_DIRECTORY ${source_dir}
+
+file(GLOB patchs
+    LIST_DIRECTORIES false
+    "${VERSION_DIR}/patch/*.patch"
     )
+
+foreach(file IN LISTS patchs)
+    list(APPEND Qt5__patch_command COMMAND git apply --ignore-whitespace "${file}")
+endforeach()
+
+if (DEFINED Qt5__patch_command)
+    ExternalProject_Add_Step(
+        ${package}
+        custom_patch
+        ${Qt5__patch_command}
+        DEPENDEES update
+        DEPENDERS configure
+        WORKING_DIRECTORY ${source_dir}
+        )
+endif()
