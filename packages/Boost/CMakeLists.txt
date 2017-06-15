@@ -49,19 +49,18 @@ endif()
 
 
 byd__EP__compile_in_source(${package} ON)
-byd__BoostBuild__add(${package})
 
 
 
 byd__package__get_version_to_build(${package} version_to_build)
 set(VERSION_DIR "${CMAKE_CURRENT_LIST_DIR}/${version_to_build}")
-byd__package__get_source_dir(${package} source_dir)
 
-ExternalProject_Add_Step(
-    ${package}
-    custom_patch
-    COMMAND git apply --ignore-whitespace "${VERSION_DIR}/patch/boost_icu_msvc.patch"
-    DEPENDEES update
-    DEPENDERS configure
-    WORKING_DIRECTORY ${source_dir}
+
+file(GLOB patchList
+    LIST_DIRECTORIES false
+    "${VERSION_DIR}/patch/*.patch"
     )
+byd__custom_patch(${package} patchList)
+
+
+byd__BoostBuild__add(${package})
