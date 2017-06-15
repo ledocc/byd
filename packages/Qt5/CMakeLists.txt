@@ -21,19 +21,22 @@ endif()
 
 
 
-
-
 byd__Qt5__generate_configure_command(${package})
 byd__Qt5__generate_build_command(${package})
 byd__Qt5__generate_install_command(${package})
+
+file(GLOB patchList
+    LIST_DIRECTORIES false
+    "${VERSION_DIR}/patch/*.patch"
+    )
+byd__custom_patch(${package} patchList)
+
+
 
 byd__EP__add(${package})
 
 
 
-
-byd__package__get_script_dir(${package} script_dir)
-byd__package__get_source_dir(${package} source_dir)
 
 ExternalProject_Add_Step(
     ${package}
@@ -41,26 +44,4 @@ ExternalProject_Add_Step(
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/bin/qt.conf"
     DEPENDEES install
     ALWAYS 1
-    WORKING_DIRECTORY ${source_dir}
     )
-
-
-file(GLOB patchs
-    LIST_DIRECTORIES false
-    "${VERSION_DIR}/patch/*.patch"
-    )
-
-foreach(file IN LISTS patchs)
-    list(APPEND Qt5__patch_command COMMAND git apply --ignore-whitespace "${file}")
-endforeach()
-
-if (DEFINED Qt5__patch_command)
-    ExternalProject_Add_Step(
-        ${package}
-        custom_patch
-        ${Qt5__patch_command}
-        DEPENDEES update
-        DEPENDERS configure
-        WORKING_DIRECTORY ${source_dir}
-        )
-endif()
