@@ -99,10 +99,6 @@ function(__byd__BoostBuild__script__generate_user_config_jam)
     byd__script__write("<linkflags>\"${CMAKE_EXE_LINKER_FLAGS}\"")
     byd__script__write(";")
 
-    if(ANDROID)
-        byd__script__write("target-os : android;")
-    endif()
-
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -153,6 +149,10 @@ function(byd__BoostBuild__generate_build_command package)
     byd__script__end()
 
     list(APPEND build_args "--user-config=${user_config_jam_path}")
+
+    if(ANDROID)
+        list(APPEND build_args "target-os=android")
+    endif()
 
     list(APPEND build_args "toolset=${BOOST_TOOLSET}")
 
