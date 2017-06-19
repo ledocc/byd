@@ -1,0 +1,3 @@
+
+# disable modification of end-line on windob
+*.patch -crlf
