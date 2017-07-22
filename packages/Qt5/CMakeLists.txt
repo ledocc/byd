@@ -38,10 +38,22 @@ byd__EP__add(${package})
 
 
 
+list(APPEND
+    install_qt_conf_COMMAND
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/bin/qt.conf"
+    )
+
+if(UNIX AND NOT APPLE)
+    list(APPEND
+        install_qt_conf_COMMAND
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/libexec/qt.conf"
+        )
+endif()
+
 ExternalProject_Add_Step(
     ${package}
     install_qt_conf
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/bin/qt.conf"
+    ${install_qt_conf_COMMAND}
     DEPENDEES install
     ALWAYS 1
     )
