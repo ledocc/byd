@@ -35,9 +35,9 @@ if(MSVC)
     byd__build_system__default_build_command(${package})
 
     byd__script__begin("${script_dir}/install.cmake")
-        byd__script__command("${CMAKE_COMMAND}" 
-                             "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}" 
-                             "-DICU_SOURCE_DIR=${source_dir}" 
+        byd__script__command("${CMAKE_COMMAND}"
+                             "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+                             "-DICU_SOURCE_DIR=${source_dir}"
                              -P "${script_dir}/${WINDOWS_INSTALL_SCRIPT}")
     byd__script__end()
     byd__build_system__default_install_command(${package})
@@ -52,7 +52,7 @@ else()
     byd__package__get_components(${package} components)
     byd__package__get_components_to_build(${package} components_to_build)
     foreach(component IN LISTS components)
-        if(component IN LIST components_to_build)
+        if(component IN_LIST components_to_build)
             set(action enable)
         else()
             set(action disable)
@@ -73,4 +73,3 @@ else()
 
     byd__autotool__add(${package} TEST_TARGET check)
 endif()
-

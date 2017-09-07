@@ -51,8 +51,15 @@ function(byd__add_package package)
     if(NOT EXISTS "${version_file}")
         cmut_fatal("[byd] - [${package}] : ${version_file} not found.")
     endif()
-    cmut_debug("[byd] - [${package}] : include ${package_dir}/version.cmake.")
-    include("${package_dir}/version.cmake")
+    cmut_debug("[byd] - [${package}] : include ${version_file}.")
+    include("${version_file}")
+
+    # include package component file
+    set(component_file "${package_dir}/component.cmake")
+    if(EXISTS "${component_file}")
+        cmut_debug("[byd] - [${package}] : include ${component_file}.")
+        include("${component_file}")
+    endif()
 
 
     # define version to build
