@@ -2,6 +2,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/id.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/byd__openssl__generate.cmake")
 
 
+byd__package__get_version_to_build(${package} version_to_build)
+if(version_to_build EQUAL LibreSSL-2.5.5)
+    byd__cmake__add(${package})
+    return()
+endif()
+
 byd__EP__compile_in_source(${package} 1)
 
 byd__openssl__generate_configure_command(${package})
