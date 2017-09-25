@@ -3,7 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/_unix.cmake")
 
 
 
-byd__Qt5__configure__add_arg_if_dependency_is_added(${package} icu)
+
+byd__Qt5__configure__add_arg_if_dependency_is_added(${package} glib)
 
 
 byd__Qt5__configure__add_args(${package} -no-cups)
