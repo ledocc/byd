@@ -1,0 +1,70 @@
+diff -Naur Qt5_origin/qtbase/src/3rdparty/icu_dependency.pri Qt5/qtbase/src/3rdparty/icu_dependency.pri
+--- Qt5_origin/qtbase/src/3rdparty/icu_dependency.pri	2016-12-01 09:17:04.000000000 +0100
++++ Qt5/qtbase/src/3rdparty/icu_dependency.pri	2017-09-25 20:39:26.345227100 +0200
+@@ -6,7 +6,11 @@
+             LIBS_PRIVATE += -lsicuin -lsicuuc -lsicudt
+         }
+     } else {
+-        LIBS_PRIVATE += -licuin -licuuc -licudt
++        CONFIG(debug, debug|release) {
++            LIBS_PRIVATE += -licuind -licuucd -licudt
++        } else {
++            LIBS_PRIVATE += -licuin -licuuc -licudt
++        }
+     }
+ } else {
+     LIBS_PRIVATE += -licui18n -licuuc -licudata
+diff -Naur Qt5_origin/qtbase/src/3rdparty/zlib_dependency.pri Qt5/qtbase/src/3rdparty/zlib_dependency.pri
+--- Qt5_origin/qtbase/src/3rdparty/zlib_dependency.pri	2016-12-01 09:17:04.000000000 +0100
++++ Qt5/qtbase/src/3rdparty/zlib_dependency.pri	2017-09-25 15:53:28.786318400 +0200
+@@ -2,7 +2,13 @@
+ contains(QT_CONFIG, system-zlib) {
+     if(unix|mingw):LIBS_PRIVATE += -lz
+     else {
+-        isEmpty(ZLIB_LIBS): LIBS += zdll.lib
++        isEmpty(ZLIB_LIBS){
++            CONFIG(debug, debug|release) {
++                LIBS += zdlld.lib
++            } else {
++                LIBS += zdll.lib
++            }
++        }
+         else: LIBS += $$ZLIB_LIBS
+     }
+ } else {
+diff -Naur Qt5_origin/qtimageformats/src/3rdparty/zlib_dependency.pri Qt5/qtimageformats/src/3rdparty/zlib_dependency.pri
+--- Qt5_origin/qtimageformats/src/3rdparty/zlib_dependency.pri	2016-09-17 22:54:51.000000000 +0200
++++ Qt5/qtimageformats/src/3rdparty/zlib_dependency.pri	2017-09-25 16:28:00.729471000 +0200
+@@ -2,7 +2,13 @@
+ contains(QT_CONFIG, system-zlib) {
+     unix|mingw: LIBS_PRIVATE += -lz
+     else {
+-        isEmpty(ZLIB_LIBS): LIBS += zdll.lib
++        isEmpty(ZLIB_LIBS){
++            CONFIG(debug, debug|release) {
++                LIBS += zdlld.lib
++            } else {
++                LIBS += zdll.lib
++            }
++        }
+         else: LIBS += $$ZLIB_LIBS
+     }
+ } else {
+diff -Naur Qt5_origin/qtsvg/src/svg/svg.pro Qt5/qtsvg/src/svg/svg.pro
+--- Qt5_origin/qtsvg/src/svg/svg.pro	2016-09-17 22:55:27.000000000 +0200
++++ Qt5/qtsvg/src/svg/svg.pro	2017-09-25 21:04:48.126477100 +0200
+@@ -46,7 +46,13 @@
+ contains(QT_CONFIG, system-zlib) {
+     if(unix|mingw):          LIBS_PRIVATE += -lz
+     else {
+-        isEmpty(ZLIB_LIBS): LIBS += zdll.lib
++        isEmpty(ZLIB_LIBS){
++            CONFIG(debug, debug|release) {
++                LIBS += zdlld.lib
++            } else {
++                LIBS += zdll.lib
++            }
++        }
+         else: LIBS += $$ZLIB_LIBS
+     }
+ } else {
