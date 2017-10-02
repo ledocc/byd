@@ -29,5 +29,5 @@ byd__Qt5__configure__add_args(${package} -no-mirclient)
 
 byd__Qt5__configure__add_args(${package} -opengl)
 byd__Qt5__configure__add_args(${package} -libinput)
-byd__Qt5__configure__add_args(${package} -no-gstreamer)
+byd__Qt5__configure__add_args(${package} -gstreamer)
 byd__Qt5__configure__add_args(${package} -no-system-proxies)
