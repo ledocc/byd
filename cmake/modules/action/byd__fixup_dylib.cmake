@@ -2,6 +2,7 @@
 
 
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/step/fixup_dylib/enable.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 
 
@@ -20,8 +21,8 @@ function(byd__fixup_dylib package)
 
 
     if(NOT IS_ABSOLUTE ${CMAKE_INSTALL_PREFIX})
-        cmut_warn("CMAKE_INSTALL_PREFIX not absolute path. fixup_dylib will fail. use cmut__config__resolve_install_prefix to convert.")
-        cmut_warn("use cmut__config__resolve_install_prefix to convert CMAKE_INSTALL_PREFIX to absolute path.")
+        cmut_warn("CMAKE_INSTALL_PREFIX not absolute path. fixup_dylib will fail.")
+        cmut_warn("Use cmut__config__resolve_install_prefix to convert CMAKE_INSTALL_PREFIX to absolute path.")
     endif()
 
 

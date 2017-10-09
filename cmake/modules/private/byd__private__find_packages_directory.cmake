@@ -24,6 +24,7 @@ function(byd__private__find_package_directory package result)
 
         if(package IN_LIST glob_result)
             set(package_dir "${dir}/${package}")
+            break()
         endif()
 
     endforeach()

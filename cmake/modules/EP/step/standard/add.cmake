@@ -1,6 +1,8 @@
 
 
 
+include(ExternalProject)
+
 include("${BYD_ROOT}/cmake/modules/EP/step/collect_steps.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/step/log.cmake")
 

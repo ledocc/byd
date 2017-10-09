@@ -8,52 +8,18 @@ include("${BYD_ROOT}/cmake/modules/private.cmake")
 
 include("${BYD_ROOT}/cmake/modules/byd__initialize.cmake")
 
+include("${BYD_ROOT}/cmake/modules/action.cmake")
+
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
-##--------------------------------------------------------------------------------------------------------------------##
-
-
-function(__byd__include_package_dependency_file package)
-
-    byd__private__find_package_directory(${package} package_dir)
-
-    set(__dependency_file "${package_dir}/dependency.cmake")
-    if (EXISTS "${__dependency_file}")
-        cmut_debug("[byd] - [${package}] : include ${__dependency_file}.")
-        include("${__dependency_file}")
-    else()
-        cmut_debug("[byd] - [${package}] : ${__dependency_file} not found.")
-        cmut_info("[byd] - [${package}] : not dependency for \"${package}\".")
-    endif()
-
-endfunction()
-
-function(__byd__collect_package_dependencies package result)
-
-    byd__package__get_dependency(${package} dependencies)
-
-    byd__package__get_components_to_build(${package} components)
-    foreach(component IN LISTS components)
-        byd__package__get_component_dependencies(${package} ${component} per_component_dependencies)
-        list(APPEND dependencies ${per_component_dependencies})
-    endforeach()
-
-    list(SORT dependencies)
-    list(REMOVE_DUPLICATES dependencies)
-
-    byd__func__return(dependencies)
-
-endfunction()
-
-
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(__byd__build_package_dependency package)
 
-    __byd__include_package_dependency_file(${package})
-    __byd__collect_package_dependencies(${package} dependencies)
+    byd__package__include_dependency_file(${package})
+    byd__package__collect_dependencies(${package} dependencies)
     if(NOT dependencies)
         return()
     endif()
@@ -115,6 +81,9 @@ function(__byd__build_package package)
 
     __byd__check_loop_dependency(${package})
 
+
+
+
     byd__private__is_package_generated(${package} already_generated)
     if(already_generated)
         cmut_debug("[byd] - [${package}] : already generated. skip.")
@@ -128,8 +97,20 @@ function(__byd__build_package package)
 
         __byd__build_package_dependency(${package})
 
-        cmut_debug("[byd] - [${package}] : include CMakeLists.txt")
-        include("${package_dir}/CMakeLists.txt")
+
+        byd__private__is_package_archive_available(${package} archive_available)
+        if(archive_available)
+            cmut_debug("[byd] - [${package}] : archive available.")
+            byd__action__extract_archive(${package})
+            byd__empty__add(${package})
+        else()
+            set(CMAKE_INSTALL_PREFIX_SAVE ${CMAKE_INSTALL_PREFIX})
+            set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${package})
+            cmut_debug("[byd] - [${package}] : include CMakeLists.txt")
+            byd__action__create_archive(${package})
+            include("${package_dir}/CMakeLists.txt")
+            set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX_SAVE})
+        endif()
 
         byd__private__set_package_generated(${package})
 
@@ -152,12 +133,15 @@ function(byd__filesystem__absolute path base result)
 
 endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__func__set_default variable default_value)
     if((NOT DEFINED ${variable}) OR ("x${${variable}}" STREQUAL "x"))
         set(${variable} ${default_value} PARENT_SCOPE)
     endif()
 endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__run)
 
@@ -180,6 +164,19 @@ function(byd__run)
     foreach(package IN LISTS packages)
         __byd__build_package(${package})
     endforeach()
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__generate_and_build source_dir)
+
+    cmut_info("build dir = ${CMAKE_BINARY_DIR}/byd/_build")
+
+    execute_process(COMMAND ${CMAKE_COMMAND} ${source_dir}
+                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/byd")
+    execute_process(COMMAND ${CMAKE_COMMAND} --build . -- -j1
+                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/byd")
 
 endfunction()
 

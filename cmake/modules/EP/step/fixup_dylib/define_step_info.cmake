@@ -30,9 +30,7 @@ function(byd__EP__step__provider__define_step_info)
     byd__EP__set_default_argument(${step_name} COMMENT "Fixup shared library (.dylib) rpath")
     byd__EP__set_default_argument(${step_name} DEPENDEES "install")
 
-#    if(BYD__EP__LOG)
-        byd__EP__set_default_argument(${step_name} LOG ON)
-#    endif()
+    byd__EP__set_default_argument(${step_name} LOG ${BYD__OPTION__LOG_STEP})
 
 endfunction()
 

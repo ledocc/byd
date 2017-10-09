@@ -9,10 +9,10 @@ include("${BYD_ROOT}/cmake/modules/EP/step/step_info.cmake")
 
 function(byd__EP__step__provider__define_step_info)
 
-    byd__EP__step__return_if_defined_or_define(BYD__EP__STEP__CUSTOM_PATCH__DEFINED)
+    byd__EP__step__return_if_defined_or_define(BYD__EP__STEP__CREATE_ARCHIVE__DEFINED)
 
 
-    set(step_name CUSTOM_PATCH)
+    set(step_name CREATE_ARCHIVE)
 
     byd__EP__step__set_parameter_source(${step_name} COMMAND           package)
     byd__EP__step__set_parameter_source(${step_name} COMMENT           default)
@@ -27,9 +27,8 @@ function(byd__EP__step__provider__define_step_info)
     byd__EP__step__set_parameter_source(${step_name} USES_TERMINAL     package)
 
 
-    byd__EP__set_default_argument(${step_name} COMMENT "Apply custom patch")
-    byd__EP__set_default_argument(${step_name} DEPENDEES "update")
-    byd__EP__set_default_argument(${step_name} DEPENDERS "configure")
+    byd__EP__set_default_argument(${step_name} COMMENT "Create reusable archive of this build")
+    byd__EP__set_default_argument(${step_name} DEPENDEES "install")
 
     byd__EP__set_default_argument(${step_name} LOG ${BYD__OPTION__LOG_STEP})
 

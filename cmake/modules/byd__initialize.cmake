@@ -2,9 +2,10 @@
 
 
 include("${BYD_ROOT}/cmake/modules/func.cmake")
-include("${BYD_ROOT}/cmake/modules/EP/define_step_info.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/byd__EP__define_step_info.cmake")
 include("${BYD_ROOT}/cmake/modules/option.cmake")
 
+include("${CMUT_ROOT}/config/cmut__config__resolve_install_prefix.cmake")
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -49,19 +50,19 @@ function(byd__initialize)
 
 
     byd__option__jobs()
+    byd__option__log_step()
     byd__option__prefix()
 
 
     byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)
-    byd__EP__set_default_log(ON)
+
 
 
 
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
     if(CMAKE_INSTALL_PREFIX)
-        byd__filesystem__absolute("${CMAKE_INSTALL_PREFIX}" "${CMAKE_BINARY_DIR}" CMAKE_INSTALL_PREFIX)
-        set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
+        cmut__config__resolve_install_prefix()
     endif()
 
 

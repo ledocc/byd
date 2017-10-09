@@ -82,14 +82,15 @@ function(byd__EP__step__standard__define_configure_step_parameters)
 
     byd__EP__step__set_parameter_source(${step_name} SOURCE_DIR               package)
     byd__EP__step__set_parameter_source(${step_name} SOURCE_SUBDIR            package)
-    byd__EP__step__set_parameter_source(${step_name} CONFIGURE_COMMAND        package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} CMAKE_COMMAND            package_or_default)
+    byd__EP__step__set_parameter_source(${step_name} CONFIGURE_COMMAND        package)
+    byd__EP__step__set_parameter_source(${step_name} CMAKE_COMMAND            package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_GENERATOR          package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_GENERATOR_PLATFORM package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_GENERATOR_TOOLSET  package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_ARGS               package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_CACHE_ARGS         package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_CACHE_DEFAULT_ARGS package)
+
 
 endfunction()
 
@@ -98,7 +99,7 @@ function(byd__EP__step__standard__define_build_step_parameters)
     set(step_name BUILD)
 
     byd__EP__step__set_parameter_source(${step_name} BINARY_DIR       package)
-    byd__EP__step__set_parameter_source(${step_name} BUILD_COMMAND    package_or_default)
+    byd__EP__step__set_parameter_source(${step_name} BUILD_COMMAND    package)
     byd__EP__step__set_parameter_source(${step_name} BUILD_IN_SOURCE  package)
     byd__EP__step__set_parameter_source(${step_name} BUILD_ALWAYS     package)
     byd__EP__step__set_parameter_source(${step_name} BUILD_BYPRODUCTS package)
@@ -110,7 +111,7 @@ function(byd__EP__step__standard__define_install_step_parameters)
     set(step_name INSTALL)
 
     byd__EP__step__set_parameter_source(${step_name} INSTALL_DIR     package)
-    byd__EP__step__set_parameter_source(${step_name} INSTALL_COMMAND package_or_default)
+    byd__EP__step__set_parameter_source(${step_name} INSTALL_COMMAND package)
 
 endfunction()
 
@@ -123,18 +124,27 @@ function(byd__EP__step__standard__define_test_step_parameters)
     byd__EP__step__set_parameter_source(${step_name} TEST_EXCLUDE_FROM_MAIN package)
     byd__EP__step__set_parameter_source(${step_name} TEST_COMMAND           package_or_default)
 
+    byd__EP__set_default_argument(${step_name} TEST_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no test step")
+
 endfunction()
 
 function(byd__EP__step__standard__define_log_step_parameters)
 
     set(step_name LOG)
 
-    byd__EP__step__set_parameter_source(${step_name} LOG_DOWNLOAD  package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} LOG_UPDATE    package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} LOG_CONFIGURE package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} LOG_BUILD     package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} LOG_TEST      package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} LOG_INSTALL   package_or_default)
+    set(args
+        LOG_DOWNLOAD
+        LOG_UPDATE
+        LOG_CONFIGURE
+        LOG_BUILD
+        LOG_TEST
+        LOG_INSTALL
+        )
+
+    foreach(arg IN LISTS args)
+        byd__EP__step__set_parameter_source(${step_name} ${arg} package_or_default)
+        byd__EP__set_default_argument(${step_name} ${arg} ${BYD__OPTION__LOG_STEP})
+    endforeach()
 
 endfunction()
 

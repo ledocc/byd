@@ -2,7 +2,7 @@
 
 
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__arg.cmake")
-include("${BYD_ROOT}/cmake/modules/EP/step/custom_patch/enable.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/step/create_archive/enable.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 
 
@@ -10,27 +10,38 @@ include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__custom_patch package patchList__)
+function(byd__action__create_archive package)
 
-    foreach(patch IN LISTS ${patchList__})
-        list(APPEND byd__custom_patch__command__${package}
-            COMMAND git apply --ignore-whitespace "${patch}"
-            )
-    endforeach()
+    byd__package__get_source_dir(${package} source_dir)
+    byd__package__get_script_dir(${package} script_dir)
 
-    byd__EP__set_package_argument(${package}
-        CUSTOM_PATCH COMMAND
-        ${byd__custom_patch__command__${package}}
+
+
+    set(package_install_dir "${CMAKE_INSTALL_PREFIX}")
+    byd__archive__get_local_package_archive_path(${package} archive_path)
+    byd__archive__get_default_repository(repository)
+    set(archive_path "${repository}/${archive_path}")
+
+    configure_file(
+        "${BYD_ROOT}/cmake/modules/EP/step/create_archive/create_archive.cmake.in"
+        "${script_dir}/create_archive.cmake"
+        @ONLY
         )
 
 
-    byd__package__get_source_dir(${package} source_dir)
     byd__EP__set_package_argument(${package}
-        CUSTOM_PATCH WORKING_DIRECTORY
+        CREATE_ARCHIVE COMMAND
+        ${CMAKE_COMMAND} -P "${script_dir}/create_archive.cmake"
+        )
+
+    byd__EP__set_package_argument(${package}
+        CREATE_ARCHIVE WORKING_DIRECTORY
         "${source_dir}"
         )
 
-    byd__EP__step__custom_patch__enable(${package})
+
+    byd__EP__step__create_archive__enable(${package})
+
 
 endfunction()
 

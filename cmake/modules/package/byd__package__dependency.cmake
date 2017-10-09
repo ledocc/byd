@@ -5,6 +5,9 @@ include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 
 
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__set_dependency package)
 
@@ -12,11 +15,15 @@ function(byd__package__set_dependency package)
 
 endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__package__add_dependency package)
 
     __byd__package__append_property(DEPENDENCY "${ARGN}")
 
 endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__get_dependency package result)
 
@@ -24,6 +31,11 @@ function(byd__package__get_dependency package result)
     byd__func__return(dependency)
 
 endfunction()
+
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
 
 
 function(byd__package__set_component_dependencies package)
@@ -48,10 +60,71 @@ function(byd__package__set_component_dependencies package)
 
 endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__get_component_dependencies package component result)
 
     __byd__package__get_property(DEPENDENCIES__${component} dependency)
     byd__func__return(dependency)
+
+endfunction()
+
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+
+function(byd__package__collect_dependencies package result)
+
+    byd__package__get_dependency(${package} dependencies)
+
+    byd__package__get_components_to_build(${package} components)
+    foreach(component IN LISTS components)
+        byd__package__get_component_dependencies(${package} ${component} per_component_dependencies)
+        list(APPEND dependencies ${per_component_dependencies})
+    endforeach()
+
+    list(SORT dependencies)
+    list(REMOVE_DUPLICATES dependencies)
+
+    byd__func__return(dependencies)
+
+endfunction()
+
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+
+function(byd__package__include_dependency_file package)
+
+    byd__private__find_package_directory(${package} package_dir)
+
+    set(__dependency_file "${package_dir}/dependency.cmake")
+    if (EXISTS "${__dependency_file}")
+        cmut_debug("[byd] - [${package}] : include ${__dependency_file}.")
+        include("${__dependency_file}")
+    else()
+        cmut_debug("[byd] - [${package}] : ${__dependency_file} not found.")
+        cmut_info("[byd] - [${package}] : not dependency for \"${package}\".")
+    endif()
+
+endfunction()
+
+
+
+function(byd__package__collect_dependencies_abis package result)
+
+    byd__package__collect_dependencies(${package} dependencies)
+
+    set(abis)
+    foreach(dependency IN LISTS dependencies)
+        byd__package__get_abi(${dependency} abi)
+        list(APPEND abis ${abi})
+    endforeach()
+
+    byd__func__return(abis)
 
 endfunction()

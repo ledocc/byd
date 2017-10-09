@@ -12,8 +12,6 @@ include("${BYD_ROOT}/byd.cmake")
 set(CMUT_DEBUG 1)
 
 
-byd__EP__set_default_log(ON)
-
 
 set(packages_directory "${BYD_ROOT}/packages")
 file(GLOB packages
