@@ -75,13 +75,10 @@ endfunction()
 
 function(__byd__build_package package)
 
-
     byd__private__find_package_directory(${package} package_dir)
 
 
     __byd__check_loop_dependency(${package})
-
-
 
 
     byd__private__is_package_generated(${package} already_generated)
@@ -101,15 +98,13 @@ function(__byd__build_package package)
         byd__private__is_package_archive_available(${package} archive_available)
         if(archive_available)
             cmut_debug("[byd] - [${package}] : archive available.")
-            byd__action__extract_archive(${package})
-            byd__empty__add(${package})
+            byd__build_system__archive__add(${package})
         else()
-            set(CMAKE_INSTALL_PREFIX_SAVE ${CMAKE_INSTALL_PREFIX})
-            set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${package})
             cmut_debug("[byd] - [${package}] : include CMakeLists.txt")
+            byd__package__apply_download_info(${package})
+            byd__action__extract_archive(${package})
             byd__action__create_archive(${package})
             include("${package_dir}/CMakeLists.txt")
-            set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX_SAVE})
         endif()
 
         byd__private__set_package_generated(${package})

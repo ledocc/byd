@@ -15,7 +15,7 @@ function(byd__EP__step__provider__define_step_info)
     set(step_name EXTRACT_ARCHIVE)
 
     byd__EP__step__set_parameter_source(${step_name} COMMAND           package)
-    byd__EP__step__set_parameter_source(${step_name} COMMENT           default)
+    byd__EP__step__set_parameter_source(${step_name} COMMENT           package_or_default)
     byd__EP__step__set_parameter_source(${step_name} DEPENDEES         package_or_default)
     byd__EP__step__set_parameter_source(${step_name} DEPENDERS         package_or_default)
     byd__EP__step__set_parameter_source(${step_name} DEPENDS           package)

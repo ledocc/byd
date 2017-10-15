@@ -1,29 +1,22 @@
 
 
+include("${BYD_ROOT}/cmake/modules/func/byd__func__property.cmake")
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
+
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-macro(add_step step)
-    list(APPEND step_paths "${BYD_ROOT}/cmake/modules/EP/step/${step}/add.cmake")
-endmacro()
+function(byd__set_install_prefix prefix)
+    byd__func__set_property(BYD__INSTALL_PREFIX "${prefix}")
+endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__EP__add package)
-
-    add_step(standard)
-    add_step(custom_patch)
-    add_step(fixup_dylib)
-    add_step(extract_archive)
-    add_step(create_archive)
-
-    # add each step
-    foreach(path IN LISTS step_paths)
-        include("${path}")
-        byd__EP__step__provider_add(${package})
-    endforeach()
-
+function(byd__get_install_prefix result)
+    byd__func__get_property(BYD__INSTALL_PREFIX prefix)
+    byd__func__return(prefix)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##

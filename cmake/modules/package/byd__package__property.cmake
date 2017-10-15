@@ -37,67 +37,28 @@ endfunction()
 ##---------------------------------------------------------------------------------------------------------------------##
 ##---------------------------------------------------------------------------------------------------------------------##
 
-
-##---------------------------------------------------------------------------------------------------------------------##
-##  ID  ---------------------------------------------------------------------------------------------------------------##
-##---------------------------------------------------------------------------------------------------------------------##
-
-macro(__byd__package__define_id_param param)
-    __byd__package__set_property(${param} "${PARAM_${param}}")
-endmacro()
-
-
-# byd__package__set_id(package
-#     URL package_url
-#     MAINTAINER_NAME package_maintainer_name
-#     MAINTAINER_EMAIL package_maintainer_email
-# )
-#
-# define :
-#        BYD__PACKAGE__URL__<package>,
-#        BYD__PACKAGE__MAINTAINER_NAME__<package>
-#        BYD__PACKAGE__MAINTAINER_EMAIL__<package>
-
-function(byd__package__set_id package)
-
-    cmut__utils__parse_arguments(
-        byd__package__set_id
-        PARAM
-        ""
-        "URL;MAINTAINER_NAME;MAINTAINER_EMAIL"
-        ""
-        )
-
-    __byd__package__define_id_param(URL)
-    __byd__package__define_id_param(MAINTAINER_NAME)
-    __byd__package__define_id_param(MAINTAINER_EMAIL)
-
-endfunction()
-
-
-
 ##--------------------------------------------------------------------------------------------------------------------##
-##  DEFAULT_VERSION  -------------------------------------------------------------------------------------------------##
+##  VERSION  ---------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__package__set_default_version package version)
-    __byd__package__set_property(DEFAULT_VERSION "${version}")
+function(byd__package__set_version package version)
+    __byd__package__set_property(VERSION "${version}")
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__package__get_default_version package result)
-    __byd__package__get_property(DEFAULT_VERSION version)
+function(byd__package__get_version package result)
+    __byd__package__get_property(VERSION version)
     byd__func__return(version)
 endfunction()
 
-
-
 ##--------------------------------------------------------------------------------------------------------------------##
-##  VERSION_TO_BUILD  ------------------------------------------------------------------------------------------------##
+##  DOWNLOAD_INFO  ---------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(__byd__package__set_EP_download_arg package)
+
+    cmut_debug("__byd__package__set_EP_download_arg ${package} ${ARGN}")
 
     set(current_arg_index 1)
 
@@ -116,36 +77,26 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__package__set_version_to_build package version)
-    byd__private__assert_not_empty("${version}")
+function(byd__package__apply_download_info package)
 
-    __byd__package__get_property(VERSION_TO_BUILD current_version_to_build)
-    if(current_version_to_build)
-        if(NOT version STREQUAL current_version_to_build)
-            cmut_fatal("[byd][package] - [${package}] : version to build \"${version}\" not match current one \"${current_version_to_build}\".")
-            return()
-        endif()
-    endif()
+    byd__package__get_download_args(${package} args)
 
-    __byd__package__set_property(VERSION_TO_BUILD "${version}")
-
-    __byd__private__version_to_name(${version} version_name)
-    __byd__package__get_property(${version_name} version_info)
-
-    __byd__package__set_EP_download_arg(${package} ${version_info})
+    __byd__package__set_EP_download_arg(${package} ${args})
 
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
+##  DOWNLOAD_ARG  --------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__package__get_version_to_build package result)
-
-    __byd__package__get_property(VERSION_TO_BUILD version)
-    byd__func__return(version)
-
+function(byd__package__set_download_args package)
+    __byd__package__set_property(DOWNLOAD_ARGS "${ARGN}")
 endfunction()
 
-
+function(byd__package__get_download_args package result)
+    __byd__package__get_property(DOWNLOAD_ARGS args)
+    byd__func__return(args)
+endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##  COMPONENTS_TO_BUILD  ---------------------------------------------------------------------------------------------##
@@ -217,6 +168,18 @@ function(byd__package__get_source_dir package result)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
+##  INSTALL_DIR  ------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__get_install_dir package result)
+
+    byd__package__get_prefix(${package} prefix)
+
+    byd__func__return_value("${prefix}/src/${package}-install")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
 ##  BUILD_DIR  ------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
@@ -280,6 +243,32 @@ endfunction()
 function(byd__package__get_abi package result)
     __byd__package__get_property(ABI abi)
     byd__func__return(abi)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+##  MAINTAINER_NAME  -------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__set_maintainer_name package maintainer_name)
+    __byd__package__set_property(MAINTAINER_NAME "${maintainer_name}")
+endfunction()
+
+function(byd__package__get_maintainer_name package result)
+    __byd__package__get_property(MAINTAINER_NAME maintainer_name)
+    byd__func__return(maintainer_name)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+##  MAINTAINER_EMAIL  -------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__set_maintainer_email package maintainer_email)
+    __byd__package__set_property(MAINTAINER_EMAIL "${maintainer_email}")
+endfunction()
+
+function(byd__package__get_maintainer_email package result)
+    __byd__package__get_property(MAINTAINER_EMAIL maintainer_email)
+    byd__func__return(maintainer_email)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##

@@ -110,9 +110,8 @@ function(byd__autotool__generate_configure_command package)
         list(APPEND configure_args --disable-shared --enable-static)
     endif()
 
-    if(CMAKE_INSTALL_PREFIX)
-        list(APPEND configure_args "--prefix=${CMAKE_INSTALL_PREFIX}")
-    endif()
+    byd__package__get_install_dir(${package} install_dir)
+    list(APPEND configure_args "--prefix=${install_dir}")
 
     if(CMAKE_CROSSCOMPILING)
         list(APPEND configure_args "--host=${CMAKE_CXX_COMPILER_TARGET}")

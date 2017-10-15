@@ -139,6 +139,7 @@ function(byd__BoostBuild__generate_build_command package)
     byd__private__error_if_property_is_defined(${__property_name})
     byd__package__get_script_dir(${package} script_dir)
     byd__package__get_build_dir(${package} build_dir)
+    byd__package__get_install_dir(${package} install_dir)
 
 
 
@@ -171,12 +172,8 @@ function(byd__BoostBuild__generate_build_command package)
         list(APPEND build_args "link=static")
     endif()
 
-
-    if(CMAKE_INSTALL_PREFIX)
-        list(APPEND build_args "--prefix=${CMAKE_INSTALL_PREFIX}")
-    endif()
-
-        list(APPEND build_args "--debug-configuration")
+    list(APPEND build_args "--prefix=${install_dir}")
+    list(APPEND build_args "--debug-configuration")
     list(APPEND build_args "--build_type=minimal")
     list(APPEND build_args "--build_dir=../${package}-build")
     list(APPEND build_args "--layout=tagged")

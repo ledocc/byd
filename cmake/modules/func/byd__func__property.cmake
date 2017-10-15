@@ -6,6 +6,12 @@ include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__func__define_property name)
+    define_property(GLOBAL PROPERTY ${name} BRIEF_DOCS "internal byd property" FULL_DOCS "internal byd property")
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__func__set_property name)
     set_property(GLOBAL PROPERTY ${name} ${ARGN})
 endfunction()
@@ -62,8 +68,15 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__func__is_property name result)
+function(byd__func__is_set_property name result)
     get_property(__result GLOBAL PROPERTY ${name} SET)
+    byd__func__return(__result)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__func__is_defined_property name result)
+    get_property(__result GLOBAL PROPERTY ${name} DEFINED)
     byd__func__return(__result)
 endfunction()
 

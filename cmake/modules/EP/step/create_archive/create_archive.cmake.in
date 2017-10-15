@@ -10,18 +10,13 @@ file(GLOB files_and_directories
 
 get_filename_component(archive_dir @archive_path@ DIRECTORY)
 
-execute_process(
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${archive_dir}
-    COMMAND ${CMAKE_COMMAND} -E tar Jcvf @archive_path@ ${files_and_directories}
-    WORKING_DIRECTORY @package_install_dir@
-    RESULT_VARIABLE result
-    OUTPUT_VARIABLE output_var
-    ERROR_VARIABLE error_var
+cmut__utils__execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${archive_dir}"
+    FATAL
     )
 
-if(result)
-    cmut_info("${function_name} failed.")
-    cmut_info("command \"${command}\" return ${result}.")
-    cmut_info(" output : ${output_var}")
-    cmut_info(" error  : ${error_var}")
-endif()
+cmut__utils__execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E tar Jcvf "@archive_path@" ${files_and_directories}
+    WORKING_DIRECTORY "@package_install_dir@"
+    FATAL
+    )

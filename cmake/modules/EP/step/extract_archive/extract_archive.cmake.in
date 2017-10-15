@@ -1,46 +1,13 @@
 
 include("@CMUT_ROOT@/cmut.cmake")
 
-function(cmut__utils__execute_process)
-
-    cmut__utils__parse_arguments(
-        cmut__utils__execute_process
-        ARG
-        ""
-        "WORKING_DIRECTORY"
-        "COMMAND"
-        ${ARGN}
-        )
-
-    if(ARG_COMMAND)
-        set(execute_process_args COMMAND ${ARG_COMMAND})
-    endif()
-
-    if(ARG_WORKING_DIRECTORY)
-        list(APPEND execute_process_args WORKING_DIRECTORY ${ARG_WORKING_DIRECTORY})
-    endif()
-
-
-
-    execute_process(
-        ${execute_process_args}
-        RESULT_VARIABLE result_var
-        OUTPUT_VARIABLE output_var
-        ERROR_VARIABLE error_var
-        )
-
-    if(result_var)
-        cmut_warn("execute_process failed.\ncommand \"${ARG_COMMAND}\" return ${result_var}.\noutput : ${output_var}\nerror  : ${error_var}")
-    endif()
-
-endfunction()
-
-
 cmut__utils__execute_process(
-    COMMAND ${CMAKE_COMMAND} -E make_directory @package_install_dir@
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "@package_install_dir@"
+    FATAL
     )
 
 cmut__utils__execute_process(
-    COMMAND ${CMAKE_COMMAND} -E tar Jxvf @archive_path@
-    WORKING_DIRECTORY @package_install_dir@
+    COMMAND "${CMAKE_COMMAND}" -E tar Jxvf "@archive_path@"
+    WORKING_DIRECTORY "@package_install_dir@"
+    FATAL
     )

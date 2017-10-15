@@ -29,13 +29,12 @@ function(byd__add_package package)
     byd__initialize_if_not_done()
 
     # parse arguments
-    set(options "")
-    set(oneValueArgs VERSION)
-    set(multiValueArgs COMPONENTS)
     cmut__utils__parse_arguments(
         byd__add_package
         PARAM
-        "${options}" "${oneValueArgs}" "${multiValueArgs}"
+        ""
+        ""
+        "COMPONENTS"
         ${ARGN}
         )
 
@@ -46,13 +45,17 @@ function(byd__add_package package)
     cmut_debug("[byd] - [${package}] : use info from ${package_dir}.")
 
 
-    # include package version file
-    set(version_file "${package_dir}/version.cmake")
-    if(NOT EXISTS "${version_file}")
-        cmut_fatal("[byd] - [${package}] : ${version_file} not found.")
+    # include package id file
+    set(id_file "${package_dir}/id.cmake")
+    if(NOT EXISTS "${id_file}")
+        cmut_fatal("[byd] - [${package}] : ${id_file} not found.")
     endif()
-    cmut_debug("[byd] - [${package}] : include ${version_file}.")
-    include("${version_file}")
+    cmut_debug("[byd] - [${package}] : include ${id_file}.")
+    include("${id_file}")
+
+    byd__package__get_version(${package} version)
+    cmut_info("[byd] - [${package}] : version : ${version}.")
+
 
     # include package component file
     set(component_file "${package_dir}/component.cmake")
@@ -60,18 +63,6 @@ function(byd__add_package package)
         cmut_debug("[byd] - [${package}] : include ${component_file}.")
         include("${component_file}")
     endif()
-
-
-    # define version to build
-    if(NOT PARAM_VERSION)
-        byd__package__get_version_to_build(${package} PARAM_VERSION)
-        if(NOT PARAM_VERSION)
-            byd__package__get_default_version(${package} PARAM_VERSION)
-        endif()
-    endif()
-    cmut_info("[byd] - [${package}] : version to build ${PARAM_VERSION}")
-    byd__package__set_version_to_build(${package} "${PARAM_VERSION}")
-
 
     # define components to build
     if(PARAM_COMPONENTS)
@@ -95,6 +86,7 @@ function(byd__add_package package)
     # add to build list
     byd__private__set_package_added(${package})
     __byd__add_package_to_build_list(${package})
+
 
 endfunction()
 

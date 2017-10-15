@@ -10,20 +10,9 @@ include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__package__add_component package component)
+function(byd__package__add_component package)
 
-    cmut__utils__parse_arguments(byd__package__add_component
-        PARAM
-        ""
-        "VERSION"
-        ""
-        ${ARGN}
-        )
-
-    __byd__package__append_property(COMPONENTS "${component}")
-    if(PARAM_VERSION)
-        __byd__package__set_property(COMPONENT_${component} "${version}")
-    endif()
+    __byd__package__append_property(COMPONENTS "${ARGN}")
 
 endfunction()
 

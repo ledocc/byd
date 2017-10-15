@@ -14,10 +14,11 @@ function(byd__action__create_archive package)
 
     byd__package__get_source_dir(${package} source_dir)
     byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_install_dir(${package} install_dir)
 
 
 
-    set(package_install_dir "${CMAKE_INSTALL_PREFIX}")
+    set(package_install_dir "${install_dir}")
     byd__archive__get_local_package_archive_path(${package} archive_path)
     byd__archive__get_default_repository(repository)
     set(archive_path "${repository}/${archive_path}")

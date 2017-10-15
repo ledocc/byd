@@ -15,7 +15,7 @@ function(byd__EP__step__provider__define_step_info)
     set(step_name CREATE_ARCHIVE)
 
     byd__EP__step__set_parameter_source(${step_name} COMMAND           package)
-    byd__EP__step__set_parameter_source(${step_name} COMMENT           default)
+    byd__EP__step__set_parameter_source(${step_name} COMMENT           package_or_default)
     byd__EP__step__set_parameter_source(${step_name} DEPENDEES         package_or_default)
     byd__EP__step__set_parameter_source(${step_name} DEPENDERS         package_or_default)
     byd__EP__step__set_parameter_source(${step_name} DEPENDS           package)
@@ -29,6 +29,7 @@ function(byd__EP__step__provider__define_step_info)
 
     byd__EP__set_default_argument(${step_name} COMMENT "Create reusable archive of this build")
     byd__EP__set_default_argument(${step_name} DEPENDEES "install")
+    byd__EP__set_default_argument(${step_name} DEPENDERS "extract_archive")
 
     byd__EP__set_default_argument(${step_name} LOG ${BYD__OPTION__LOG_STEP})
 
