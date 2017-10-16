@@ -119,11 +119,12 @@ function(byd__EP__step__standard__define_test_step_parameters)
 
     set(step_name TEST)
 
-    byd__EP__step__set_parameter_source(${step_name} TEST_BEFORE_INSTALL    package)
-    byd__EP__step__set_parameter_source(${step_name} TEST_AFTER_INSTALL     package)
+    byd__EP__step__set_parameter_source(${step_name} TEST_BEFORE_INSTALL    default)
+    byd__EP__step__set_parameter_source(${step_name} TEST_AFTER_INSTALL     default)
     byd__EP__step__set_parameter_source(${step_name} TEST_EXCLUDE_FROM_MAIN package)
     byd__EP__step__set_parameter_source(${step_name} TEST_COMMAND           package_or_default)
 
+    byd__EP__set_default_argument(${step_name} TEST_BEFORE_INSTALL 1)
     byd__EP__set_default_argument(${step_name} TEST_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no test step")
 
 endfunction()
