@@ -117,27 +117,6 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__filesystem__absolute path base result)
-
-    if((path) AND (NOT IS_ABSOLUTE "${path}"))
-        set(absolute_path "${base}/${path}")
-    else()
-        set(absolute_path "${path}")
-    endif()
-    byd__func__return(absolute_path)
-
-endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
-function(byd__func__set_default variable default_value)
-    if((NOT DEFINED ${variable}) OR ("x${${variable}}" STREQUAL "x"))
-        set(${variable} ${default_value} PARENT_SCOPE)
-    endif()
-endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
 function(byd__run)
 
     byd__initialize_if_not_done()
