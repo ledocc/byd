@@ -30,7 +30,7 @@ function(byd__EP__step__collect_step_arguments package step parameters result)
             cmut_fatal("[byd][EP] - invalid source for step=${step}, parameter=${parameter}, source=${source}")
         endif()
 
-        cmut_debug("[byd][EP] - step=${step}, parameter=${parameter}, source=${source}, is_defined=${is_defined}, argument=${argument}")
+#        cmut_debug("[byd][EP] - step=${step}, parameter=${parameter}, source=${source}, is_defined=${is_defined}, argument=${argument}")
 
         if(is_defined)
             list(APPEND arguments "${parameter}" "${argument}")
