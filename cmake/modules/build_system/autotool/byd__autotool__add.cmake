@@ -27,13 +27,9 @@ function(byd__autotool__add package)
     byd__autotool__generate_update_command(${package})
     byd__autotool__generate_configure_command(${package})
     byd__autotool__generate_build_command(${package})
-
-
     byd__autotool__generate_install_command(${package})
 
-    byd__is_disable_test_step(disable_test)
-
-    if((NOT "test" IN_LIST PARAM_SKIP) AND (NOT disable_test))
+    if((NOT "test" IN_LIST PARAM_SKIP) AND BUILD_TESTING)
         if(PARAM_TEST_TARGET)
             set(TARGET_ARG TARGET ${PARAM_TEST_TARGET})
         endif()

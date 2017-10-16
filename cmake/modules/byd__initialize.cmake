@@ -44,9 +44,6 @@ function(byd__initialize)
     option(BUILD_SHARED_LIBS "Enable to build shared libraries")
     # add BUILD_TESTING option
     enable_testing()
-    if(NOT BUILD_TESTING)
-        byd__disable_test_step(1)
-    endif()
 
 
     byd__option__jobs()
@@ -55,9 +52,6 @@ function(byd__initialize)
 
 
     byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)
-
-
-
 
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
