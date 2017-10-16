@@ -1,4 +1,3 @@
-include("${BYD_ROOT}/cmake/modules/package/byd__package__add_version.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__component.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__dependency.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__info.cmake")
