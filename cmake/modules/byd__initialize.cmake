@@ -11,7 +11,7 @@ include("${CMUT_ROOT}/config/cmut__config__resolve_install_prefix.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__set_initialized)
+function(__byd__set_initialized)
     byd__func__set_property(BYD__INITIALIZED 1)
 endfunction()
 
@@ -37,7 +37,7 @@ endfunction()
 
 function(byd__initialize)
 
-    byd__set_initialized()
+    __byd__set_initialized()
 
 
 
