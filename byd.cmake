@@ -7,7 +7,15 @@ if(NOT DEFINED CMUT_ROOT)
         message(STATUS "CMUT_ROOT variable and environment variable is not defined.")
         message(FATAL_ERROR "define CMUT_ROOT to use byd.")
     endif()
-
 endif()
+
+include(${CMUT_ROOT}/cmut.cmake)
+cmut_info("[byd] - cmut location : \"${CMUT_ROOT}\".")
+cmut_info("[byd] - cmut version  : \"${CMUT_VERSION}\".")
+
+if(CMUT_VERSION VERSION_LESS 0.5.0)
+    message(FATAL_ERROR "byd require cmut version 0.5.0 or greater.")
+endif()
+
 
 include("${BYD_ROOT}/cmake/modules.cmake")

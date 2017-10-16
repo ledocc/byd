@@ -28,6 +28,7 @@ function(byd__add_package package)
 
     byd__initialize_if_not_done()
 
+
     # parse arguments
     cmut__utils__parse_arguments(
         byd__add_package
@@ -38,11 +39,15 @@ function(byd__add_package package)
         ${ARGN}
         )
 
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - ---------------------------------")
+    cmut_info("[byd] - add \"${package}\" to build list.")
+
 
 
     # look for package directory
     byd__private__find_package_directory(${package} package_dir)
-    cmut_debug("[byd] - [${package}] : use info from ${package_dir}.")
+    cmut_info("[byd] - [${package}] : use info from ${package_dir}.")
 
 
     # include package id file
@@ -72,6 +77,8 @@ function(byd__add_package package)
         endforeach()
         byd__package__add_components_to_build(${package} "${PARAM_COMPONENTS}")
     endif()
+
+    cmut_info("[byd] - ---------------------------------")
 
 
     # define prefix (where to download/configure/build)
