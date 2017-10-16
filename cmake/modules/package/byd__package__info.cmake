@@ -13,7 +13,7 @@ function(byd__package__info package)
         byd__package__info
         __BYD__PACKAGE__INFO_ARG
         ""
-        "MAINTAINER_NAME;MAINTAINER_EMAIL;VERSION;BUILD_ID;ABI"
+        "MAINTAINER_NAME;MAINTAINER_EMAIL;VERSION;ABI"
         ""
         ${ARGN}
         )
@@ -31,13 +31,6 @@ function(byd__package__info package)
         byd__package__set_version(${package} ${__BYD__PACKAGE__INFO_ARG_VERSION})
     else()
         cmut_error("[byd][package] - [${package}] : byd__package__info : VERSION argument required.")
-    endif()
-
-
-    if(DEFINED __BYD__PACKAGE__INFO_ARG_BUILD_ID)
-        byd__package__set_build_id(${package} ${__BYD__PACKAGE__INFO_ARG_BUILD_ID})
-    else()
-        byd__package__set_build_id(${package} ${__BYD__PACKAGE__INFO_ARG_VERSION})
     endif()
 
 
