@@ -20,6 +20,12 @@ function(byd__package__add_component package component)
         ${ARGN}
         )
 
+    __byd__package__get_property(COMPONENTS components)
+    if(component IN_LIST components)
+        return()
+    endif()
+
+
     __byd__package__append_property(COMPONENTS "${component}")
     if(PARAM_VERSION)
         __byd__package__set_property(COMPONENT_${component} "${version}")
