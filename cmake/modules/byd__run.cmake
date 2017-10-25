@@ -104,6 +104,9 @@ function(__byd__build_package package)
             byd__package__apply_download_info(${package})
             byd__action__extract_archive(${package})
             byd__action__create_archive(${package})
+            if (BYD__OPTION__UPLOAD_ARCHIVE)
+                byd__action__upload_archive(${package})
+            endif()
             include("${package_dir}/CMakeLists.txt")
         endif()
 
@@ -138,19 +141,6 @@ function(byd__run)
     foreach(package IN LISTS packages)
         __byd__build_package(${package})
     endforeach()
-
-endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
-function(byd__generate_and_build source_dir)
-
-    cmut_info("build dir = ${CMAKE_BINARY_DIR}/byd/_build")
-
-    execute_process(COMMAND ${CMAKE_COMMAND} ${source_dir}
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/byd")
-    execute_process(COMMAND ${CMAKE_COMMAND} --build . -- -j1
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/byd")
 
 endfunction()
 

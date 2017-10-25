@@ -53,17 +53,34 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__archive__get_archive_root_dir result)
+
+    cmut__system__get_distribution_name(distribution_name)
+    cmut__system__get_distribution_version(distribution_version)
+    set(root_dir "${distribution_name}-${distribution_version}")
+
+    byd__func__return(root_dir)
+
+endfunction()
+
 function(byd__archive__get_package_archive_output_dir package result)
 
+    byd__archive__get_archive_root_dir(root_dir)
+    set(output_dir "${root_dir}")
+
     byd__get_build_id(byd_build_id)
+    set(output_dir "${output_dir}/byd-${byd_build_id}")
 
     byd__archive__get_cmake_args_build_id(${package} cmake_args_build_id)
+    set(output_dir "${output_dir}/${cmake_args_build_id}")
 
     byd__package__get_version(${package} package_version)
+    set(output_dir "${output_dir}/${package}-${package_version}")
 
     byd__archive__get_dependencies_build_id(${package} dependencies_build_id)
+    set(output_dir "${output_dir}/${dependencies_build_id}")
 
-    byd__func__return_value("${byd_build_id}/${cmake_args_build_id}/${package}/${package_version}/${dependencies_build_id}")
+    byd__func__return(output_dir)
 
 endfunction()
 
@@ -80,7 +97,7 @@ endfunction()
 
 function(byd__archive__find_package_archive_path package result)
 
-    byd__archive__get_repositories(repositories)
+    byd__archive__get_local_repository(repositories)
     byd__archive__get_local_package_archive_path(${package} package_path)
 
     foreach(repo IN LISTS repositories)
@@ -89,13 +106,13 @@ function(byd__archive__find_package_archive_path package result)
 
         if(EXISTS "${path}")
             byd__func__return(path)
-            cmut_debug("path found : ${path}")
+            cmut_debug("[byd][archive] - [${package}] : path found : ${path}")
             return()
         endif()
 
     endforeach()
 
     byd__func__return_value("")
-    cmut_debug("path not found")
+    cmut_debug("[byd][archive] - [${package}] : path not found")
 
 endfunction()

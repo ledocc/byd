@@ -10,6 +10,7 @@
 # and placed in the directory defined by the DESTINATION parameter, or in current
 # directory if not specified.
 
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__archive__create_archive archive source)
 
@@ -29,7 +30,7 @@ function(byd__archive__create_archive archive source)
 
 endfunction()
 
-
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__archive__extract_archive archive destination)
 
@@ -64,6 +65,7 @@ function(byd__archive__extract_archive archive destination)
 
 endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
 
 function(__byd__archive__execute_process function_name)
 

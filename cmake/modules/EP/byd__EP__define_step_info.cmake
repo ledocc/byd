@@ -7,6 +7,7 @@ function(byd__EP__define_step_info)
         )
 
     foreach(path IN LISTS step_paths)
+        cmut_debug("include( ${path} )")
         include("${path}")
         byd__EP__step__provider__define_step_info()
     endforeach()

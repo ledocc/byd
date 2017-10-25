@@ -1,0 +1,6 @@
+
+include("@CMUT_ROOT@/cmut.cmake")
+include("@BYD_ROOT@/byd.cmake")
+
+
+byd__archive__rsync__upload_archive("@package@" "@archive_path@")

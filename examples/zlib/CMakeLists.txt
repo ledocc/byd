@@ -9,9 +9,5 @@ get_filename_component(BYD_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 include("${BYD_ROOT}/byd.cmake")
 
 
-set(CMUT_DEBUG 1)
-byd__EP__set_default_log(ON)
-
-
-byd__add_package(zlib VERSION 1.2.11-unowhy)
+byd__add_package(zlib)
 byd__run()

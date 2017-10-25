@@ -9,8 +9,4 @@ get_filename_component(BYD_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 include("${BYD_ROOT}/byd.cmake")
 
 
-set(CMUT_DEBUG 1)
-byd__EP__set_default_log(ON)
-
-
 byd__generate_and_build("${BYD_ROOT}/examples/zlib")

@@ -1,29 +1,19 @@
 
 
-
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-macro(add_step step)
-    list(APPEND step_paths "${BYD_ROOT}/cmake/modules/EP/step/${step}/add.cmake")
-endmacro()
+function(byd__option__upload_archive)
 
+    set(default_upload_archive OFF)
 
-function(byd__EP__add package)
+    set(upload_archive_from_env_var "$ENV{BYD__OPTION__UPLOAD_ARCHIVE}")
+    if(upload_archive_from_env_var)
+        set(default_upload_archive "${upload_archive_from_env_var}")
+    endif()
 
-    add_step(standard)
-    add_step(custom_patch)
-    add_step(fixup_dylib)
-    add_step(extract_archive)
-    add_step(create_archive)
-    add_step(upload_archive)
-
-    # add each step
-    foreach(path IN LISTS step_paths)
-        include("${path}")
-        byd__EP__step__provider_add(${package})
-    endforeach()
+    option(BYD__OPTION__UPLOAD_ARCHIVE "Enable to upload archive." default_upload_archive)
 
 endfunction()
 
