@@ -58,6 +58,7 @@ function(byd__cmake__generate_configure_cmake_args package)
     endif()
 
     __byd__cmake__add_variable_if_defined(__cmake_args BUILD_SHARED_LIBS)
+    __byd__cmake__add_variable_if_defined(__cmake_args BUILD_TESTING)
     byd__package__get_install_dir(${package} install_dir)
     __byd__cmake__add_variable(           __cmake_args CMAKE_INSTALL_PREFIX "${install_dir}")
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_BUILD_TYPE)
@@ -146,7 +147,7 @@ function(byd__cmake__generate_test_command package)
     byd__script__end()
 
 
-    byd__build_system__default_install_command(${package})
+    byd__build_system__default_test_command(${package})
 
 endfunction()
 
