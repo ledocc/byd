@@ -16,6 +16,10 @@ function(byd__BoostBuild__add package)
     byd__BoostBuild__generate_build_command(${package})
     byd__BoostBuild__generate_install_command(${package})
 
+    if(BUILD_TESTING)
+        byd__BoostBuild__generate_test_command(${package})
+    endif()
+
     byd__EP__add(${package})
 
 endfunction()
