@@ -16,14 +16,11 @@ include("${BYD_ROOT}/cmake/modules/EP/step/upload_archive/enable.cmake")
 
 function(byd__EP__step__provider_add package)
 
-    cmut_debug("byd__EP__step__provider_add ${package}")
-
     byd__EP__step__upload_archive__is_enable(${package} is_enable)
     if(NOT is_enable)
         return()
     endif()
 
-    cmut_debug("byd__EP__step__provider_add ${package} pass")
 
     byd__EP__set_package_argument(${package} UPLOAD_ARCHIVE COMMENT "Upload \'${package}\' archive")
 
