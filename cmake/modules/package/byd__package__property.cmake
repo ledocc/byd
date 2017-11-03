@@ -58,8 +58,6 @@ endfunction()
 
 function(__byd__package__set_EP_download_arg package)
 
-    cmut_debug("__byd__package__set_EP_download_arg ${package} ${ARGN}")
-
     set(current_arg_index 1)
 
     while(current_arg_index LESS ARGC)
