@@ -71,8 +71,8 @@ function(byd__cmake__generate_configure_cmake_args package)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_OSX_SYSROOT)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_MACOSX_RPATH)
 
-
-    byd__EP__set_package_argument(${package} CONFIGURE CMAKE_ARGS "${__cmake_args}")
+    byd__cmake__configure__get_arg(${package} user_define_args)
+    byd__EP__set_package_argument(${package} CONFIGURE CMAKE_ARGS "${__cmake_args}" "${user_define_args}")
     byd__EP__set_package_argument(${package} CONFIGURE CMAKE_GENERATOR "${CMAKE_GENERATOR}")
 
 
