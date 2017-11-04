@@ -8,6 +8,9 @@ include("${BYD_ROOT}/cmake/modules/byd__package_repositories.cmake")
 
 function(byd__private__find_package_directory package result)
 
+    cmut_debug("[byd] - look for ${package}")
+
+
     byd__get_package_repositories(repositories)
     list(APPEND repositories "${BYD_ROOT}/packages")
 
@@ -15,6 +18,7 @@ function(byd__private__find_package_directory package result)
     set(package_dir "")
 
     foreach(dir IN LISTS repositories)
+        cmut_debug("[byd] - test ${dir}/${package}")
 
         file(GLOB glob_result
             LIST_DIRECTORIES true
