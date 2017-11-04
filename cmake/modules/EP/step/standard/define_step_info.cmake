@@ -91,6 +91,8 @@ function(byd__EP__step__standard__define_configure_step_parameters)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_CACHE_ARGS         package)
     byd__EP__step__set_parameter_source(${step_name} CMAKE_CACHE_DEFAULT_ARGS package)
 
+    ## no default for CONFIGURE_COMMAND, in case of cmake build system, CONFIGURE_COMMAND is and should remain not defined
+#    byd__EP__set_default_argument(${step_name} CONFIGURE_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no configure step")
 
 endfunction()
 
@@ -99,10 +101,12 @@ function(byd__EP__step__standard__define_build_step_parameters)
     set(step_name BUILD)
 
     byd__EP__step__set_parameter_source(${step_name} BINARY_DIR       package)
-    byd__EP__step__set_parameter_source(${step_name} BUILD_COMMAND    package)
+    byd__EP__step__set_parameter_source(${step_name} BUILD_COMMAND    package_or_default)
     byd__EP__step__set_parameter_source(${step_name} BUILD_IN_SOURCE  package)
     byd__EP__step__set_parameter_source(${step_name} BUILD_ALWAYS     package)
     byd__EP__step__set_parameter_source(${step_name} BUILD_BYPRODUCTS package)
+
+    byd__EP__set_default_argument(${step_name} BUILD_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no build step")
 
 endfunction()
 
@@ -111,7 +115,9 @@ function(byd__EP__step__standard__define_install_step_parameters)
     set(step_name INSTALL)
 
     byd__EP__step__set_parameter_source(${step_name} INSTALL_DIR     package)
-    byd__EP__step__set_parameter_source(${step_name} INSTALL_COMMAND package)
+    byd__EP__step__set_parameter_source(${step_name} INSTALL_COMMAND package_or_default)
+
+    byd__EP__set_default_argument(${step_name} INSTALL_COMMAND "${CMAKE_COMMAND}" "-E" "echo" "no install step")
 
 endfunction()
 
