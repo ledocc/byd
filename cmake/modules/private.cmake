@@ -5,6 +5,5 @@ include("${BYD_ROOT}/cmake/modules/private/byd__private__error_if_property_is_de
 include("${BYD_ROOT}/cmake/modules/private/byd__private__find_packages_directory.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__is_package_archive_available.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__num_core_available.cmake")
-include("${BYD_ROOT}/cmake/modules/private/byd__private__package_added.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__package_generated.cmake")
 include("${BYD_ROOT}/cmake/modules/private/byd__private__version_to_name.cmake")

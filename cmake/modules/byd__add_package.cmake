@@ -91,7 +91,7 @@ function(byd__add_package package)
 
 
     # add to build list
-    byd__private__set_package_added(${package})
+    byd__package__set_added(${package})
     __byd__add_package_to_build_list(${package})
 
 

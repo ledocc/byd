@@ -221,8 +221,14 @@ endfunction()
 ##  IS_ADDED  --------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__package__set_added package)
+    __byd__package__set_property(ADDED 1)
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__package__is_added package result)
-    byd__private__is_package_added(${package} added)
+    __byd__package__get_property(ADDED added)
     byd__func__return(added)
 endfunction()
 
