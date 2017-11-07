@@ -26,33 +26,19 @@ function(byd__EP__step__standard__define_download_step_parameters)
 
     set(step_name DOWNLOAD)
 
-    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_NAME        package)
-    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_DIR         package_or_default)
+
     byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_COMMAND     package)
-    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_NO_PROGRESS package_or_default)
-
-    byd__EP__step__set_parameter_source(${step_name} CVS_REPOSITORY package)
-    byd__EP__step__set_parameter_source(${step_name} CVS_MODULE     package)
-    byd__EP__step__set_parameter_source(${step_name} CVS_TAG        package)
-
-    byd__EP__step__set_parameter_source(${step_name} SVN_REPOSITORY package)
-    byd__EP__step__set_parameter_source(${step_name} SVN_REVISION   package)
-    byd__EP__step__set_parameter_source(${step_name} SVN_USERNAME   package)
-    byd__EP__step__set_parameter_source(${step_name} SVN_PASSWORD   package)
-    byd__EP__step__set_parameter_source(${step_name} SVN_TRUST_CERT package)
-
-    byd__EP__step__set_parameter_source(${step_name} GIT_REPOSITORY  package)
-    byd__EP__step__set_parameter_source(${step_name} GIT_TAG         package)
-    byd__EP__step__set_parameter_source(${step_name} GIT_REMOTE_NAME package)
-    byd__EP__step__set_parameter_source(${step_name} GIT_SUBMODULES  package)
-    byd__EP__step__set_parameter_source(${step_name} GIT_SHALLOW     package)
-
-    byd__EP__step__set_parameter_source(${step_name} HG_REPOSITORY package)
-    byd__EP__step__set_parameter_source(${step_name} HG_TAG        package)
 
     byd__EP__step__set_parameter_source(${step_name} URL      package)
     byd__EP__step__set_parameter_source(${step_name} URL_HASH package)
     byd__EP__step__set_parameter_source(${step_name} URL_MD5  package)
+
+    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_NAME        package)
+    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_NO_EXTRACT  package)
+    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_NO_PROGRESS package_or_default)
+
+    byd__EP__step__set_parameter_source(${step_name} TIMEOUT package_or_default)
+
 
     byd__EP__step__set_parameter_source(${step_name} HTTP_USERNAME package)
     byd__EP__step__set_parameter_source(${step_name} HTTP_PASSWORD package)
@@ -61,8 +47,34 @@ function(byd__EP__step__standard__define_download_step_parameters)
     byd__EP__step__set_parameter_source(${step_name} TLS_VERIFY package)
     byd__EP__step__set_parameter_source(${step_name} TLS_CAINFO package)
 
-    byd__EP__step__set_parameter_source(${step_name} TIMEOUT             package_or_default)
-    byd__EP__step__set_parameter_source(${step_name} DOWNLOAD_NO_EXTRACT package)
+
+    byd__EP__step__set_parameter_source(${step_name} GIT_REPOSITORY  package)
+    byd__EP__step__set_parameter_source(${step_name} GIT_TAG         package)
+    byd__EP__step__set_parameter_source(${step_name} GIT_REMOTE_NAME package)
+    byd__EP__step__set_parameter_source(${step_name} GIT_SUBMODULES  package)
+    byd__EP__step__set_parameter_source(${step_name} GIT_SHALLOW     package_or_default)
+    byd__EP__step__set_parameter_source(${step_name} GIT_PROGRESS    package)
+    byd__EP__step__set_parameter_source(${step_name} GIT_CONFIG      package)
+
+
+    byd__EP__step__set_parameter_source(${step_name} SVN_REPOSITORY package)
+    byd__EP__step__set_parameter_source(${step_name} SVN_REVISION   package)
+    byd__EP__step__set_parameter_source(${step_name} SVN_USERNAME   package)
+    byd__EP__step__set_parameter_source(${step_name} SVN_PASSWORD   package)
+    byd__EP__step__set_parameter_source(${step_name} SVN_TRUST_CERT package)
+
+
+    byd__EP__step__set_parameter_source(${step_name} HG_REPOSITORY package)
+    byd__EP__step__set_parameter_source(${step_name} HG_TAG        package)
+
+
+    byd__EP__step__set_parameter_source(${step_name} CVS_REPOSITORY package)
+    byd__EP__step__set_parameter_source(${step_name} CVS_MODULE     package)
+    byd__EP__step__set_parameter_source(${step_name} CVS_TAG        package)
+
+
+    byd__EP__set_default_argument(${step_name} DOWNLOAD_NO_PROGRESS 0)
+    byd__EP__set_default_argument(${step_name} GIT_SHALLOW 1)
 
 endfunction()
 
