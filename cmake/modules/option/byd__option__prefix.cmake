@@ -9,13 +9,13 @@ include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
 
 function(byd__option__prefix)
 
-    set(default_prefix "")
+    set(default_prefix "${CMAKE_BINARY_PATH}")
 
     set(prefix_from_env_var "$ENV{BYD__OPTION__PREFIX}")
     if(prefix_from_env_var)
         set(default_prefix "${prefix_from_env_var}")
     endif()
-    
+
     set(BYD__OPTION__PREFIX "${default_prefix}" CACHE STRING "Specifies the path where packages are build. Usefull on Windows where path have limited length.")
     file(TO_CMAKE_PATH "${BYD__OPTION__PREFIX}" BYD__OPTION__PREFIX_CMAKE_PATH)
     byd__set_prefix("${BYD__OPTION__PREFIX_CMAKE_PATH}")
