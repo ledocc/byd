@@ -140,6 +140,29 @@ function(byd__package__get_prefix package result)
 
 endfunction()
 
+##--------------------------------------------------------------------------------------------------------------------##
+##  ROOT_DIR  ---  ---------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__get_root_dir package result)
+
+    byd__package__get_prefix(${package} prefix)
+
+    byd__func__return_value("${prefix}/src")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+##  STAMP_DIR  - -----------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__get_stamp_dir package result)
+
+    byd__package__get_root_dir(${package} root_dir)
+
+    byd__func__return_value("${root_dir}/${package}-stamp")
+
+endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##  SCRIPT_DIR  ------------------------------------------------------------------------------------------------------##
@@ -147,9 +170,9 @@ endfunction()
 
 function(byd__package__get_script_dir package result)
 
-    byd__package__get_prefix(${package} prefix)
+    byd__package__get_root_dir(${package} root_dir)
 
-    byd__func__return_value("${prefix}/src/${package}-script")
+    byd__func__return_value("${root_dir}/${package}-script")
 
 endfunction()
 
@@ -159,9 +182,9 @@ endfunction()
 
 function(byd__package__get_source_dir package result)
 
-    byd__package__get_prefix(${package} prefix)
+    byd__package__get_root_dir(${package} root_dir)
 
-    byd__func__return_value("${prefix}/src/${package}")
+    byd__func__return_value("${root_dir}/${package}")
 
 endfunction()
 
@@ -171,9 +194,9 @@ endfunction()
 
 function(byd__package__get_install_dir package result)
 
-    byd__package__get_prefix(${package} prefix)
+    byd__package__get_root_dir(${package} root_dir)
 
-    byd__func__return_value("${prefix}/src/${package}-install")
+    byd__func__return_value("${root_dir}/${package}-install")
 
 endfunction()
 
@@ -183,8 +206,7 @@ endfunction()
 
 function(byd__package__get_build_dir package result)
 
-    byd__package__get_prefix(${package} prefix)
-    set(source_dir "${prefix}/src/${package}")
+    byd__package__get_source_dir(${package} source_dir)
 
     byd__EP__get_compile_in_source(${package} compile_in_source)
     if(NOT compile_in_source)
