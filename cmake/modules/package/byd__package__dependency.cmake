@@ -1,8 +1,10 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
+
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
+
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -19,7 +21,7 @@ endfunction()
 
 function(byd__package__add_dependency package)
 
-    __byd__package__append_property(DEPENDENCY "${ARGN}")
+    __byd__package__add_to_property(DEPENDENCY "${ARGN}")
 
 endfunction()
 

@@ -81,7 +81,7 @@ function(__byd__build_package package)
     __byd__check_loop_dependency(${package})
 
 
-    byd__private__is_package_generated(${package} already_generated)
+    byd__package__is_generated(${package} already_generated)
     if(already_generated)
         cmut_debug("[byd] - [${package}] : already generated. skip.")
         return()
@@ -110,7 +110,7 @@ function(__byd__build_package package)
             include("${package_dir}/CMakeLists.txt")
         endif()
 
-        byd__private__set_package_generated(${package})
+        byd__package__set_generated(${package})
 
     __byd__pop_from_build_stack(${package})
 

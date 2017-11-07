@@ -2,7 +2,10 @@
 
 
 include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
-include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
+
+include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
+
+include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 
 
 
@@ -12,7 +15,7 @@ include("${CMUT_ROOT}/utils/cmut__utils__parse_arguments.cmake")
 
 function(byd__package__add_component package)
 
-    __byd__package__append_property(COMPONENTS "${ARGN}")
+    __byd__package__add_to_property(COMPONENTS "${ARGN}")
 
 endfunction()
 
@@ -20,7 +23,7 @@ endfunction()
 
 function(byd__package__is_component package component result)
 
-    cmut__utils__parse_arguments(byd__package__add_component
+    cmut__utils__parse_arguments(byd__package__is_component
         PARAM
         ""
         "VERSION"
@@ -49,6 +52,29 @@ endfunction()
 function(byd__package__get_components package result)
 
     __byd__package__get_property(COMPONENTS components)
+    byd__func__return(components)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__add_components_to_build package components)
+
+    __byd__package__add_to_property(COMPONENTS_TO_BUILD "${components}")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__get_components_to_build package result)
+
+    __byd__package__get_property(COMPONENTS_TO_BUILD components)
+    if(NOT components)
+        byd__package__get_components(${package} components)
+    endif()
+
     byd__func__return(components)
 
 endfunction()
