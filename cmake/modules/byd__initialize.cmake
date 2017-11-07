@@ -41,7 +41,7 @@ function(byd__initialize)
 
 
 
-    option(BUILD_SHARED_LIBS "Enable to build shared libraries")
+    option(BUILD_SHARED_LIBS "Enable to build shared libraries" ON)
     # add BUILD_TESTING option
     enable_testing()
 
