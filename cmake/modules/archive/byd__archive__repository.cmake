@@ -1,9 +1,11 @@
 
 ##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__archive__get_default_repository result)
+function(byd__archive__set_local_repository local_repo)
 
-    byd__func__return_value("$ENV{HOME}/.byd")
+    byd__func__set_property(BYD__ARCHIVE__LOCAL_REPOSITORY "${local_repo}")
 
 endfunction()
 
@@ -11,39 +13,31 @@ endfunction()
 
 function(byd__archive__get_local_repository result)
 
-    set(byd_local_repo_env_var "BYD_LOCAL_REPO")
+    byd__func__get_property(BYD__ARCHIVE__LOCAL_REPOSITORY local_repo)
 
-    set(repository "$ENV{${byd_local_repo_env_var}}")
+    cmut_debug("[byd][archive] : local repository used : ${local_repo}")
 
-    if("x${${byd_local_repo_env_var}}" STREQUAL "x")
-        byd__archive__get_default_repository(repository)
-    endif()
+    byd__func__return(local_repo)
 
-    cmut_debug("[byd][archive] : local repository used : ${repository}")
+endfunction()
 
-    byd__func__return(repository)
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__set_remote_repository remote_repo)
+
+    byd__func__set_property(BYD__ARCHIVE__REMOTE_REPOSITORY "${remote_repo}")
 
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(__byd__archive__get_remote_repository_env_var result)
-    byd__func__return_value("BYD_REMOTE_REPO")
-endfunction()
-
 function(byd__archive__get_remote_repository result)
 
-    __byd__archive__get_remote_repository_env_var(byd_remote_repo_env_var)
+    byd__func__get_property(BYD__ARCHIVE__REMOTE_REPOSITORY remote_repo)
 
-    set(repository "$ENV{${byd_remote_repo_env_var}}")
-
-    if("x${repository}" STREQUAL "x")
-        cmut_warn("[byd][archive] : ${byd_remote_repo_env_var} environment variable not defined. Abort upload.")
-    else()
-        cmut_debug("[byd][archive] : remote repository used : ${repository}")
-    endif()
-
-    byd__func__return(repository)
+    byd__func__return(remote_repo)
 
 endfunction()
 
@@ -51,14 +45,15 @@ endfunction()
 
 function(byd__archive__is_remote_repository_defined result)
 
-    __byd__archive__get_remote_repository_env_var(byd_remote_repo_env_var)
+    byd__archive__get_remote_repository(remote_repo)
 
-    set(repository "$ENV{${byd_remote_repo_env_var}}")
-
-    if("x${repository}" STREQUAL "x")
+    if("${remote_repo}" STREQUAL "")
         byd__func__return_value(0)
     else()
         byd__func__return_value(1)
     endif()
-
 endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##
+##--------------------------------------------------------------------------------------------------------------------##

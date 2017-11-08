@@ -48,6 +48,8 @@ function(byd__initialize)
 
     byd__option__jobs()
     byd__option__log_step()
+    byd__option__local_repo()
+    byd__option__remote_repo()
     byd__option__prefix()
     byd__option__upload_archive()
 
