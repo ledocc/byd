@@ -58,6 +58,10 @@ function(byd__initialize)
 
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX install CACHE PATH "CMAKE_INSTALL_PREFIX: Install path prefix, prepended onto install directories." FORCE)
+    endif()
+
     if(CMAKE_INSTALL_PREFIX)
         cmut__config__resolve_install_prefix()
     endif()
