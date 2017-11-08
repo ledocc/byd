@@ -58,11 +58,16 @@ function(byd__archive__rsync__upload_archive package)
     list(APPEND rsync_opts "${root_dir}")
     list(APPEND rsync_opts "${remote_repo}")
 
-    cmut_info("${RSYNC_COMMAND} ${rsync_opts}")
+
+    cmut_debug("[byd][archive][rsync] : cmut__utils__execute_process(")
+    cmut_debug("[byd][archive][rsync] :     COMMAND ${RSYNC_COMMAND} ${rsync_opts}")
+    cmut_debug("[byd][archive][rsync] :     WORKING_DIRECTORY ${local_repo}")
+    cmut_debug("[byd][archive][rsync] :     FATAL )")
+
 
     cmut__utils__execute_process(
-        COMMAND ${RSYNC_COMMAND} ${rsync_opts}
-        WORKING_DIRECTORY ${local_repo}
+        COMMAND ${RSYNC_COMMAND} "${rsync_opts}"
+        WORKING_DIRECTORY "${local_repo}"
         FATAL
         )
 
@@ -83,17 +88,21 @@ function(byd__archive__rsync__download_archive package)
     byd__archive__get_local_repository(local_repo)
     byd__archive__get_remote_repository(remote_repo)
     byd__archive__get_archive_root_dir(root_dir)
-    cmut_debug("root_dir=${root_dir}")
 
     list(APPEND rsync_opts "${remote_repo}/${root_dir}")
     list(APPEND rsync_opts "${local_repo}")
 
-    cmut_debug("${RSYNC_COMMAND} ${rsync_opts}")
+
+    cmut_debug("[byd][archive][rsync] : cmut__utils__execute_process(")
+    cmut_debug("[byd][archive][rsync] :     COMMAND ${RSYNC_COMMAND} ${rsync_opts}")
+    cmut_debug("[byd][archive][rsync] :     WORKING_DIRECTORY ${local_repo}")
+    cmut_debug("[byd][archive][rsync] :     FATAL )")
+
 
     cmut__utils__mkdir(${local_repo})
     cmut__utils__execute_process(
-        COMMAND ${RSYNC_COMMAND} ${rsync_opts}
-        WORKING_DIRECTORY ${local_repo}
+        COMMAND ${RSYNC_COMMAND} "${rsync_opts}"
+        WORKING_DIRECTORY "${local_repo}"
         )
 
 endfunction()
