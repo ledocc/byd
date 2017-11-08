@@ -28,7 +28,7 @@ function(byd__EP__step__provider__define_step_info)
 
 
     byd__EP__set_default_argument(${step_name} COMMENT "Create reusable archive of this build")
-    byd__EP__set_default_argument(${step_name} DEPENDEES "create_archive")
+    byd__EP__set_default_argument(${step_name} DEPENDEES "extract_archive")
 
     byd__EP__set_default_argument(${step_name} LOG ${BYD__OPTION__LOG_STEP})
 

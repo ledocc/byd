@@ -15,6 +15,9 @@ function(byd__action__upload_archive package)
     byd__package__get_source_dir(${package} source_dir)
     byd__package__get_script_dir(${package} script_dir)
 
+    byd__archive__get_local_repository(local_repo)
+    byd__archive__get_remote_repository(remote_repo)
+
 
     byd__archive__get_local_package_archive_path(${package} archive_path)
 
