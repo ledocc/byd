@@ -1,7 +1,3 @@
-
-
-
-
 include("${BYD_ROOT}/cmake/modules/func.cmake")
 include("${BYD_ROOT}/cmake/modules/package.cmake")
 include("${BYD_ROOT}/cmake/modules/private.cmake")
@@ -94,6 +90,7 @@ function(__byd__build_package package)
 
         __byd__build_package_dependency(${package})
 
+        byd__archive__remove_previous_build_if_byd_tag_not_match(${package})
 
         byd__private__is_package_archive_available(${package} archive_available)
         if(archive_available)
@@ -110,8 +107,11 @@ function(__byd__build_package package)
             if (BYD__OPTION__UPLOAD_ARCHIVE)
                 byd__action__upload_archive(${package})
             endif()
-            include("${package_dir}/CMakeLists.txt")
+            add_subdirectory("${package_dir}" "packages_subdirectory/${package}")
         endif()
+
+        byd__archive__add_byd_tag(${package})
+
 
         byd__package__set_generated(${package})
 
@@ -144,6 +144,21 @@ function(byd__run)
     foreach(package IN LISTS packages)
         __byd__build_package(${package})
     endforeach()
+
+
+    byd__archive__is_byd_tag_mismatch(byd_tag_mismatch)
+    if(byd_tag_mismatch)
+
+        cmut_info("[byd] - At least one byd tag mismatch")
+        cmut_info("[byd] - remove ${CMAKE_INSTALL_PREFIX}")
+        cmut__utils__rmdir(${CMAKE_INSTALL_PREFIX})
+
+        byd__package__get_generated_list(package_generated)
+        foreach(package IN LISTS package_generated)
+            byd__action__extract_archive__reset(${package})
+        endforeach()
+
+    endif()
 
 endfunction()
 

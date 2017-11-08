@@ -46,5 +46,23 @@ function(byd__action__extract_archive package)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__action__extract_archive__reset package)
+
+    byd__package__get_stamp_dir(${package} stamp_dir)
+    set(extract_archive-stamp-file "${stamp_dir}/${package}-extract_archive")
+
+    if(NOT EXISTS "${extract_archive-stamp-file}")
+        return()
+    endif()
+
+    cmut_info("[byd][action][extract_archive] - [${package}] : force reset of this step")
+    cmut_debug("[byd][action][extract_archive] - [${package}] : remove \"${extract_archive-stamp-file}\"")
+
+    file(REMOVE "${extract_archive-stamp-file}")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
