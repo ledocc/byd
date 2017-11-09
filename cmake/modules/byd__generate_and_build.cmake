@@ -8,6 +8,17 @@ include("${CMUT_ROOT}/utils/cmut__utils__execute_process.cmake")
 
 function(byd__generate_and_build source_dir)
 
+    cmut__utils__parse_arguments(
+        byd__generate_and_build
+        GEN_AND_BUILD_
+        ""
+        ""
+        "CMAKE_ARGS"
+        ${ARGN}
+        )
+
+
+
     set(build_dir   "${PROJECT_BINARY_DIR}/byd/_build")
     set(install_dir "${PROJECT_BINARY_DIR}/byd/_install")
     set(log_dir     "${PROJECT_BINARY_DIR}/byd/_log")
@@ -21,8 +32,26 @@ function(byd__generate_and_build source_dir)
     cmut__utils__mkdir("${build_dir}")
     cmut__utils__mkdir("${log_dir}")
 
+
+
+    list(APPEND cmake_args "-DCMAKE_INSTALL_PREFIX=${install_dir}")
+
+    set(cmake_arg_to_forward
+        CMAKE_BUILD_TYPE
+        CMAKE_TOOLCHAIN_FILE
+        )
+
+    foreach(cmake_arg IN LISTS cmake_arg_to_forward)
+        if(NOT "${${cmake_arg}}" STREQUAL "")
+            list(APPEND cmake_args "-D${cmake_arg}=${${cmake_arg}}")
+        endif()
+    endforeach()
+
+    list(APPEND cmake_args "${GEN_AND_BUILD__CMAKE_ARGS}")
+    list(APPEND cmake_args "${source_dir}")
+
     cmut__utils__execute_process(
-        COMMAND ${CMAKE_COMMAND} "-DCMAKE_INSTALL_PREFIX=${install_dir}" "${source_dir}"
+        COMMAND ${CMAKE_COMMAND} "${cmake_args}"
         WORKING_DIRECTORY "${build_dir}"
         LOG_FILE ${log_dir}/generate
         FATAL
