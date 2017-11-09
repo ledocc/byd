@@ -48,20 +48,28 @@ function(byd__generate_and_build source_dir)
     endforeach()
 
     list(APPEND cmake_args "${GEN_AND_BUILD__CMAKE_ARGS}")
+
     list(APPEND cmake_args "${source_dir}")
+
+
+    cmut_info("[byd] : configure step ...")
+    cmut_info("[byd] : configure command ...")
 
     cmut__utils__execute_process(
         COMMAND ${CMAKE_COMMAND} "${cmake_args}"
         WORKING_DIRECTORY "${build_dir}"
-        LOG_FILE ${log_dir}/generate
+        LOG_FILE ${log_dir}/configure
         FATAL
         )
 
+    cmut_info("[byd] : build step ... (this could take a while)")
     cmut__utils__execute_process(
         COMMAND ${CMAKE_COMMAND} --build . -- -j1
         WORKING_DIRECTORY "${build_dir}"
         LOG_FILE ${log_dir}/build
         FATAL
         )
+
+    cmut_info("[byd] : dependencies configuration/build done.")
 
 endfunction()
