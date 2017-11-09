@@ -145,6 +145,7 @@ function(byd__run)
         __byd__build_package(${package})
     endforeach()
 
+    byd__archive__write_cmake_args_in_build_id()
 
     byd__archive__is_byd_tag_mismatch(byd_tag_mismatch)
     if(byd_tag_mismatch)

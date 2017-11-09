@@ -43,7 +43,7 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__archive__get_cmake_args_build_id package result)
+function(byd__archive__get_cmake_args_in_build_id result)
 
     set(CMAKE_ARGS
         BUILD_SHARED_LIBS
@@ -75,6 +75,16 @@ function(byd__archive__get_cmake_args_build_id package result)
         __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_SHARED_LINKER_FLAGS_${buildType})
     endif()
 
+    byd__func__return(CMAKE_ARGS)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__get_cmake_args_build_id result)
+
+    byd__archive__get_cmake_args_in_build_id(CMAKE_ARGS)
+
     foreach(arg IN LISTS CMAKE_ARGS)
         list(APPEND cmake_args "${arg}=${${arg}}")
     endforeach()
@@ -96,7 +106,9 @@ function(byd__archive__get_archive_root_dir result)
 
 endfunction()
 
-function(byd__archive__get_package_archive_output_dir package result)
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__get_archive_cmake_args_dir result)
 
     byd__archive__get_archive_root_dir(root_dir)
     set(output_dir "${root_dir}")
@@ -104,8 +116,18 @@ function(byd__archive__get_package_archive_output_dir package result)
     byd__get_build_id(byd_build_id)
     set(output_dir "${output_dir}/byd-${byd_build_id}")
 
-    byd__archive__get_cmake_args_build_id(${package} cmake_args_build_id)
+    byd__archive__get_cmake_args_build_id(cmake_args_build_id)
     set(output_dir "${output_dir}/${cmake_args_build_id}")
+
+    byd__func__return(output_dir)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__get_package_archive_output_dir package result)
+
+    byd__archive__get_archive_cmake_args_dir(output_dir)
 
     byd__package__get_version(${package} package_version)
     set(output_dir "${output_dir}/${package}-${package_version}")
@@ -114,6 +136,28 @@ function(byd__archive__get_package_archive_output_dir package result)
     set(output_dir "${output_dir}/${dependencies_build_id}")
 
     byd__func__return(output_dir)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__write_cmake_args_in_build_id)
+
+    byd__archive__get_cmake_args_in_build_id(CMAKE_ARGS)
+
+    foreach(arg IN LISTS CMAKE_ARGS)
+        string(APPEND cmake_args_in_build_id "${arg}=${${arg}}\n")
+    endforeach()
+
+    byd__archive__get_local_repository(repository)
+    byd__archive__get_archive_cmake_args_dir(output_dir)
+
+    set(path "${repository}/${output_dir}")
+
+    if(EXISTS ${path})
+        cmut_info("file(WRITE \"${repository}/${output_dir}/cmake_args.txt\" ${cmake_args_in_build_id})")
+        file(WRITE "${repository}/${output_dir}/cmake_args.txt" ${cmake_args_in_build_id})
+    endif()
 
 endfunction()
 
@@ -130,20 +174,16 @@ endfunction()
 
 function(byd__archive__find_package_archive_path package result)
 
-    byd__archive__get_local_repository(repositories)
+    byd__archive__get_local_repository(repository)
     byd__archive__get_local_package_archive_path(${package} package_path)
 
-    foreach(repo IN LISTS repositories)
+    set(path "${repository}/${package_path}")
 
-        set(path "${repo}/${package_path}")
-
-        if(EXISTS "${path}")
-            byd__func__return(path)
-            cmut_debug("[byd][archive] - [${package}] : path found : ${path}")
-            return()
-        endif()
-
-    endforeach()
+    if(EXISTS "${path}")
+        byd__func__return(path)
+        cmut_debug("[byd][archive] - [${package}] : path found : ${path}")
+        return()
+    endif()
 
     byd__func__return_value("")
     cmut_debug("[byd][archive] - [${package}] : path not found")
