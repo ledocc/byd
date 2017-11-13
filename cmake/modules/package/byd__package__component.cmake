@@ -172,6 +172,7 @@ function(byd__package__split_package_component_name package package_name compone
     list(LENGTH package_and_component package_and_component_num_element)
     if(package_and_component_num_element EQUAL 1)
         set(package_name ${package} PARENT_SCOPE)
+        set(component_name "" PARENT_SCOPE)
         return()
     elseif(package_and_component_num_element EQUAL 2)
         __byd__package__get_package_name_from_package_and_component_list("${package_and_component}" package_name)
