@@ -9,6 +9,16 @@ include("${CMUT_ROOT}/cmut_message.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__EP__step__debug message)
+
+    if(NOT BYD__EP__DEBUG)
+        return()
+    endif()
+
+    cmut_debug("[byd][EP][step] - ${message}")
+
+endfunction()
+
 
 function(byd__EP__step__log_EP_Add_Step_command package step arguments)
 
