@@ -34,11 +34,9 @@ function(byd__package__get_dependency package result)
 
 endfunction()
 
-
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
-
 
 function(byd__package__set_component_dependencies package)
 
@@ -58,42 +56,10 @@ function(byd__package__set_component_dependencies package)
         return()
     endif()
 
-    __byd__package__set_property(DEPENDENCIES__${PARAM_COMPONENT} "${PARAM_DEPENDS}")
+    byd__package__make_package_component_name(${package} ${PARAM_COMPONENT} package)
+    __byd__package__set_property(DEPENDENCY "${PARAM_DEPENDS}")
 
 endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
-function(byd__package__get_component_dependencies package component result)
-
-    __byd__package__get_property(DEPENDENCIES__${component} dependency)
-    byd__func__return(dependency)
-
-endfunction()
-
-
-##--------------------------------------------------------------------------------------------------------------------##
-##--------------------------------------------------------------------------------------------------------------------##
-##--------------------------------------------------------------------------------------------------------------------##
-
-
-function(byd__package__collect_dependencies package result)
-
-    byd__package__get_dependency(${package} dependencies)
-
-    byd__package__get_components_to_build(${package} components)
-    foreach(component IN LISTS components)
-        byd__package__get_component_dependencies(${package} ${component} per_component_dependencies)
-        list(APPEND dependencies ${per_component_dependencies})
-    endforeach()
-
-    list(SORT dependencies)
-    list(REMOVE_DUPLICATES dependencies)
-
-    byd__func__return(dependencies)
-
-endfunction()
-
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -119,7 +85,7 @@ endfunction()
 
 function(byd__package__collect_dependencies_abis package result)
 
-    byd__package__collect_dependencies(${package} dependencies)
+    byd__package__get_dependency(${package} dependencies)
 
     set(abis)
     foreach(dependency IN LISTS dependencies)

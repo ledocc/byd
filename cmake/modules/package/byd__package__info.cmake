@@ -14,6 +14,9 @@ include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 
 function(byd__package__info package)
 
+    byd__package__assert_no_component(${package} byd__package__info)
+
+
     cmut__utils__parse_arguments(
         byd__package__info
         __BYD__PACKAGE__INFO_ARG
@@ -52,6 +55,8 @@ endfunction()
 
 function(byd__package__download_info package)
 
+    byd__package__assert_no_component(${package} byd__package__download_info)
+
     byd__package__set_download_args(${package} ${ARGN})
 
 endfunction()
@@ -62,6 +67,8 @@ endfunction()
 
 function(byd__package__set_maintainer_name package maintainer_name)
 
+    byd__package__assert_no_component(${package} byd__package__set_maintainer_name)
+
     __byd__package__set_property(MAINTAINER_NAME "${maintainer_name}")
 
 endfunction()
@@ -69,6 +76,8 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__get_maintainer_name package result)
+
+    byd__package__get_package_name(${package} package)
 
     __byd__package__get_property(MAINTAINER_NAME maintainer_name)
 
@@ -82,6 +91,8 @@ endfunction()
 
 function(byd__package__set_maintainer_email package maintainer_email)
 
+    byd__package__assert_no_component(${package} byd__package__set_maintainer_email)
+
     __byd__package__set_property(MAINTAINER_EMAIL "${maintainer_email}")
 
 endfunction()
@@ -89,6 +100,8 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__get_maintainer_email package result)
+
+    byd__package__get_package_name(${package} package)
 
     __byd__package__get_property(MAINTAINER_EMAIL maintainer_email)
 
@@ -102,6 +115,8 @@ endfunction()
 
 function(byd__package__set_version package version)
 
+    byd__package__assert_no_component(${package} byd__package__set_version)
+
     __byd__package__set_property(VERSION "${version}")
 
 endfunction()
@@ -109,6 +124,8 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__get_version package result)
+
+    byd__package__get_package_name(${package} package)
 
     __byd__package__get_property(VERSION version)
 
@@ -122,6 +139,8 @@ endfunction()
 
 function(byd__package__set_abi package abi)
 
+    byd__package__assert_no_component(${package} byd__package__set_abi)
+
     __byd__package__set_property(ABI "${abi}")
 
 endfunction()
@@ -129,6 +148,8 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__get_abi package result)
+
+    byd__package__get_package_name(${package} package)
 
     __byd__package__get_property(ABI abi)
 
@@ -141,6 +162,8 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__set_download_args package)
+
+    byd__package__assert_no_component(${package} byd__package__set_download)
 
     __byd__package__set_property(DOWNLOAD_ARGS "${ARGN}")
 
@@ -161,6 +184,8 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__package__apply_download_info package)
+
+    byd__package__get_package_name(${package} package)
 
     byd__package__get_download_args(${package} args)
 

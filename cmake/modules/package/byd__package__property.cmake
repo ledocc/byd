@@ -11,7 +11,7 @@ include("${BYD_ROOT}/cmake/modules/private/byd__private__assert_not_empty.cmake"
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(__byd__package__get_property_name param result)
-    byd__private__assert_not_empty(${package})
+    byd__private__assert_not_empty("${package}")
     byd__func__return_value(BYD__PACKAGE__${param}__${package})
 endfunction()
 

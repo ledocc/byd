@@ -24,7 +24,40 @@ endmacro()
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+macro(byd__add_package__include_id_file id_file)
+
+    if(NOT EXISTS "${id_file}")
+        cmut_fatal("[byd] - [${package}] : ${id_file} not found.")
+    endif()
+    cmut_debug("[byd] - [${package}] : include ${id_file}.")
+    include("${id_file}")
+
+endmacro()
+
+macro(byd__add_package__include_component_file component_file)
+
+    if(EXISTS "${component_file}")
+        cmut_debug("[byd] - [${package}] : include ${component_file}.")
+        include("${component_file}")
+    endif()
+
+endmacro()
+
+macro(byd__add_package__add_components_to_build components_to_build)
+
+    cmut_info("[byd] - [${package}] : component to build :")
+    foreach(component IN LISTS components_to_build)
+        cmut_info("[byd] - [${package}] : - ${component}")
+    endforeach()
+    byd__package__add_components_to_build(${package} "${components_to_build}")
+
+endmacro()
+
+
 function(byd__add_package package)
+
+    byd__package__assert_no_component(${package} byd__add_package)
+
 
     byd__initialize_if_not_done()
 
@@ -50,33 +83,14 @@ function(byd__add_package package)
     cmut_info("[byd] - [${package}] : use info from ${package_dir}.")
 
 
-    # include package id file
-    set(id_file "${package_dir}/id.cmake")
-    if(NOT EXISTS "${id_file}")
-        cmut_fatal("[byd] - [${package}] : ${id_file} not found.")
-    endif()
-    cmut_debug("[byd] - [${package}] : include ${id_file}.")
-    include("${id_file}")
+    byd__add_package__include_id_file("${package_dir}/id.cmake")
 
     byd__package__get_version(${package} version)
     cmut_info("[byd] - [${package}] : version : ${version}.")
 
 
-    # include package component file
-    set(component_file "${package_dir}/component.cmake")
-    if(EXISTS "${component_file}")
-        cmut_debug("[byd] - [${package}] : include ${component_file}.")
-        include("${component_file}")
-    endif()
+    byd__add_package__include_component_file("${package_dir}/component.cmake")
 
-    # define components to build
-    if(PARAM_COMPONENTS)
-        cmut_info("[byd] - [${package}] : component to build :")
-        foreach(component IN LISTS PARAM_COMPONENTS)
-            cmut_info("[byd] - [${package}] : - ${component}")
-        endforeach()
-        byd__package__add_components_to_build(${package} "${PARAM_COMPONENTS}")
-    endif()
 
     cmut_info("[byd] - ---------------------------------")
 
@@ -91,9 +105,17 @@ function(byd__add_package package)
 
 
     # add to build list
-    byd__package__set_added(${package})
-    __byd__add_package_to_build_list(${package})
+    if(PARAM_COMPONENTS)
+        foreach(component IN LISTS PARAM_COMPONENTS)
+            byd__package__make_package_component_name(${package} ${component} package_component_name)
 
+            byd__package__set_added(${package_component_name})
+            __byd__add_package_to_build_list(${package_component_name})
+        endforeach()
+    else()
+        byd__package__set_added(${package})
+        __byd__add_package_to_build_list(${package})
+    endif()
 
 endfunction()
 

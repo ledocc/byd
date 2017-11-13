@@ -15,7 +15,7 @@ include("${BYD_ROOT}/cmake/modules/action.cmake")
 function(__byd__build_package_dependency package)
 
     byd__package__include_dependency_file(${package})
-    byd__package__collect_dependencies(${package} dependencies)
+    byd__package__get_dependency(${package} dependencies)
     if(NOT dependencies)
         return()
     endif()
@@ -28,8 +28,16 @@ function(__byd__build_package_dependency package)
 
 
     foreach(dependency IN LISTS dependencies)
-        byd__add_package(${dependency})
-        __byd__build_package(${dependency})
+        byd__package__split_package_component_name("${dependency}" package_name component_name)
+        byd__private__is_empty("${component_name}" is_component_name_empty)
+
+        if(NOT is_component_name_empty)
+            set(opts COMPONENTS ${component_name})
+        endif()
+
+        byd__add_package(${package_name} ${opts})
+
+        byd__build_package(${dependency})
     endforeach()
 
     byd__EP__set_package_argument(${package} GENERAL DEPENDS "${dependencies}")
@@ -69,13 +77,9 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(__byd__build_package package)
-
-    byd__private__find_package_directory(${package} package_dir)
-
+function(byd__build_package package)
 
     __byd__check_loop_dependency(${package})
-
 
     byd__package__is_generated(${package} already_generated)
     if(already_generated)
@@ -89,6 +93,7 @@ function(__byd__build_package package)
     __byd__push_to_build_stack(${package})
 
         __byd__build_package_dependency(${package})
+
 
         byd__archive__remove_previous_build_if_byd_tag_not_match(${package})
 
@@ -107,6 +112,8 @@ function(__byd__build_package package)
             if (BYD__OPTION__UPLOAD_ARCHIVE)
                 byd__action__upload_archive(${package})
             endif()
+
+            byd__private__find_package_directory(${package} package_dir)
             add_subdirectory("${package_dir}" "packages_subdirectory/${package}")
         endif()
 
@@ -136,16 +143,19 @@ function(byd__run)
     cmut_info("[byd] -")
 
 
-    byd__func__set_property("__BYD__BUILD_PACKAGE_STACK" "")
+    byd__func__set_property(__BYD__BUILD_PACKAGE_STACK "")
 
     byd__func__get_property(__BYD__PACKAGE_TO_BUILD packages)
     list(REMOVE_DUPLICATES packages)
 
+
     foreach(package IN LISTS packages)
-        __byd__build_package(${package})
+        byd__build_package(${package})
     endforeach()
 
+
     byd__archive__write_cmake_args_in_build_id()
+
 
     byd__archive__is_byd_tag_mismatch(byd_tag_mismatch)
     if(byd_tag_mismatch)
