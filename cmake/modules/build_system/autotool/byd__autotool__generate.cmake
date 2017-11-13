@@ -117,7 +117,6 @@ function(byd__autotool__generate_configure_command package)
         list(APPEND configure_args "--host=${CMAKE_CXX_COMPILER_TARGET}")
     endif()
 
-    byd__autotool__configure__add_components_to_arg(${package})
     byd__autotool__configure__get_args(${package} custom_configure_args)
 
 
