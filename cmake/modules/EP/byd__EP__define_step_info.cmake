@@ -1,4 +1,5 @@
 
+include("${BYD_ROOT}/cmake/modules/EP/log.cmake")
 
 function(byd__EP__define_step_info)
 
