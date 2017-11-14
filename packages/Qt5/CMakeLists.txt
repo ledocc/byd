@@ -49,7 +49,12 @@ if(UNIX AND NOT APPLE)
         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/libexec/qt.conf"
         )
 endif()
-
+if(APPLE AND CMAKE_BUILD_TYPE MATCHES Debug)
+     list(APPEND
+         install_qt_conf_COMMAND
+         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_LIST_DIR}/qt.conf" "${CMAKE_INSTALL_PREFIX}/libexec/qt.conf"
+         )
+endif()
 ExternalProject_Add_Step(
     ${package}
     install_qt_conf
