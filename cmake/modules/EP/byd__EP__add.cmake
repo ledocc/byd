@@ -14,9 +14,9 @@ function(byd__EP__add package)
 
     add_step(standard)
     add_step(custom_patch)
-    add_step(fixup_dylib)
     add_step(extract_archive)
     add_step(create_archive)
+    add_step(fixup_dylib)
     add_step(upload_archive)
 
     # add each step

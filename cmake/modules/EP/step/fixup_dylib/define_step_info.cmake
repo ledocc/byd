@@ -29,6 +29,7 @@ function(byd__EP__step__provider__define_step_info)
 
     byd__EP__set_default_argument(${step_name} COMMENT "Fixup shared library (.dylib) rpath")
     byd__EP__set_default_argument(${step_name} DEPENDEES "install")
+    byd__EP__set_default_argument(${step_name} DEPENDERS "create_archive")
 
     byd__EP__set_default_argument(${step_name} LOG ${BYD__OPTION__LOG_STEP})
 
