@@ -35,6 +35,7 @@ function(byd__generate_and_build source_dir)
 
 
     list(APPEND cmake_args "-DCMAKE_INSTALL_PREFIX=${install_dir}")
+    list(APPEND cmake_args "-G${CMAKE_GENERATOR}")
 
     set(cmake_arg_to_forward
         CMAKE_BUILD_TYPE
