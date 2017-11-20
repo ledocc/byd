@@ -1,6 +1,7 @@
 include("${BYD_ROOT}/cmake/modules/byd__add_package.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__generate_and_build.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__get_build_id.cmake")
+include("${BYD_ROOT}/cmake/modules/byd__get_cmake_args_in_build_id.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__initialize.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__package_repositories.cmake")
 include("${BYD_ROOT}/cmake/modules/byd__run.cmake")

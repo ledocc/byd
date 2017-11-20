@@ -4,6 +4,8 @@
 include("${CMUT_ROOT}/utils/cmut__utils__directory.cmake")
 include("${CMUT_ROOT}/utils/cmut__utils__execute_process.cmake")
 
+include("${CMAKE_CURRENT_LIST_DIR}/byd__get_cmake_args_in_build_id.cmake")
+
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__generate_and_build source_dir)
@@ -37,11 +39,7 @@ function(byd__generate_and_build source_dir)
     list(APPEND cmake_args "-DCMAKE_INSTALL_PREFIX=${install_dir}")
     list(APPEND cmake_args "-G${CMAKE_GENERATOR}")
 
-    set(cmake_arg_to_forward
-        CMAKE_BUILD_TYPE
-        CMAKE_TOOLCHAIN_FILE
-        )
-
+    byd__get_cmake_args_in_build_id(cmake_arg_to_forward)
     foreach(cmake_arg IN LISTS cmake_arg_to_forward)
         if(NOT "${${cmake_arg}}" STREQUAL "")
             list(APPEND cmake_args "-D${cmake_arg}=${${cmake_arg}}")
