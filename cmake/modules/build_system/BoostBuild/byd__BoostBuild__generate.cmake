@@ -123,6 +123,9 @@ function(byd__BoostBuild__generate_configure_command package)
 
 
     byd__script__begin("${script_dir}/configure.cmake")
+        byd__script__env__unset("CC")
+        byd__script__env__unset("CXX")
+        byd__script__env__unset("RC")
         byd__script__command("${command}")
     byd__script__end()
 
