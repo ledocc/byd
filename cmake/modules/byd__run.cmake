@@ -53,10 +53,12 @@ function(__byd__check_loop_dependency package)
     if(${package} IN_LIST build_package_stack)
 
         cmut_info("[byd] : loop dependency detected.")
+        cmut_info("[byd] : package \"${package}\" already in stack.")
         cmut_info("[byd] : stack : ")
         foreach(package IN LISTS build_package_stack)
             cmut_info("[byd] : - ${package}")
         endforeach()
+        cmut_info("[byd] : loop dependency detected !!!")
         cmut_fatal("[byd] : loop dependency detected !!!")
 
     endif()
