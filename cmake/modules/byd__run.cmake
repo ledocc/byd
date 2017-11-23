@@ -173,6 +173,9 @@ function(byd__run)
 
     endif()
 
+    byd__package__get_generated_list(package_generated)
+    file(WRITE "${CMAKE_BINARY_DIR}/target.list" "${package_generated}")
+
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##

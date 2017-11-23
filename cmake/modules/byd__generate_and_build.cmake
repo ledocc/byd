@@ -64,14 +64,35 @@ function(byd__generate_and_build source_dir)
         FATAL
         )
 
-    cmut_info("[byd] : build step ... (this could take a while)")
+
+    if (NOT EXISTS "${build_dir}/target.list")
+
+        cmut_info("[byd] : build step ... (this could take a while)")
+        __byd__build("all")
+
+    else()
+
+        file(READ "${build_dir}/target.list" targets)
+
+        foreach(target IN LISTS targets)
+            cmut_info("[byd] : build \"${target}\"  ... (this could take a while)")
+            __byd__build( ${target} )
+        endforeach()
+
+    endif()
+
+    cmut_info("[byd] : dependencies configuration/build done.")
+
+endfunction()
+
+
+function(__byd__build target)
+
     cmut__utils__execute_process(
-        COMMAND ${CMAKE_COMMAND} --build . -- -j1
+        COMMAND ${CMAKE_COMMAND} --build . -- ${target} -j1
         WORKING_DIRECTORY "${build_dir}"
         LOG_FILE ${log_dir}/build
         FATAL
         )
-
-    cmut_info("[byd] : dependencies configuration/build done.")
 
 endfunction()
