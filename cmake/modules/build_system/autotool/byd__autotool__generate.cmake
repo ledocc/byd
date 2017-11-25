@@ -176,6 +176,8 @@ function(byd__autotool__generate_build_command package)
     set(command ${command} -j${num_core})
 
     byd__script__begin("${script_dir}/build.cmake")
+        __byd__autotool__script__prepend_env_var_if_defined("LD_LIBRARY_PATH:PATH" "${CMAKE_INSTALL_PREFIX}/lib")
+
         byd__build_system__inject_env_var_in_script(${package} BUILD)
         byd__script__command("${command}")
     byd__script__end()
