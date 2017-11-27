@@ -42,8 +42,7 @@ function(byd__initialize)
 
 
     option(BUILD_SHARED_LIBS "Enable to build shared libraries" ON)
-    # add BUILD_TESTING option
-    enable_testing()
+    option(BUILD_TESTING "Build the testing tree." ON)
 
 
     byd__option__jobs()
