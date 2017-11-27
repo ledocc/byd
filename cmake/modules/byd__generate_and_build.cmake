@@ -91,8 +91,19 @@ function(__byd__build target)
     cmut__utils__execute_process(
         COMMAND ${CMAKE_COMMAND} --build . -- ${target} -j1
         WORKING_DIRECTORY "${build_dir}"
-        LOG_FILE ${log_dir}/build
-        FATAL
+        LOG_FILE "${log_dir}/build"
+        RESULT_VARIABLE result
         )
+
+    if(result OR BYD_DEBUG)
+        file(READ "${log_dir}/build-out.log" out_log)
+        file(READ "${log_dir}/build-err.log" err_log)
+        cmut_info("output :\n${out_log}")
+        cmut_info("error  :\n${err_log}")
+    endif()
+
+    if(result)
+        cmut_fatal("[byd] : build of \"${target}\" failed.")
+    endif()
 
 endfunction()
