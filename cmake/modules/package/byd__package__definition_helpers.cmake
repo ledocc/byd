@@ -28,7 +28,7 @@ function(byd__package__assert_component_exists package_name component_name)
 
     byd__package__get_components(${package_name} components)
     if(NOT component_name IN_LIST components)
-        cmut_fatal("[byd][package] - [${package_name}] : component \"${component_name}\" requested but not provide by package definition.")
+        cmut_fatal("[byd][package] - [${package_name}] : component \"${component_name}\" requested but not provided by package definition.")
     endif()
 
 endfunction()

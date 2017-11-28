@@ -10,6 +10,7 @@ include("${BYD_ROOT}/cmake/modules/func/byd__func__return.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__add_package_repositories)
+    cmut_info("[byd] - add package repository : \"${ARGN}\"")
     byd__func__add_to_property(BYD__PACKAGE_REPOSITORIES "${ARGN}")
 endfunction()
 
