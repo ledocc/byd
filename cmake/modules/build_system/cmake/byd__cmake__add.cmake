@@ -27,7 +27,7 @@ function(byd__cmake__add package)
     byd__cmake__generate_build_command(${package})
     byd__cmake__generate_install_command(${package})
 
-    if((NOT "test" IN_LIST PARAM_SKIP) AND (BUILD_TESTING))
+    if((NOT ANDROID) AND (NOT "test" IN_LIST PARAM_SKIP) AND (BUILD_TESTING))
         byd__cmake__generate_test_command(${package})
     endif()
 
