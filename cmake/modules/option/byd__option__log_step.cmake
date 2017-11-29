@@ -6,14 +6,9 @@
 
 function(byd__option__log_step)
 
-    set(default_log_step ON)
+    byd__option__private__get_default("BYD__OPTION__LOG_STEP" "ON" default_log_step)
 
-    set(log_step_from_env_var "$ENV{BYD__OPTION__LOG_STEP}")
-    if(log_step_from_env_var)
-        set(default_log_step "${log_step_from_env_var}")
-    endif()
-
-    option(BYD__OPTION__LOG_STEP "Enable to log step action in a file" default_log_step)
+    option(BYD__OPTION__LOG_STEP "Enable to log step action in a file" ${default_log_step})
 
 endfunction()
 

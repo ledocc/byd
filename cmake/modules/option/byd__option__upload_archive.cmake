@@ -6,14 +6,17 @@
 
 function(byd__option__upload_archive)
 
-    set(default_upload_archive OFF)
+    byd__option__private__get_default("BYD__OPTION__UPLOAD_ARCHIVE" "OFF" default_upload_archive)
 
-    set(upload_archive_from_env_var "$ENV{BYD__OPTION__UPLOAD_ARCHIVE}")
-    if(upload_archive_from_env_var)
-        set(default_upload_archive "${upload_archive_from_env_var}")
-    endif()
+    set(BYD__OPTION__UPLOAD_ARCHIVE
+        "${default_upload_archive}"
+        CACHE
+        PATH
+        "Enable to upload archive on remote repo defined by BYD__OPTION__REMOTE_REPO."
+        FORCE
+        )
 
-    option(BYD__OPTION__UPLOAD_ARCHIVE "Enable to upload archive." default_upload_archive)
+    option(BYD__OPTION__UPLOAD_ARCHIVE "Enable to upload archive." ${default_upload_archive})
 
 endfunction()
 
