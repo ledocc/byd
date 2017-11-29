@@ -49,8 +49,13 @@ endfunction()
 function(byd__archive__get_archive_root_dir result)
 
     cmut__system__get_distribution_name(distribution_name)
-    cmut__system__get_distribution_version(distribution_version)
-    set(root_dir "${distribution_name}-${distribution_version}")
+    set(root_dir "${distribution_name}")
+
+    if (UNIX AND (NOT DARWIN))
+        cmut__system__get_distribution_version(distribution_version)
+        set(root_dir "${root_dir}-${distribution_version}")
+    endif()
+
 
     byd__func__return(root_dir)
 
