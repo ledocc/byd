@@ -31,6 +31,13 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(__byd__package__add_unique_to_property param value)
+    __byd__package__get_property_name(${param} property_name)
+    byd__func__add_unique_to_property(${property_name} "${value}")
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(__byd__package__get_property param result)
     __byd__package__get_property_name(${param} property_name)
 

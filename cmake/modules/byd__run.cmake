@@ -31,6 +31,7 @@ function(__byd__build_package_dependency package)
         byd__package__split_package_component_name("${dependency}" package_name component_name)
         byd__private__is_empty("${component_name}" is_component_name_empty)
 
+        set(opts)
         if(NOT is_component_name_empty)
             set(opts COMPONENTS ${component_name})
         endif()

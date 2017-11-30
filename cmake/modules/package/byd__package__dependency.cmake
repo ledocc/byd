@@ -21,7 +21,7 @@ endfunction()
 
 function(byd__package__add_dependency package)
 
-    __byd__package__add_to_property(DEPENDENCY "${ARGN}")
+    __byd__package__add_unique_to_property(DEPENDENCY "${ARGN}")
 
 endfunction()
 
@@ -84,7 +84,7 @@ function(byd__package__add_component_dependencies package)
         return()
     endif()
 
-    __byd__package__add_to_property(DEPENDENCY "${dependencies}")
+    __byd__package__add_unique_to_property(DEPENDENCY "${dependencies}")
 
 endfunction()
 
