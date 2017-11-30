@@ -36,12 +36,14 @@ function(byd__package__is_component package component result)
     __byd__package__get_property(COMPONENTS components)
     if(NOT component IN_LIST components)
         byd__func__return_value(FALSE)
+        return()
     endif()
 
     if(PARAM_VERSION)
         __byd__package__get_property(COMPONENT_${component} version)
         if(PARAM_VERSION VERSION_LESS version)
             byd__func__return_value(FALSE)
+            return()
         endif()
     endif()
 
@@ -55,6 +57,52 @@ function(byd__package__get_components package result)
 
     __byd__package__get_property(COMPONENTS components)
     byd__func__return(components)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__set_module_to_component package module component)
+
+    __byd__package__set_property(${module}_COMPONENT ${component})
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__get_module_to_component package module result)
+
+    __byd__package__get_property(${module}_COMPONENT component)
+    byd__func__return(component)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__package__convert_module_to_component_if_need package component result)
+
+    byd__package__is_component(${package} ${component} is_component)
+    cmut_info("byd__package__is_component(${package} ${component} ${is_component})")
+    if (is_component)
+        byd__func__return(component)
+        return()
+    endif()
+
+    byd__package__get_module_to_component(${package} ${component} component_from_module)
+    if("${component_from_module}" STREQUAL "")
+        cmut_error("[byd][package] - [${package}] : \"${component}\" is not a component either a module.")
+        byd__func__return_value("")
+        return()
+    endif()
+
+    byd__package__is_component(${package} ${component_from_module} is_component)
+    cmut_info("byd__package__is_component(${package} ${component_from_module} ${is_component})")
+    if (is_component)
+        byd__func__return(component_from_module)
+    else()
+        cmut_error("[byd][package] - [${package}] : \"${component}\" is a module of \"${component_from_module}\", but \"${component_from_module}\" is not a component.")
+        byd__func__return_value("")
+    endif()
 
 endfunction()
 

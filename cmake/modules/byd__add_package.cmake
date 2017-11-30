@@ -106,12 +106,29 @@ function(byd__add_package package)
 
     # add to build list
     if(PARAM_COMPONENTS)
-        foreach(component IN LISTS PARAM_COMPONENTS)
+
+        cmut_info("PARAM_COMPONENTS = ${PARAM_COMPONENTS}")
+        set(components)
+        foreach(component_or_module IN LISTS PARAM_COMPONENTS)
+            byd__package__convert_module_to_component_if_need(${package} ${component_or_module} component)
+            if(NOT "${component}" STREQUAL "")
+                list(APPEND components ${component})
+            endif()
+        endforeach()
+
+
+        list(REMOVE_DUPLICATES components)
+        cmut_info("components = ${components}")
+
+        foreach(component IN LISTS components)
             byd__package__make_package_component_name(${package} ${component} package_component_name)
 
             byd__package__set_added(${package_component_name})
             __byd__add_package_to_build_list(${package_component_name})
         endforeach()
+
+
+
     else()
         byd__package__set_added(${package})
         __byd__add_package_to_build_list(${package})
