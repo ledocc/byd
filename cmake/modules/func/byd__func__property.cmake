@@ -29,6 +29,20 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__func__add_unique_to_property name)
+
+    byd__func__get_property(${name} __property_value)
+    list(APPEND __property_value ${ARGN})
+    list(REMOVE_DUPLICATES __property_value)
+
+    set_property(GLOBAL PROPERTY ${name} "${__property_value}")
+
+endfunction()
+
+
+
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__func__accum_to_property name)
 
     byd__func__get_property(${name} __property_value)
