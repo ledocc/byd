@@ -61,6 +61,7 @@ function(byd__generate_and_build source_dir)
         COMMAND ${CMAKE_COMMAND} "${cmake_args}"
         WORKING_DIRECTORY "${build_dir}"
         LOG_FILE ${log_dir}/configure
+        PRINT_LOG_ON_ERROR
         FATAL
         )
 
@@ -94,16 +95,5 @@ function(__byd__build target)
         LOG_FILE "${log_dir}/build"
         RESULT_VARIABLE result
         )
-
-    if(result OR BYD_DEBUG)
-        file(READ "${log_dir}/build-out.log" out_log)
-        file(READ "${log_dir}/build-err.log" err_log)
-        cmut_info("output :\n${out_log}")
-        cmut_info("error  :\n${err_log}")
-    endif()
-
-    if(result)
-        cmut_fatal("[byd] : build of \"${target}\" failed.")
-    endif()
 
 endfunction()
