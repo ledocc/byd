@@ -60,7 +60,7 @@ function(byd__generate_and_build source_dir)
     cmut__utils__execute_process(
         COMMAND ${CMAKE_COMMAND} "${cmake_args}"
         WORKING_DIRECTORY "${build_dir}"
-        LOG_FILE ${log_dir}/configure
+        LOG_FILE "${log_dir}/configure"
         PRINT_LOG_ON_ERROR
         FATAL
         )
@@ -93,7 +93,7 @@ function(__byd__build target)
         COMMAND ${CMAKE_COMMAND} --build . -- ${target} -j1
         WORKING_DIRECTORY "${build_dir}"
         LOG_FILE "${log_dir}/build"
-        RESULT_VARIABLE result
+        PRINT_LOG_ON_ERROR
         )
 
 endfunction()
