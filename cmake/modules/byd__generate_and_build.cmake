@@ -39,6 +39,14 @@ function(byd__generate_and_build source_dir)
     list(APPEND cmake_args "-DCMAKE_INSTALL_PREFIX=${install_dir}")
     list(APPEND cmake_args "-G${CMAKE_GENERATOR}")
 
+
+    # adjust CMAKE_BUILD_TYPE
+    set(build_type_to_forward "Debug" "RelWithDebInfo")
+    if(NOT "${CMAKE_BUILD_TYPE}" IN_LIST build_type_to_forward)
+        set(CMAKE_BUILD_TYPE "Release")
+    endif()
+
+
     byd__get_cmake_args_in_build_id(cmake_arg_to_forward)
     list(APPEND cmake_arg_to_forward CMAKE_VERBOSE_MAKEFILE)
     if(CMAKE_TOOLCHAIN_FILE)
