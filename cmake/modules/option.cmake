@@ -1,4 +1,6 @@
 
+include("${BYD_ROOT}/cmake/modules/option/byd__option__build_shared_libs.cmake")
+include("${BYD_ROOT}/cmake/modules/option/byd__option__build_testing.cmake")
 include("${BYD_ROOT}/cmake/modules/option/byd__option__jobs.cmake")
 include("${BYD_ROOT}/cmake/modules/option/byd__option__local_repo.cmake")
 include("${BYD_ROOT}/cmake/modules/option/byd__option__log_step.cmake")

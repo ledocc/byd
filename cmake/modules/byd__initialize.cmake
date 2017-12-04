@@ -40,16 +40,13 @@ function(byd__initialize)
     __byd__set_initialized()
 
 
-
-    option(BUILD_SHARED_LIBS "Enable to build shared libraries" ON)
-    option(BUILD_TESTING "Build the testing tree." ON)
-
-
+    byd__option__build_shared_libs()
+    byd__option__build_testing()
     byd__option__jobs()
-    byd__option__log_step()
     byd__option__local_repo()
-    byd__option__remote_repo()
+    byd__option__log_step()
     byd__option__prefix()
+    byd__option__remote_repo()
     byd__option__upload_archive()
 
 
