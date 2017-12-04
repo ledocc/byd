@@ -82,7 +82,6 @@ endfunction()
 function(byd__package__convert_module_to_component_if_need package component result)
 
     byd__package__is_component(${package} ${component} is_component)
-    cmut_info("byd__package__is_component(${package} ${component} ${is_component})")
     if (is_component)
         byd__func__return(component)
         return()
@@ -96,7 +95,6 @@ function(byd__package__convert_module_to_component_if_need package component res
     endif()
 
     byd__package__is_component(${package} ${component_from_module} is_component)
-    cmut_info("byd__package__is_component(${package} ${component_from_module} ${is_component})")
     if (is_component)
         byd__func__return(component_from_module)
     else()

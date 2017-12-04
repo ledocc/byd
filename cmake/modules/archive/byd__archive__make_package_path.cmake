@@ -109,10 +109,14 @@ function(byd__archive__write_cmake_args_in_build_id)
 
     set(path "${repository}/${output_dir}")
 
-    if(EXISTS ${path})
-        cmut_info("file(WRITE \"${repository}/${output_dir}/cmake_args.txt\" ${cmake_args_in_build_id})")
-        file(WRITE "${repository}/${output_dir}/cmake_args.txt" ${cmake_args_in_build_id})
+    if(NOT EXISTS ${path})
+        cmut__utils__mkdir(${path})
     endif()
+    file(WRITE "${path}/cmake_args.txt" ${cmake_args_in_build_id})
+
+    cmut_info("")
+    cmut_info( "[byd][archive] - archive root directory : \"${path}\"")
+    cmut_debug("[byd][archive] - args :\n${cmake_args_in_build_id}")
 
 endfunction()
 
