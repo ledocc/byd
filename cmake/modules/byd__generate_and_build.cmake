@@ -41,6 +41,9 @@ function(byd__generate_and_build source_dir)
 
     byd__get_cmake_args_in_build_id(cmake_arg_to_forward)
     list(APPEND cmake_arg_to_forward CMAKE_VERBOSE_MAKEFILE)
+    if(CMAKE_TOOLCHAIN_FILE)
+        file(TO_CMAKE_PATH "${CMAKE_TOOLCHAIN_FILE}" CMAKE_TOOLCHAIN_FILE)
+    endif()
     list(APPEND cmake_arg_to_forward CMAKE_TOOLCHAIN_FILE)
     list(APPEND cmake_arg_to_forward CMAKE_MODULE_PATH)
 
