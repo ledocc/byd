@@ -35,6 +35,13 @@ macro(__byd__cmake__add_variable __list __variable __value)
     list(APPEND ${__list} "-D${__variable}=${__value}")
 endmacro()
 
+function(__byd__cmake__add_cmut_find_to_cmake_module_path)
+    set(__cmut__find "${CMUT_ROOT}/find")
+    if(NOT  __cmut__find IN_LIST CMAKE_MODULE_PATH)
+        set(CMAKE_MODULE_PATH "${ __cmut__find}" "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
+    endif()
+endfunction()
+
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__cmake__generate_configure_cmake_args package)
@@ -47,6 +54,7 @@ function(byd__cmake__generate_configure_cmake_args package)
         set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
     endif()
 
+    __byd__cmake__add_cmut_find_to_cmake_module_path()
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_MODULE_PATH)
 
     if (DEFINED CMAKE_TOOLCHAIN_FILE)
