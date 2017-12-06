@@ -1,0 +1,42 @@
+
+include("@CMUT_ROOT@/cmut.cmake")
+
+cmut__utils__execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "@package_install_dir@"
+    FATAL
+    )
+
+cmut__utils__execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E tar Jxvf "@archive_path@"
+    WORKING_DIRECTORY "@package_install_dir@"
+    FATAL
+    )
+
+
+file(GLOB pcfiles "@package_install_dir@/lib/pkgconfig/*.pc")
+
+
+foreach(pcfile IN LISTS pcfiles)
+    file(STRINGS "${pcfile}" pc_lines)
+
+    # find prefix
+    foreach(line IN LISTS pc_lines)
+        if(line MATCHES "^prefix[ ]*=[ ]*(/.*)$")
+            break()
+        endif()
+    endforeach()
+
+    set(prefix_path ${CMAKE_MATCH_1})
+    if("${prefix_path}" STREQUAL "")
+        break()
+    endif()
+
+    unset(lines)
+    foreach(line IN LISTS pc_lines)
+        string(REPLACE "${prefix_path}" "@package_install_dir@" line_updated "${line}")
+        set(lines "${lines}\n${line_updated}")
+    endforeach()
+
+    file(WRITE "${pcfile}" "${lines}\n")
+
+endforeach()

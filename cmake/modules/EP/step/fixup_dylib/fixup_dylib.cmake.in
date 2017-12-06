@@ -4,11 +4,11 @@ include("@CMUT_ROOT@/utils/cmut__utils__chmod.cmake")
 
 
 file(GLOB dylibs
-     LIST_DIRECTORIES false "@CMAKE_INSTALL_PREFIX@/lib/*.dylib")
+     LIST_DIRECTORIES false "@install_dir@/lib/*.dylib")
 
 
 foreach(dylib ${dylibs})
     cmut__utils__chmod("${dylib}" 755)
     cmut__utils__fixup_dylib_id("${dylib}")
-    cmut__utils__fixup_dylib_dependencies("${dylib}" "@CMAKE_INSTALL_PREFIX@/lib")
+    cmut__utils__fixup_dylib_dependencies("${dylib}" "@install_dir@/lib")
 endforeach()

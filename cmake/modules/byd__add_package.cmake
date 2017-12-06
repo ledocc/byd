@@ -16,85 +16,110 @@ include("${BYD_ROOT}/cmake/modules/private.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-macro(__byd__add_package_to_build_list name)
-    byd__func__add_to_property(__BYD__PACKAGE_TO_BUILD ${name})
+macro(__byd__add_package_to_build_list name version)
+
+    byd__func__get_property(__BYD__PACKAGE_TO_BUILD package_to_build)
+    if(NOT "${name}" IN_LIST package_to_build)
+        byd__func__add_to_property(__BYD__PACKAGE_TO_BUILD ${name})
+        cmut_info("[byd] - add \"${name}\" ${version} to build list.")
+    endif()
 endmacro()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__add_package package)
+macro(byd__add_package__include_id_file id_file)
 
-    byd__initialize_if_not_done()
-
-    # parse arguments
-    set(options "")
-    set(oneValueArgs VERSION)
-    set(multiValueArgs COMPONENTS)
-    cmut__utils__parse_arguments(
-        byd__add_package
-        PARAM
-        "${options}" "${oneValueArgs}" "${multiValueArgs}"
-        ${ARGN}
-        )
-
-
-
-    # look for package directory
-    byd__private__find_package_directory(${package} package_dir)
-    cmut_debug("[byd] - [${package}] : use info from ${package_dir}.")
-
-
-    # include package version file
-    set(version_file "${package_dir}/version.cmake")
-    if(NOT EXISTS "${version_file}")
-        cmut_fatal("[byd] - [${package}] : ${version_file} not found.")
+    if(NOT EXISTS "${id_file}")
+        cmut_fatal("[byd] - [${package}] : ${id_file} not found.")
     endif()
-    cmut_debug("[byd] - [${package}] : include ${version_file}.")
-    include("${version_file}")
+    cmut_debug("[byd] - [${package}] : include ${id_file}.")
+    include("${id_file}")
 
-    # include package component file
-    set(component_file "${package_dir}/component.cmake")
+endmacro()
+
+macro(byd__add_package__include_component_file component_file)
+
     if(EXISTS "${component_file}")
         cmut_debug("[byd] - [${package}] : include ${component_file}.")
         include("${component_file}")
     endif()
 
+endmacro()
 
-    # define version to build
-    if(NOT PARAM_VERSION)
-        byd__package__get_version_to_build(${package} PARAM_VERSION)
-        if(NOT PARAM_VERSION)
-            byd__package__get_default_version(${package} PARAM_VERSION)
+
+function(byd__add_package package)
+
+    byd__package__assert_no_component(${package} byd__add_package)
+
+
+    byd__initialize_if_not_done()
+
+
+    # parse arguments
+    cmut__utils__parse_arguments(
+        byd__add_package
+        PARAM
+        ""
+        ""
+        "COMPONENTS"
+        ${ARGN}
+
+        )
+
+    # include package's id
+    byd__func__get_property(BYD__ADD_PACKAGE__${package}_INFO_INCLUDED is_package_added)
+    if(NOT is_package_added)
+
+        byd__private__find_package_directory(${package} package_dir)
+        cmut_info("[byd] - [${package}] : use info from ${package_dir}.")
+
+        byd__add_package__include_id_file("${package_dir}/id.cmake")
+        byd__add_package__include_component_file("${package_dir}/component.cmake")
+        byd__func__set_property(BYD__ADD_PACKAGE__${package}_INFO_INCLUDED 1)
+
+        # define prefix (where to download/configure/build)
+        set(prefix "packages/${package}")
+        byd__get_prefix(global_prefix)
+        if(global_prefix)
+            set(prefix "${global_prefix}/${prefix}")
         endif()
-    endif()
-    cmut_info("[byd] - [${package}] : version to build ${PARAM_VERSION}")
-    byd__package__set_version_to_build(${package} "${PARAM_VERSION}")
+        byd__EP__set_package_argument(${package} GENERAL PREFIX "${prefix}")
 
-
-    # define components to build
-    if(PARAM_COMPONENTS)
-        cmut_info("[byd] - [${package}] : component to build :")
-        foreach(component IN LISTS PARAM_COMPONENTS)
-            cmut_info("[byd] - [${package}] : - ${component}")
-        endforeach()
-        byd__package__add_components_to_build(${package} "${PARAM_COMPONENTS}")
     endif()
 
 
-    # define prefix (where to download/configure/build)
-    set(prefix "packages/${package}")
-    byd__get_prefix(global_prefix)
-    if(global_prefix)
-        set(prefix "${global_prefix}/${prefix}")
-    endif()
-    byd__EP__set_package_argument(${package} GENERAL PREFIX "${prefix}")
 
+    byd__package__get_version(${package} version)
 
     # add to build list
-    byd__private__set_package_added(${package})
-    __byd__add_package_to_build_list(${package})
+    if(PARAM_COMPONENTS)
+
+        set(components)
+        foreach(component_or_module IN LISTS PARAM_COMPONENTS)
+            byd__package__convert_module_to_component_if_need(${package} ${component_or_module} component)
+            if(NOT "${component}" STREQUAL "")
+                list(APPEND components ${component})
+            endif()
+        endforeach()
+
+        list(REMOVE_DUPLICATES components)
+
+        foreach(component IN LISTS components)
+            byd__package__make_package_component_name(${package} ${component} package_component_name)
+
+            byd__package__set_added(${package_component_name})
+            __byd__add_package_to_build_list(${package_component_name} ${version})
+
+        endforeach()
+
+    else()
+
+        byd__package__set_added(${package})
+        __byd__add_package_to_build_list(${package} ${version})
+
+    endif()
 
 endfunction()
 

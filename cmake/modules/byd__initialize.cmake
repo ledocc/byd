@@ -2,15 +2,16 @@
 
 
 include("${BYD_ROOT}/cmake/modules/func.cmake")
-include("${BYD_ROOT}/cmake/modules/EP/define_step_info.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/byd__EP__define_step_info.cmake")
 include("${BYD_ROOT}/cmake/modules/option.cmake")
 
+include("${CMUT_ROOT}/config/cmut__config__resolve_install_prefix.cmake")
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__set_initialized)
+function(__byd__set_initialized)
     byd__func__set_property(BYD__INITIALIZED 1)
 endfunction()
 
@@ -36,32 +37,29 @@ endfunction()
 
 function(byd__initialize)
 
-    byd__set_initialized()
+    __byd__set_initialized()
 
 
-
-    option(BUILD_SHARED_LIBS "Enable to build shared libraries")
-    # add BUILD_TESTING option
-    enable_testing()
-    if(NOT BUILD_TESTING)
-        byd__disable_test_step(1)
-    endif()
-
-
+    byd__option__build_shared_libs()
+    byd__option__build_testing()
     byd__option__jobs()
+    byd__option__local_repo()
+    byd__option__log_step()
     byd__option__prefix()
+    byd__option__remote_repo()
+    byd__option__upload_archive()
 
 
     byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)
-    byd__EP__set_default_log(ON)
-
-
 
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+        set(CMAKE_INSTALL_PREFIX install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
+    endif()
+
     if(CMAKE_INSTALL_PREFIX)
-        byd__filesystem__absolute("${CMAKE_INSTALL_PREFIX}" "${CMAKE_BINARY_DIR}" CMAKE_INSTALL_PREFIX)
-        set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
+        cmut__config__resolve_install_prefix()
     endif()
 
 

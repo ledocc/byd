@@ -63,7 +63,9 @@ function(__byd__BoostBuild__script__generate_user_config_jam)
                 set(compile_flags "${compile_flags} --gcc-toolchain=${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
             endif()
         endif()
-        if(CMAKE_SYSROOT)
+        if(CMAKE_SYSROOT_COMPILE)
+            set(compile_flags "${compile_flags} --sysroot=${CMAKE_SYSROOT_COMPILE}")
+        elseif(CMAKE_SYSROOT)
             set(compile_flags "${compile_flags} --sysroot=${CMAKE_SYSROOT}")
         endif()
 
@@ -123,6 +125,9 @@ function(byd__BoostBuild__generate_configure_command package)
 
 
     byd__script__begin("${script_dir}/configure.cmake")
+        byd__script__env__unset("CC")
+        byd__script__env__unset("CXX")
+        byd__script__env__unset("RC")
         byd__script__command("${command}")
     byd__script__end()
 
@@ -139,6 +144,7 @@ function(byd__BoostBuild__generate_build_command package)
     byd__private__error_if_property_is_defined(${__property_name})
     byd__package__get_script_dir(${package} script_dir)
     byd__package__get_build_dir(${package} build_dir)
+    byd__package__get_install_dir(${package} install_dir)
 
 
 
@@ -171,12 +177,8 @@ function(byd__BoostBuild__generate_build_command package)
         list(APPEND build_args "link=static")
     endif()
 
-
-    if(CMAKE_INSTALL_PREFIX)
-        list(APPEND build_args "--prefix=${CMAKE_INSTALL_PREFIX}")
-    endif()
-
-        list(APPEND build_args "--debug-configuration")
+    list(APPEND build_args "--prefix=${install_dir}")
+    list(APPEND build_args "--debug-configuration")
     list(APPEND build_args "--build_type=minimal")
     list(APPEND build_args "--build_dir=../${package}-build")
     list(APPEND build_args "--layout=tagged")
@@ -192,11 +194,8 @@ function(byd__BoostBuild__generate_build_command package)
     byd__BoostBuild__build__get_args(${package} build_args_${package})
 
 
-    if(WIN32)
-        set(build_cmd b2)
-    else()
-        set(build_cmd ./b2)
-    endif()
+    byd__package__get_source_dir(${package} source_dir)
+    set(build_cmd ${source_dir}/b2)
 
     byd__private__get_num_core_available(num_core)
     set(command_mv_user_config_jam ${CMAKE_COMMAND} -E copy "${user_config_jam_path}" "${build_dir}/${user_config_jam_file}")
@@ -233,6 +232,28 @@ function(byd__BoostBuild__generate_install_command package)
 
 
     byd__build_system__default_install_command(${package})
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__BoostBuild__generate_test_command package)
+
+    set(__property_name BYD__EP__TEST__TEST_COMMAND__${package})
+    byd__private__error_if_property_is_defined(${__property_name})
+    byd__package__get_script_dir(${package} script_dir)
+    byd__package__get_source_dir(${package} source_dir)
+
+
+
+    __byd__BoostBuild__get_build_command_line(${package} command)
+
+    byd__script__begin("${script_dir}/test.cmake")
+        byd__script__command("${command}")
+    byd__script__end()
+
+
+    byd__EP__set_package_argument(${package} TEST TEST_COMMAND "${CMAKE_COMMAND}" -E chdir "${source_dir}/status" "${CMAKE_COMMAND}" -P "${script_dir}/test.cmake")
 
 endfunction()
 

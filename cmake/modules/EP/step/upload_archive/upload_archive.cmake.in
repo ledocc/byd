@@ -1,0 +1,10 @@
+
+set(CMUT_ROOT "@CMUT_ROOT@")
+
+include("@CMUT_ROOT@/cmut.cmake")
+include("@BYD_ROOT@/byd.cmake")
+
+byd__archive__set_local_repository(@local_repo@)
+byd__archive__set_remote_repository(@remote_repo@)
+
+byd__archive__rsync__upload_archive("@package@" "@archive_path@")

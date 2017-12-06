@@ -5,7 +5,7 @@ include("${CMUT_ROOT}/cmut_message.cmake")
 
 function(byd__private__error_if_property_is_defined property_name)
 
-    byd__func__is_property(${property_name} result)
+    byd__func__is_set_property(${property_name} result)
 
     if(result)
         cmut_fatal("property is already defined.")

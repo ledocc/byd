@@ -9,10 +9,8 @@ get_filename_component(BYD_ROOT "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
 include("${BYD_ROOT}/byd.cmake")
 
 
-set(CMUT_DEBUG 1)
+#set(CMUT_DEBUG 1)
 
-
-byd__EP__set_default_log(ON)
 
 
 set(packages_directory "${BYD_ROOT}/packages")
@@ -26,6 +24,6 @@ file(GLOB packages
 #    byd__add_package(${package})
 #endforeach()
 
-byd__add_package(Boost)
+byd__add_package(boost)
 
 byd__run()

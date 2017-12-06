@@ -1,67 +1,29 @@
 
 
 
-include(ExternalProject)
-
-include("${BYD_ROOT}/cmake/modules/EP/byd__EP__define.cmake")
-
-
-
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-macro(__byd__EP__accum_step_info step)
-    byd__func__get_property(BYD__EP__${step}_STEP__${package} step_info)
-    set(__BYD__EP__${package}_ARGS ${__BYD__EP__${package}_ARGS} ${step_info})
+macro(add_step step)
+    list(APPEND step_paths "${BYD_ROOT}/cmake/modules/EP/step/${step}/add.cmake")
 endmacro()
 
-##--------------------------------------------------------------------------------------------------------------------##
-##--------------------------------------------------------------------------------------------------------------------##
-##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__EP__add package)
 
-    file(GLOB step_paths
-        "${BYD_ROOT}/cmake/modules/EP/step/*/add.cmake"
-        )
-    list(REMOVE_ITEM step_paths "${BYD_ROOT}/cmake/modules/EP/step/standard/add.cmake")
-    set(step_paths "${BYD_ROOT}/cmake/modules/EP/step/standard/add.cmake" ${step_paths})
+    add_step(standard)
+    add_step(custom_patch)
+    add_step(extract_archive)
+    add_step(create_archive)
+    add_step(fixup_dylib)
+    add_step(upload_archive)
 
+    # add each step
     foreach(path IN LISTS step_paths)
         include("${path}")
         byd__EP__step__provider_add(${package})
     endforeach()
-
-endfunction()
-
-
-function(byd__EP__add__ package)
-
-    byd__EP__define_steps(${package})
-
-
-    __byd__EP__accum_step_info(GENERAL)
-    __byd__EP__accum_step_info(DOWNLOAD)
-    __byd__EP__accum_step_info(UPDATE)
-    __byd__EP__accum_step_info(CONFIGURE)
-    __byd__EP__accum_step_info(BUILD)
-    __byd__EP__accum_step_info(INSTALL)
-    __byd__EP__accum_step_info(TEST)
-    __byd__EP__accum_step_info(LOG)
-
-
-    cmut_debug("[byd][EP] - [${package}] : ExternalProject_Add(${package}")
-    foreach(arg IN LISTS __BYD__EP__${package}_ARGS)
-        cmut_debug("[byd][EP] - [${package}] :     ${arg}")
-    endforeach()
-    cmut_debug("[byd][EP] - [${package}] : )")
-
-
-    ExternalProject_Add(
-        ${package}
-        ${__BYD__EP__${package}_ARGS}
-        )
 
 endfunction()
 

@@ -1,8 +1,10 @@
 
 
 
-include("${BYD_ROOT}/cmake/modules/EP/step/log.cmake")
+include(ExternalProject)
+
 include("${BYD_ROOT}/cmake/modules/EP/step/collect_steps.cmake")
+include("${BYD_ROOT}/cmake/modules/EP/step/log.cmake")
 
 include("${BYD_ROOT}/cmake/modules/EP/step/fixup_dylib/enable.cmake")
 

@@ -110,15 +110,13 @@ function(byd__autotool__generate_configure_command package)
         list(APPEND configure_args --disable-shared --enable-static)
     endif()
 
-    if(CMAKE_INSTALL_PREFIX)
-        list(APPEND configure_args "--prefix=${CMAKE_INSTALL_PREFIX}")
-    endif()
+    byd__package__get_install_dir(${package} install_dir)
+    list(APPEND configure_args "--prefix=${install_dir}")
 
     if(CMAKE_CROSSCOMPILING)
         list(APPEND configure_args "--host=${CMAKE_CXX_COMPILER_TARGET}")
     endif()
 
-    byd__autotool__configure__add_components_to_arg(${package})
     byd__autotool__configure__get_args(${package} custom_configure_args)
 
 
@@ -178,6 +176,8 @@ function(byd__autotool__generate_build_command package)
     set(command ${command} -j${num_core})
 
     byd__script__begin("${script_dir}/build.cmake")
+        __byd__autotool__script__prepend_env_var_if_defined("LD_LIBRARY_PATH:PATH" "${CMAKE_INSTALL_PREFIX}/lib")
+
         byd__build_system__inject_env_var_in_script(${package} BUILD)
         byd__script__command("${command}")
     byd__script__end()

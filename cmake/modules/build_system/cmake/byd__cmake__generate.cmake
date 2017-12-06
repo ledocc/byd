@@ -31,6 +31,17 @@ macro(__byd__cmake__add_variable_if_defined __list __variable)
     endif()
 endmacro()
 
+macro(__byd__cmake__add_variable __list __variable __value)
+    list(APPEND ${__list} "-D${__variable}=${__value}")
+endmacro()
+
+function(__byd__cmake__add_cmut_find_to_cmake_module_path)
+    set(__cmut__find "${CMUT_ROOT}/find")
+    if(NOT  __cmut__find IN_LIST CMAKE_MODULE_PATH)
+        set(CMAKE_MODULE_PATH "${ __cmut__find}" "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
+    endif()
+endfunction()
+
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(byd__cmake__generate_configure_cmake_args package)
@@ -43,7 +54,7 @@ function(byd__cmake__generate_configure_cmake_args package)
         set(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
     endif()
 
-    set(CMAKE_MODULE_PATH "${BYD_ROOT}/cmake/find")
+    __byd__cmake__add_cmut_find_to_cmake_module_path()
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_MODULE_PATH)
 
     if (DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -54,7 +65,9 @@ function(byd__cmake__generate_configure_cmake_args package)
     endif()
 
     __byd__cmake__add_variable_if_defined(__cmake_args BUILD_SHARED_LIBS)
-    __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_INSTALL_PREFIX)
+    __byd__cmake__add_variable_if_defined(__cmake_args BUILD_TESTING)
+    byd__package__get_install_dir(${package} install_dir)
+    __byd__cmake__add_variable(           __cmake_args CMAKE_INSTALL_PREFIX "${install_dir}")
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_BUILD_TYPE)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_PREFIX_PATH)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_VERBOSE_MAKEFILE)
@@ -65,8 +78,8 @@ function(byd__cmake__generate_configure_cmake_args package)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_OSX_SYSROOT)
     __byd__cmake__add_variable_if_defined(__cmake_args CMAKE_MACOSX_RPATH)
 
-
-    byd__func__add_to_property(${__property_name} "${__cmake_args}")
+    byd__cmake__configure__get_arg(${package} user_define_args)
+    byd__EP__set_package_argument(${package} CONFIGURE CMAKE_ARGS "${__cmake_args}" "${user_define_args}")
     byd__EP__set_package_argument(${package} CONFIGURE CMAKE_GENERATOR "${CMAKE_GENERATOR}")
 
 
@@ -141,7 +154,7 @@ function(byd__cmake__generate_test_command package)
     byd__script__end()
 
 
-    byd__build_system__default_install_command(${package})
+    byd__build_system__default_test_command(${package})
 
 endfunction()
 

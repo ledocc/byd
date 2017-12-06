@@ -1,0 +1,22 @@
+
+include("@CMUT_ROOT@/cmut.cmake")
+
+
+file(GLOB files_and_directories
+    LIST_DIRECTORIES true
+    RELATIVE @package_install_dir@
+    @package_install_dir@/*
+    )
+
+get_filename_component(archive_dir @archive_path@ DIRECTORY)
+
+cmut__utils__execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${archive_dir}"
+    FATAL
+    )
+
+cmut__utils__execute_process(
+    COMMAND "${CMAKE_COMMAND}" -E tar Jcvf "@archive_path@" ${files_and_directories}
+    WORKING_DIRECTORY "@package_install_dir@"
+    FATAL
+    )

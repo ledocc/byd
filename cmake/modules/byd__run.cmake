@@ -1,59 +1,21 @@
-
-
-
-
 include("${BYD_ROOT}/cmake/modules/func.cmake")
 include("${BYD_ROOT}/cmake/modules/package.cmake")
 include("${BYD_ROOT}/cmake/modules/private.cmake")
 
 include("${BYD_ROOT}/cmake/modules/byd__initialize.cmake")
 
+include("${BYD_ROOT}/cmake/modules/action.cmake")
+
 
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
-##--------------------------------------------------------------------------------------------------------------------##
-
-
-function(__byd__include_package_dependency_file package)
-
-    byd__private__find_package_directory(${package} package_dir)
-
-    set(__dependency_file "${package_dir}/dependency.cmake")
-    if (EXISTS "${__dependency_file}")
-        cmut_debug("[byd] - [${package}] : include ${__dependency_file}.")
-        include("${__dependency_file}")
-    else()
-        cmut_debug("[byd] - [${package}] : ${__dependency_file} not found.")
-        cmut_info("[byd] - [${package}] : not dependency for \"${package}\".")
-    endif()
-
-endfunction()
-
-function(__byd__collect_package_dependencies package result)
-
-    byd__package__get_dependency(${package} dependencies)
-
-    byd__package__get_components_to_build(${package} components)
-    foreach(component IN LISTS components)
-        byd__package__get_component_dependencies(${package} ${component} per_component_dependencies)
-        list(APPEND dependencies ${per_component_dependencies})
-    endforeach()
-
-    list(SORT dependencies)
-    list(REMOVE_DUPLICATES dependencies)
-
-    byd__func__return(dependencies)
-
-endfunction()
-
-
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(__byd__build_package_dependency package)
 
-    __byd__include_package_dependency_file(${package})
-    __byd__collect_package_dependencies(${package} dependencies)
+    byd__package__include_dependency_file(${package})
+    byd__package__get_dependency(${package} dependencies)
     if(NOT dependencies)
         return()
     endif()
@@ -66,8 +28,17 @@ function(__byd__build_package_dependency package)
 
 
     foreach(dependency IN LISTS dependencies)
-        byd__add_package(${dependency})
-        __byd__build_package(${dependency})
+        byd__package__split_package_component_name("${dependency}" package_name component_name)
+        byd__private__is_empty("${component_name}" is_component_name_empty)
+
+        set(opts)
+        if(NOT is_component_name_empty)
+            set(opts COMPONENTS ${component_name})
+        endif()
+
+        byd__add_package(${package_name} ${opts})
+
+        byd__build_package(${dependency})
     endforeach()
 
     byd__EP__set_package_argument(${package} GENERAL DEPENDS "${dependencies}")
@@ -83,10 +54,12 @@ function(__byd__check_loop_dependency package)
     if(${package} IN_LIST build_package_stack)
 
         cmut_info("[byd] : loop dependency detected.")
+        cmut_info("[byd] : package \"${package}\" already in stack.")
         cmut_info("[byd] : stack : ")
         foreach(package IN LISTS build_package_stack)
             cmut_info("[byd] : - ${package}")
         endforeach()
+        cmut_info("[byd] : loop dependency detected !!!")
         cmut_fatal("[byd] : loop dependency detected !!!")
 
     endif()
@@ -107,15 +80,11 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(__byd__build_package package)
-
-
-    byd__private__find_package_directory(${package} package_dir)
-
+function(byd__build_package package)
 
     __byd__check_loop_dependency(${package})
 
-    byd__private__is_package_generated(${package} already_generated)
+    byd__package__is_generated(${package} already_generated)
     if(already_generated)
         cmut_debug("[byd] - [${package}] : already generated. skip.")
         return()
@@ -128,10 +97,33 @@ function(__byd__build_package package)
 
         __byd__build_package_dependency(${package})
 
-        cmut_debug("[byd] - [${package}] : include CMakeLists.txt")
-        include("${package_dir}/CMakeLists.txt")
 
-        byd__private__set_package_generated(${package})
+        byd__archive__remove_previous_build_if_byd_tag_not_match(${package})
+
+        byd__private__is_package_archive_available(${package} archive_available)
+        if(archive_available)
+            cmut_debug("[byd] - [${package}] : archive available.")
+            if (BYD__OPTION__UPLOAD_ARCHIVE)
+                byd__action__upload_archive(${package})
+            endif()
+            byd__build_system__archive__add(${package})
+        else()
+            cmut_debug("[byd] - [${package}] : include CMakeLists.txt")
+            byd__package__apply_download_info(${package})
+            byd__action__extract_archive(${package})
+            byd__action__create_archive(${package})
+            if (BYD__OPTION__UPLOAD_ARCHIVE)
+                byd__action__upload_archive(${package})
+            endif()
+
+            byd__private__find_package_directory(${package} package_dir)
+            add_subdirectory("${package_dir}" "packages_subdirectory/${package}")
+        endif()
+
+        byd__archive__add_byd_tag(${package})
+
+
+        byd__package__set_generated(${package})
 
     __byd__pop_from_build_stack(${package})
 
@@ -140,24 +132,6 @@ function(__byd__build_package package)
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
-
-function(byd__filesystem__absolute path base result)
-
-    if((path) AND (NOT IS_ABSOLUTE "${path}"))
-        set(absolute_path "${base}/${path}")
-    else()
-        set(absolute_path "${path}")
-    endif()
-    byd__func__return(absolute_path)
-
-endfunction()
-
-
-function(byd__func__set_default variable default_value)
-    if((NOT DEFINED ${variable}) OR ("x${${variable}}" STREQUAL "x"))
-        set(${variable} ${default_value} PARENT_SCOPE)
-    endif()
-endfunction()
 
 function(byd__run)
 
@@ -172,14 +146,36 @@ function(byd__run)
     cmut_info("[byd] -")
 
 
-    byd__func__set_property("__BYD__BUILD_PACKAGE_STACK" "")
+    byd__func__set_property(__BYD__BUILD_PACKAGE_STACK "")
 
     byd__func__get_property(__BYD__PACKAGE_TO_BUILD packages)
     list(REMOVE_DUPLICATES packages)
 
+
     foreach(package IN LISTS packages)
-        __byd__build_package(${package})
+        byd__build_package(${package})
     endforeach()
+
+
+    byd__archive__write_cmake_args_in_build_id()
+
+
+    byd__archive__is_byd_tag_mismatch(byd_tag_mismatch)
+    if(byd_tag_mismatch)
+
+        cmut_info("[byd] - At least one byd tag mismatch")
+        cmut_info("[byd] - remove ${CMAKE_INSTALL_PREFIX}")
+        cmut__utils__rmdir(${CMAKE_INSTALL_PREFIX})
+
+        byd__package__get_generated_list(package_generated)
+        foreach(package IN LISTS package_generated)
+            byd__action__extract_archive__reset(${package})
+        endforeach()
+
+    endif()
+
+    byd__package__get_generated_list(package_generated)
+    file(WRITE "${CMAKE_BINARY_DIR}/target.list" "${package_generated}")
 
 endfunction()
 

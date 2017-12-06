@@ -85,6 +85,23 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(byd__script__env__define_function__unset_env)
+
+    byd__script__return_if_function_defined_else_define("unset_env")
+
+    byd__script__write_function(
+"
+cmake_policy(SET CMP0057 NEW)
+function(unset_env variable)
+    unset(ENV{\${variable}})
+endfunction()
+"
+    )
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
 function(byd__script__env__define_function__add_env)
 
     byd__script__return_if_function_defined_else_define("add_env")
@@ -143,6 +160,14 @@ function(byd__script__env__set variable value)
     byd__script__env__define_function__set_env()
     byd__script__env__get_variable_type("${variable}" variable_name variable_type)
     byd__script__write("set_env(${variable_name} \"${value}\" ${variable_type})")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__script__env__unset variable)
+    byd__script__env__define_function__unset_env()
+    byd__script__write("unset_env(${variable})")
 
 endfunction()
 

@@ -1,4 +1,9 @@
 
+
+
+include("${BYD_ROOT}/cmake/modules/option/private/get_default.cmake")
+include("${BYD_ROOT}/cmake/modules/option/private/make_absolute_cmake_path.cmake")
+
 include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
 
 
@@ -9,33 +14,22 @@ include("${BYD_ROOT}/cmake/modules/byd__prefix.cmake")
 
 function(byd__option__prefix)
 
-    set(default_prefix "")
+    byd__option__private__get_default("BYD__OPTION__PREFIX" "${CMAKE_BINARY_DIR}" default_prefix)
 
-    set(prefix_from_env_var "$ENV{BYD__OPTION__PREFIX}")
-    if(prefix_from_env_var)
-        set(default_prefix "${prefix_from_env_var}")
-    endif()
-    
-    set(BYD__OPTION__PREFIX "${default_prefix}" CACHE STRING "Specifies the path where packages are build. Usefull on Windows where path have limited length.")
-    file(TO_CMAKE_PATH "${BYD__OPTION__PREFIX}" BYD__OPTION__PREFIX_CMAKE_PATH)
-    byd__set_prefix("${BYD__OPTION__PREFIX_CMAKE_PATH}")
-
-    variable_watch(BYD__OPTION__PREFIX byd__private__update_option_prefix)
-
-endfunction()
+    byd__option__private__make_absolute_cmake_path("${default_prefix}" default_prefix__absolute_cmake_path)
 
 
-function(byd__private__update_option_prefix variable access value current_list_file stack)
+    set(BYD__OPTION__PREFIX
+        "${default_prefix__absolute_cmake_path}"
+        CACHE
+        PATH
+        "Specifies the ABSOLUTE path where packages are build. Usefull on Windows where path have limited length."
+        FORCE
+        )
 
-    cmut__variable_watch__log_arguments("${variable}" "${access}" "${value}" "${current_list_file}" "${stack}")
-
-    if(access STREQUAL "MODIFIED_ACCESS")
-        file(TO_CMAKE_PATH "${value}" value_CMAKE_PATH)
-        byd__set_prefix("${value_CMAKE_PATH}")
-    endif()
+    byd__set_prefix("${BYD__OPTION__PREFIX}")
 
 endfunction()
-
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
