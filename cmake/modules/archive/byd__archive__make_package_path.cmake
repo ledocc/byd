@@ -145,6 +145,6 @@ function(byd__archive__find_package_archive_path package result)
     endif()
 
     byd__func__return_value("")
-    cmut_debug("[byd][archive] - [${package}] : path not found")
+    cmut_debug("[byd][archive] - [${package}] : path not found : ${path}")
 
 endfunction()

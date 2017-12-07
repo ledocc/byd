@@ -12,6 +12,7 @@ function(byd__private__is_package_archive_available package result)
     byd__archive__is_remote_repository_defined(remote_repository_defined)
     if(NOT remote_repository_defined)
         byd__func__return_value(0)
+        cmut_debug("[byd] - remote repository not defined.")
         return()
     endif()
 
