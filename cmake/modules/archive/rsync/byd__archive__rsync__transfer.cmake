@@ -29,8 +29,14 @@ function(__byd__archive__rsync__prepare_rsync_command package archive_path resul
     list(APPEND rsync_opts "-arv" )
     list(APPEND rsync_opts "--prune-empty-dirs")
     list(APPEND rsync_opts --include "${archive_path}")
-    list(APPEND rsync_opts --include "*/")
-    list(APPEND rsync_opts --exclude "*")
+    if(CMAKE_HOST_WIN32)
+        # we have to protect * on windows otherwise all archive are sync
+        list(APPEND rsync_opts --include "\'*/\'")
+        list(APPEND rsync_opts --exclude "\'*\'")
+    else()
+        list(APPEND rsync_opts --include "*/")
+        list(APPEND rsync_opts --exclude "*")
+    endif()
 
     byd__func__return(rsync_opts)
 
@@ -45,8 +51,9 @@ function(__byd__archive__rsync__adapt_local_path_for_msys2_on_windows local_repo
 		return()
 	endif()
 
-	string(REGEX REPLACE "^([a-zA-Z]):" "/\\1" ${result} "${local_repo}")
-
+	string(REGEX REPLACE "^([a-zA-Z]):" "/\\1" msys2_local_repo "${local_repo}")
+    byd__func__return(msys2_local_repo)
+    
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -79,11 +86,13 @@ function(byd__archive__rsync__upload_archive package)
 
 
     cmut__utils__execute_process(
-        COMMAND ${RSYNC_COMMAND} "${rsync_opts}"
+        COMMAND "${RSYNC_COMMAND}" "${rsync_opts}"
         WORKING_DIRECTORY "${local_repo}"
         FATAL
         )
 
+    cmut_fatal( "end for ${package}" )
+        
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -103,10 +112,13 @@ function(byd__archive__rsync__download_archive package)
     byd__archive__get_archive_root_dir(root_dir)
 
     list(APPEND rsync_opts "${remote_repo}/${root_dir}")
+    cmut_debug("local_repo = ${local_repo}")
 	__byd__archive__rsync__adapt_local_path_for_msys2_on_windows("${local_repo}" adapted_local_repo)
+    cmut_debug("adapted_local_repo = ${adapted_local_repo}")
     list(APPEND rsync_opts "${adapted_local_repo}")
 
 
+    
     cmut_debug("[byd][archive][rsync] : cmut__utils__execute_process(")
     cmut_debug("[byd][archive][rsync] :     COMMAND ${RSYNC_COMMAND} ${rsync_opts}")
     cmut_debug("[byd][archive][rsync] :     WORKING_DIRECTORY ${local_repo}")
@@ -115,8 +127,9 @@ function(byd__archive__rsync__download_archive package)
 
     cmut__utils__mkdir(${local_repo})
     cmut__utils__execute_process(
-        COMMAND ${RSYNC_COMMAND} "${rsync_opts}"
+        COMMAND "${RSYNC_COMMAND}" "${rsync_opts}"
         WORKING_DIRECTORY "${local_repo}"
+        FATAL
         )
 
 endfunction()
