@@ -33,10 +33,14 @@ function(byd__openssl__generate_configure_command package)
         endif()
     elseif(APPLE)
         set(openssl_platform "darwin64")
-        set(openssl_architecture "-x86_64")
+        set(openssl_architecture "-generic64")
         set(openssl_compiler "-cc")
     elseif(UNIX)
-        set(openssl_architecture "-x86_64")
+        if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+            set(openssl_architecture "-generic64")
+        else()
+            set(openssl_architecture "-generic32")
+        endif()
         set(openssl_platform "linux")
         if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
             set(openssl_compiler "")
@@ -67,13 +71,13 @@ function(byd__openssl__generate_configure_command package)
         list(APPEND configure_args "--prefix=${prefix}")
     endif()
 
-    
+
     if(BUILD_SHARED_LIBS AND NOT WIN32)
         list(APPEND configure_args "shared")
     else()
         list(APPEND configure_args "no-shared")
     endif()
-    
+
 
     if(BYD__zlib)
         if(BUILD_SHARED_LIBS)
