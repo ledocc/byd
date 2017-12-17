@@ -53,7 +53,7 @@ function(__byd__archive__rsync__adapt_local_path_for_msys2_on_windows local_repo
 
 	string(REGEX REPLACE "^([a-zA-Z]):" "/\\1" msys2_local_repo "${local_repo}")
     byd__func__return(msys2_local_repo)
-    
+
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -91,8 +91,6 @@ function(byd__archive__rsync__upload_archive package)
         FATAL
         )
 
-    cmut_fatal( "end for ${package}" )
-        
 endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
@@ -118,7 +116,7 @@ function(byd__archive__rsync__download_archive package)
     list(APPEND rsync_opts "${adapted_local_repo}")
 
 
-    
+
     cmut_debug("[byd][archive][rsync] : cmut__utils__execute_process(")
     cmut_debug("[byd][archive][rsync] :     COMMAND ${RSYNC_COMMAND} ${rsync_opts}")
     cmut_debug("[byd][archive][rsync] :     WORKING_DIRECTORY ${local_repo}")
