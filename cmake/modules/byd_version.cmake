@@ -1,2 +1,2 @@
 
-file(STRINGS "${BYD_ROOT}/version.txt" CMUT_VERSION LIMIT_COUNT 1)
+file(STRINGS "${BYD_ROOT}/version.txt" BYD_VERSION LIMIT_COUNT 1)
