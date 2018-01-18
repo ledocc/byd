@@ -46,12 +46,12 @@ endfunction()
 
 function(__byd__archive__rsync__adapt_local_path_for_msys2_on_windows local_repo result)
 
-	if(NOT CMAKE_HOST_WIN32)
-		byd__func__return( ${local_repo} )
-		return()
-	endif()
+    if(NOT CMAKE_HOST_WIN32)
+        byd__func__return( local_repo )
+        return()
+    endif()
 
-	string(REGEX REPLACE "^([a-zA-Z]):" "/\\1" msys2_local_repo "${local_repo}")
+    string(REGEX REPLACE "^([a-zA-Z]):" "/\\1" msys2_local_repo "${local_repo}")
     byd__func__return(msys2_local_repo)
 
 endfunction()
@@ -110,11 +110,8 @@ function(byd__archive__rsync__download_archive package)
     byd__archive__get_archive_root_dir(root_dir)
 
     list(APPEND rsync_opts "${remote_repo}/${root_dir}")
-    cmut_debug("local_repo = ${local_repo}")
-	__byd__archive__rsync__adapt_local_path_for_msys2_on_windows("${local_repo}" adapted_local_repo)
-    cmut_debug("adapted_local_repo = ${adapted_local_repo}")
+    __byd__archive__rsync__adapt_local_path_for_msys2_on_windows("${local_repo}" adapted_local_repo)
     list(APPEND rsync_opts "${adapted_local_repo}")
-
 
 
     cmut_debug("[byd][archive][rsync] : cmut__utils__execute_process(")
