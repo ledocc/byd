@@ -21,6 +21,10 @@ function(byd__action__upload_archive package)
 
     byd__archive__get_local_package_archive_path(${package} archive_path)
 
+    if(DARWIN)
+        cmut__system__get_osx_sdk_short_name(byd__action__upload_archive__sdkroot)
+    endif()
+
     configure_file(
         "${BYD_ROOT}/cmake/modules/EP/step/upload_archive/upload_archive.cmake.in"
         "${script_dir}/upload_archive.cmake"

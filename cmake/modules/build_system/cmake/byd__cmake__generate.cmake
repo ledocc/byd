@@ -37,8 +37,8 @@ endmacro()
 
 function(__byd__cmake__add_cmut_find_to_cmake_module_path)
     set(__cmut__find "${CMUT_ROOT}/find")
-    if(NOT  __cmut__find IN_LIST CMAKE_MODULE_PATH)
-        set(CMAKE_MODULE_PATH "${ __cmut__find}" "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
+    if(NOT __cmut__find IN_LIST CMAKE_MODULE_PATH)
+        set(CMAKE_MODULE_PATH "${__cmut__find}" "${CMAKE_MODULE_PATH}" PARENT_SCOPE)
     endif()
 endfunction()
 
