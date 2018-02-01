@@ -10,6 +10,8 @@ function(byd__option__local_repo)
 
     if(CMAKE_HOST_WIN32)
         set(local_repo "$ENV{USERPROFILE}/.byd")
+    elseif(CMAKE_HOST_UNIX)
+        set(local_repo "$ENV{HOME}/.local/share/byd")
     else()
         set(local_repo "$ENV{HOME}/.byd")
     endif()
