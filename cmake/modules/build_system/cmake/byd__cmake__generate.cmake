@@ -26,7 +26,7 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 macro(__byd__cmake__add_variable_if_defined __list __variable)
-    if(${__variable})
+    if(DEFINED ${__variable})
         list(APPEND ${__list} "-D${__variable}=${${__variable}}")
     endif()
 endmacro()
