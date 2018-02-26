@@ -54,6 +54,11 @@ function(byd__initialize)
 
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
+
+    cmut__system__get_osx_sdk_short_name(osx_sdk)
+    set(BYD_OSX_SDK ${osx_sdk} CACHE STRING "OSX SDK used.")
+
+
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         set(CMAKE_INSTALL_PREFIX install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
     endif()
@@ -61,6 +66,7 @@ function(byd__initialize)
     if(CMAKE_INSTALL_PREFIX)
         cmut__config__resolve_install_prefix()
     endif()
+
 
 
     cmut_info("[byd] - ")
