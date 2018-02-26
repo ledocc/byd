@@ -89,39 +89,54 @@ function(byd__add_package package)
 
     endif()
 
-
-
-    byd__package__get_version(${package} version)
-
-    # add to build list
+    byd__package__get_components(${package} available_components)
     if(PARAM_COMPONENTS)
-
-        set(components)
-        foreach(component_or_module IN LISTS PARAM_COMPONENTS)
-            byd__package__convert_module_to_component_if_need(${package} ${component_or_module} component)
-            if(NOT "${component}" STREQUAL "")
-                list(APPEND components ${component})
-            endif()
-        endforeach()
-
-        list(REMOVE_DUPLICATES components)
-
-        foreach(component IN LISTS components)
-            byd__package__make_package_component_name(${package} ${component} package_component_name)
-
-            byd__package__set_added(${package_component_name})
-            __byd__add_package_to_build_list(${package_component_name} ${version})
-
-        endforeach()
-
+        if(available_components STREQUAL "")
+            unset(PARAM_COMPONENTS)
+        endif()
     else()
+        if(NOT available_components STREQUAL "")
+            set(PARAM_COMPONENTS ${available_components})
+        endif()
+    endif()
 
-        byd__package__set_added(${package})
-        __byd__add_package_to_build_list(${package} ${version})
 
+    if(PARAM_COMPONENTS)
+        byd__add_package__add_component(${package} "${PARAM_COMPONENTS}")
+    else()
+        byd__add_package__apply(${package})
     endif()
 
 endfunction()
+
+function(byd__add_package__add_component package components_to_add)
+
+    foreach(component_or_module IN LISTS components_to_add)
+        byd__package__convert_module_to_component_if_need(${package} ${component_or_module} component)
+        if(NOT "${component}" STREQUAL "")
+            list(APPEND components ${component})
+        endif()
+    endforeach()
+
+    list(REMOVE_DUPLICATES components)
+
+    foreach(component IN LISTS components)
+        byd__package__make_package_component_name(${package} ${component} package_component_name)
+        byd__add_package__apply(${package_component_name})
+    endforeach()
+
+endfunction()
+
+function(byd__add_package__apply package)
+    byd__package__set_added(${package})
+
+    byd__package__get_version(${package} version)
+    __byd__add_package_to_build_list(${package} ${version})
+endfunction()
+
+
+
+
 
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
