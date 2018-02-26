@@ -48,6 +48,10 @@ function(byd__generate_and_build source_dir)
 
 
     byd__get_cmake_args_in_build_id(cmake_arg_to_forward)
+    list(APPEND cmake_arg_to_forward CMAKE_C_COMPILER)
+    list(APPEND cmake_arg_to_forward CMAKE_CXX_COMPILER)
+    list(REMOVE_ITEM cmake_arg_to_forward CMAKE_C_COMPILER_ID)
+    list(REMOVE_ITEM cmake_arg_to_forward CMAKE_CXX_COMPILER_ID)
     list(APPEND cmake_arg_to_forward CMAKE_VERBOSE_MAKEFILE)
     if(CMAKE_TOOLCHAIN_FILE)
         file(TO_CMAKE_PATH "${CMAKE_TOOLCHAIN_FILE}" CMAKE_TOOLCHAIN_FILE)
