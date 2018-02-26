@@ -7,8 +7,8 @@ function(byd__package__check_component package)
 
     cmut_debug("package_name = ${package_name}, component_name = ${component_name}")
 
-    byd__package__assert_not_empty_component(${package_name} ${component_name})
-    byd__package__assert_component_exists(${package_name} ${component_name})
+    byd__package__assert_not_empty_component("${package_name}" "${component_name}")
+    byd__package__assert_component_exists("${package_name}" "${component_name}")
 
 endfunction()
 
