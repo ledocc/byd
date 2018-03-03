@@ -47,6 +47,7 @@ function(byd__get_cmake_args_in_build_id result)
         __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_EXE_LINKER_FLAGS_${buildType})
         __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_MODULE_LINKER_FLAGS_${buildType})
         __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_SHARED_LINKER_FLAGS_${buildType})
+        __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_STATIC_LINKER_FLAGS_${buildType})
     endif()
 
     set(${result} "${CMAKE_ARGS}" PARENT_SCOPE)
