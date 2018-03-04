@@ -51,7 +51,8 @@ function(byd__archive__get_archive_root_dir result)
     cmut__system__get_distribution_name(distribution_name)
     set(root_dir "${distribution_name}")
 
-    if (UNIX AND (NOT DARWIN))
+
+    if (UNIX AND (NOT APPLE))
         cmut__system__get_distribution_version(distribution_version)
         set(root_dir "${root_dir}-${distribution_version}")
     endif()
