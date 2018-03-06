@@ -170,6 +170,12 @@ function(byd__BoostBuild__generate_build_command package)
         list(APPEND build_args "variant=release")
     endif()
 
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(ADDRESS_MODEL 64)
+    else()
+        set(ADDRESS_MODEL 32)
+    endif()
+    list(APPEND build_args "address-model=${ADDRESS_MODEL}")
 
     if(BUILD_SHARED_LIBS)
         list(APPEND build_args "link=shared")
