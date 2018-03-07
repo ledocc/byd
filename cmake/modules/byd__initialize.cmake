@@ -55,8 +55,10 @@ function(byd__initialize)
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
 
-    cmut__system__get_osx_sdk_short_name(osx_sdk)
-    set(BYD_OSX_SDK ${osx_sdk} CACHE STRING "OSX SDK used.")
+    if(APPLE)
+        cmut__system__get_osx_sdk_short_name(osx_sdk)
+        set(BYD_OSX_SDK ${osx_sdk} CACHE STRING "OSX SDK used.")
+    endif()
 
 
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
