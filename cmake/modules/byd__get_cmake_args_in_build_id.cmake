@@ -49,6 +49,14 @@ function(byd__get_cmake_args_in_build_id result)
         __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_STATIC_LINKER_FLAGS_${buildType})
     endif()
 
+    if (ANDROID)
+        __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_ANDROID_ARCH_ABI)
+        __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_ANDROID_ARM_MODE)
+        __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_ANDROID_ARM_NEON)
+        __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_ANDROID_STL_TYPE)
+    endif()
+
+
     set(${result} "${CMAKE_ARGS}" PARENT_SCOPE)
 
 endfunction()
