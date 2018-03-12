@@ -37,6 +37,7 @@ function(byd__get_cmake_args_in_build_id result)
         CMAKE_POSITION_INDEPENDENT_CODE
         CMAKE_SHARED_LINKER_FLAGS
         CMAKE_STATIC_LINKER_FLAGS
+        CMAKE_SYSTEM_PROCESSOR
         )
 
     if (NOT CMAKE_BUILD_TYPE STREQUAL "")
@@ -56,6 +57,9 @@ function(byd__get_cmake_args_in_build_id result)
         __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_ANDROID_STL_TYPE)
     endif()
 
+    if(APPLE)
+        __byd__archive__add_cmake_args_build_id(CMAKE_ARGS CMAKE_OSX_ARCHITECTURES)
+    endif()
 
     set(${result} "${CMAKE_ARGS}" PARENT_SCOPE)
 
