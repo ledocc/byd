@@ -19,7 +19,7 @@ function(byd__action__create_archive package)
 
 
     set(package_install_dir "${install_dir}")
-    byd__archive__get_local_package_archive_path(${package} archive_path)
+    byd__archive__get_package_archive_path(${package} archive_path)
     byd__archive__get_local_repository(repository)
     set(archive_path "${repository}/${archive_path}")
 

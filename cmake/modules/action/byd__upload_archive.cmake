@@ -16,10 +16,12 @@ function(byd__action__upload_archive package)
     byd__package__get_script_dir(${package} script_dir)
 
     byd__archive__get_local_repository(local_repo)
+    byd__archive__get_system_id(system_id)
     byd__archive__get_remote_repository(remote_repo)
 
 
-    byd__archive__get_local_package_archive_path(${package} archive_path)
+    byd__archive__get_package_archive_path(${package} archive_path)
+    byd__archive__get_cmake_args_path( cmake_args_path )
 
     if(DARWIN)
         cmut__system__get_osx_sdk_short_name(byd__action__upload_archive__sdkroot)
