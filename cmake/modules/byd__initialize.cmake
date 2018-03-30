@@ -122,6 +122,9 @@ function(byd__initialize)
     endforeach()
     cmut_info("[byd] -")
     cmut_info("[byd] -")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - ----------------------------------------")
 
 
 

@@ -18,7 +18,7 @@ function(byd__action__extract_archive package)
 
 
     set(package_install_dir "${CMAKE_INSTALL_PREFIX}")
-    byd__archive__get_local_package_archive_path(${package} archive_path)
+    byd__archive__get_package_archive_path(${package} archive_path)
     byd__archive__get_local_repository(repository)
     set(archive_path "${repository}/${archive_path}")
 
