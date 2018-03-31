@@ -51,8 +51,8 @@ function(__byd__archive__rsync__prepare_rsync_command result package)
 
     if(CMAKE_HOST_WIN32)
         # we have to protect * on windows otherwise all archive are sync
-        list(APPEND rsync_opts --include "\'*/\'")
-        list(APPEND rsync_opts --exclude "\'*\'")
+        list(APPEND rsync_opts --include "'*/'")
+        list(APPEND rsync_opts --exclude "'*'")
     else()
         list(APPEND rsync_opts --include "*/")
         list(APPEND rsync_opts --exclude "*")
