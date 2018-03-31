@@ -48,6 +48,7 @@ function(byd__initialize)
     byd__option__prefix()
     byd__option__remote_repo()
     byd__option__upload_archive()
+    byd__option__force_build()
 
 
     byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)
@@ -121,6 +122,9 @@ function(byd__initialize)
     endforeach()
     cmut_info("[byd] -")
     cmut_info("[byd] -")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - ----------------------------------------")
+    cmut_info("[byd] - ----------------------------------------")
 
 
 

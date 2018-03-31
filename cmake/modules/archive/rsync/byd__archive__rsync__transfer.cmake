@@ -20,19 +20,39 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(__byd__archive__rsync__prepare_rsync_command package archive_path result)
+function(__byd__archive__rsync__prepare_rsync_command result package)
 
     if(NOT RSYNC_COMMAND)
         __byd__archive__rsync__find_rsync()
     endif()
 
+    cmut__utils__parse_arguments(
+        __byd__archive__rsync__prepare_rsync_command
+        ARG_
+        ""
+        "ARCHIVE_PATH;CMAKE_ARGS_PATH"
+        ""
+        ${ARGN}
+        )
+
+
+
     list(APPEND rsync_opts "-arv" )
     list(APPEND rsync_opts "--prune-empty-dirs")
-    list(APPEND rsync_opts --include "${archive_path}")
+    if( "${ARG__ARCHIVE_PATH}" STREQUAL "" )
+        cmut_fatal("[byd][archive][rsync] - Archive path not defined in prepare_rsync_command.")
+    else()
+        list(APPEND rsync_opts --include "${ARG__ARCHIVE_PATH}")
+    endif()
+
+    if( NOT "${ARG__CMAKE_ARGS_PATH}" STREQUAL "" )
+        list(APPEND rsync_opts --include "${ARG__CMAKE_ARGS_PATH}")
+    endif()
+
     if(CMAKE_HOST_WIN32)
         # we have to protect * on windows otherwise all archive are sync
-        list(APPEND rsync_opts --include "\'*/\'")
-        list(APPEND rsync_opts --exclude "\'*\'")
+        list(APPEND rsync_opts --include "'*/'")
+        list(APPEND rsync_opts --exclude "'*'")
     else()
         list(APPEND rsync_opts --include "*/")
         list(APPEND rsync_opts --exclude "*")
@@ -62,20 +82,27 @@ endfunction()
 
 function(byd__archive__rsync__upload_archive package)
 
-    if (ARGC EQUAL 1)
-        byd__archive__get_local_package_archive_path(${package} archive_path)
-    else()
-        set(archive_path "${ARGN}")
-    endif()
+    cmut__utils__parse_arguments(
+        byd__archive__rsync__upload_archive
+        ARG_
+        ""
+        "ARCHIVE_PATH;CMAKE_ARGS_PATH"
+        ""
+        ${ARGN}
+        )
 
-    __byd__archive__rsync__prepare_rsync_command("${package}" "${archive_path}" rsync_opts)
 
+    __byd__archive__rsync__prepare_rsync_command(
+        rsync_opts "${package}"
+        ARCHIVE_PATH "${ARG__ARCHIVE_PATH}"
+        CMAKE_ARGS_PATH "${ARG__CMAKE_ARGS_PATH}"
+        )
 
     byd__archive__get_local_repository(local_repo)
     byd__archive__get_remote_repository(remote_repo)
-    byd__archive__get_archive_root_dir(root_dir)
+    byd__archive__get_or_detect_system_id(system_id)
 
-    list(APPEND rsync_opts "${root_dir}")
+    list(APPEND rsync_opts "${system_id}")
     list(APPEND rsync_opts "${remote_repo}")
 
 
@@ -97,8 +124,11 @@ endfunction()
 
 function(byd__archive__rsync__download_archive package)
 
-    byd__archive__get_local_package_archive_path(${package} archive_path)
-    __byd__archive__rsync__prepare_rsync_command("${package}" "${archive_path}" rsync_opts)
+    byd__archive__get_package_archive_path(${package} archive_path)
+    __byd__archive__rsync__prepare_rsync_command(
+        rsync_opts "${package}"
+        ARCHIVE_PATH "${archive_path}"
+        )
 
     if(NOT RSYNC_COMMAND)
         cmut_warn("[byd][archive] : rsync tool not found. Can't upload/download archives.")
@@ -107,9 +137,9 @@ function(byd__archive__rsync__download_archive package)
 
     byd__archive__get_local_repository(local_repo)
     byd__archive__get_remote_repository(remote_repo)
-    byd__archive__get_archive_root_dir(root_dir)
+    byd__archive__get_or_detect_system_id(system_id)
 
-    list(APPEND rsync_opts "${remote_repo}/${root_dir}")
+    list(APPEND rsync_opts "${remote_repo}/${system_id}")
     __byd__archive__rsync__adapt_local_path_for_msys2_on_windows("${local_repo}" adapted_local_repo)
     list(APPEND rsync_opts "${adapted_local_repo}")
 

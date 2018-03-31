@@ -9,8 +9,13 @@ cmut__utils__execute_process(
 cmut__utils__execute_process(
     COMMAND "${CMAKE_COMMAND}" -E tar Jxvf "@archive_path@"
     WORKING_DIRECTORY "@package_install_dir@"
-    FATAL
+    RESULT_VARIABLE result
     )
+
+if(result)
+    cmut_warn("[byd][action][extract_archive] - fail to extract archive \"@archive_path@\".")
+    cmut_fatal("[byd][action][extract_archive] - try to remove archive, then rerun your build.")
+endif()
 
 
 file(GLOB pcfiles "@package_install_dir@/lib/pkgconfig/*.pc")

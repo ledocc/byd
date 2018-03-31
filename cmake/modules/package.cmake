@@ -3,5 +3,6 @@ include("${BYD_ROOT}/cmake/modules/package/byd__package__definition_helpers.cmak
 include("${BYD_ROOT}/cmake/modules/package/byd__package__dependency.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__directory.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__info.cmake")
+include("${BYD_ROOT}/cmake/modules/package/byd__package__is_force_build.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__property.cmake")
 include("${BYD_ROOT}/cmake/modules/package/byd__package__status.cmake")
