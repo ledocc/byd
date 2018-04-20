@@ -3,11 +3,11 @@ include("@CMUT_ROOT@/utils/cmut__utils__fixup_dylib.cmake")
 include("@CMUT_ROOT@/utils/cmut__utils__chmod.cmake")
 
 
-file(GLOB dylibs
+file(GLOB_RECURSE dylibs
      LIST_DIRECTORIES false "@install_dir@/lib/*.dylib")
 
-
 foreach(dylib ${dylibs})
+    cmut_info("Apply fixup_dylib on \"${dylib}\".")
     cmut__utils__chmod("${dylib}" 755)
     cmut__utils__fixup_dylib_id("${dylib}")
     cmut__utils__fixup_dylib_dependencies("${dylib}" "@install_dir@/lib")
