@@ -117,7 +117,7 @@ function(byd__package__collect_dependencies_abis package result)
     set(abis)
     foreach(dependency IN LISTS dependencies)
         byd__package__get_abi(${dependency} abi)
-        list(APPEND abis ${abi})
+        list(APPEND abis "${dependency}=${abi}")
     endforeach()
 
     byd__func__return(abis)

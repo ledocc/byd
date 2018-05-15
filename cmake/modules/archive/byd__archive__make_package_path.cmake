@@ -31,7 +31,7 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__archive__get_cmake_args_build_id result)
+function(byd__archive__collect_cmake_args_build_id result)
 
     byd__get_cmake_args_in_build_id(CMAKE_ARGS)
 
@@ -39,6 +39,15 @@ function(byd__archive__get_cmake_args_build_id result)
         list(APPEND cmake_args "${arg}=${${arg}}")
     endforeach()
 
+    byd__func__return(cmake_args)
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__get_cmake_args_build_id result)
+
+    byd__archive__collect_cmake_args_build_id( cmake_args )
     byd__archive__get_hash("${cmake_args}" build_id)
     byd__func__return(build_id)
 
@@ -90,10 +99,10 @@ endfunction()
 
 function(byd__archive__write_cmake_args_in_build_id)
 
-    byd__get_cmake_args_in_build_id(CMAKE_ARGS)
+    byd__archive__collect_cmake_args_build_id( cmake_args_build_id )
 
-    foreach(arg IN LISTS CMAKE_ARGS)
-        string(APPEND cmake_args_in_build_id "${arg}=${${arg}}\n")
+    foreach(arg IN LISTS cmake_args_build_id)
+        string(APPEND cmake_args_in_build_id "${arg}\n")
     endforeach()
 
     byd__archive__get_local_cmake_args_path( cmake_args_path )
@@ -107,6 +116,31 @@ function(byd__archive__write_cmake_args_in_build_id)
     cmut_info( "" )
     cmut_info( "[byd][archive] - archive root directory : \"${cmake_args_dir}\"")
     cmut_debug("[byd][archive] - args :\n${cmake_args_in_build_id}")
+
+endfunction()
+
+##--------------------------------------------------------------------------------------------------------------------##
+
+function(byd__archive__write_dependencies_id package)
+
+    byd__package__collect_dependencies_abis(${package} abis)
+
+    foreach(abi IN LISTS abis)
+        string(APPEND dependencies_id "${abi}\n")
+    endforeach()
+
+    byd__archive__get_local_repository( repository )
+    byd__archive__get_package_archive_output_dir( ${package} output_dir )
+
+    set(output_dir "${repository}/${output_dir}")
+    if( NOT EXISTS "${output_dir}" )
+        cmut__utils__mkdir( "${output_dir}" )
+    endif()
+    file(WRITE "${output_dir}/dependencies.txt" ${dependencies_id})
+
+    cmut_info( "" )
+    cmut_info( "[byd][archive][${package}] - archive directory : \"${output_dir}\"")
+    cmut_debug("[byd][archive][${package}] - dependencies :\n${dependencies_id}")
 
 endfunction()
 
