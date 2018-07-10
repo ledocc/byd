@@ -12,7 +12,7 @@ function(byd__option__force_build)
     set(BYD__OPTION__FORCE_BUILD
         "${default_force_build}"
         CACHE
-        PATH
+        BOOL
         "Enable to force build of package, even if archive is available."
         FORCE
         )
@@ -23,7 +23,7 @@ function(byd__option__force_build)
     set(BYD__OPTION__FORCE_BUILD__PACKAGE_LIST
         "${default_force_build_list}"
         CACHE
-        PATH
+        STRING
         "List of package forced to build, all if empty."
         FORCE
         )

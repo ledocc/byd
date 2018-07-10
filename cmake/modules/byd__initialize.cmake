@@ -49,6 +49,7 @@ function(byd__initialize)
     byd__option__remote_repo()
     byd__option__upload_archive()
     byd__option__force_build()
+    byd__option__use_ccache()
 
 
     byd__EP__set_default_argument(DOWNLOAD TIMEOUT 3600)

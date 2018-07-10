@@ -16,6 +16,7 @@ function(byd__action__create_archive package)
     byd__package__get_script_dir(${package} script_dir)
     byd__package__get_install_dir(${package} install_dir)
 
+    byd__archive__write_dependencies_id( ${package} )
 
 
     set(package_install_dir "${install_dir}")

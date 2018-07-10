@@ -112,12 +112,27 @@ endfunction()
 
 function(byd__package__collect_dependencies_abis package result)
 
+    byd__package__collect_dependencies_abis__recursive( ${package} abis )
+
+    list(REMOVE_DUPLICATES abis)
+
+    byd__func__return( abis )
+
+endfunction()
+
+function(byd__package__collect_dependencies_abis__recursive package result)
+
     byd__package__get_dependency(${package} dependencies)
 
     set(abis)
     foreach(dependency IN LISTS dependencies)
+
+        byd__package__collect_dependencies_abis__recursive(${dependency} dep_result)
+        list(APPEND abis "${dep_result}")
+
         byd__package__get_abi(${dependency} abi)
-        list(APPEND abis ${abi})
+        list(APPEND abis "${dependency}=${abi}")
+
     endforeach()
 
     byd__func__return(abis)
