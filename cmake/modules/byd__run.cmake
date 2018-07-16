@@ -80,7 +80,33 @@ endfunction()
 
 ##--------------------------------------------------------------------------------------------------------------------##
 
+function(__byd__is_in_always_exception result package always_exception)
+
+    set(in_list FALSE)
+    if("${package}" IN_LIST always_exception)
+        set(in_list TRUE)
+    else()
+        byd__package__get_package_name(${package} package_name)
+        if("${package_name}" IN_LIST always_exception)
+            set(in_list TRUE)
+        endif()
+    endif()
+
+    byd__func__return(in_list)
+
+endfunction()
+
 function(byd__build_package package)
+
+    cmut__utils__parse_arguments(
+        byd__build_package
+        ARG
+        ""
+        "BUILD_DIRECTIVE"
+        "BUILD_DIRECTIVE_NEVER_EXCEPTION;BUILD_DIRECTIVE_ALWAYS_EXCEPTION"
+        ${ARGN}
+        )
+
 
     __byd__check_loop_dependency(${package})
 
@@ -102,13 +128,26 @@ function(byd__build_package package)
 
         byd__private__is_package_archive_available(${package} archive_available)
         byd__package__is_force_build(force_build ${package})
-        if(archive_available AND ( NOT force_build ) )
+        __byd__is_in_always_exception(is_in_always_exception ${package} "${ARG_BUILD_DIRECTIVE_ALWAYS_EXCEPTION}")
+        if(     ( ( NOT "${ARG_BUILD_DIRECTIVE}" STREQUAL "ALWAYS") OR is_in_always_exception )
+            AND archive_available
+            AND ( NOT force_build )
+            )
             cmut_debug("[byd] - [${package}] : archive available.")
             if (BYD__OPTION__UPLOAD_ARCHIVE)
                 byd__action__upload_archive(${package})
             endif()
             byd__build_system__archive__add(${package})
         else()
+            if("${ARG_BUILD_DIRECTIVE}" STREQUAL "NEVER")
+                byd__package__get_package_name(${package} package_name)
+                if( NOT "${package_name}" IN_LIST ARG_BUILD_DIRECTIVE_NEVER_EXCEPTION )
+                    cmut_error("[byd][${package}] - BUILD_DIRECTIVE set to \"NEVER\" and no pre-build package \"${package}\" is available.")
+                endif()
+            elseif( ( "${ARG_BUILD_DIRECTIVE}" STREQUAL "ALWAYS" ) AND  is_in_always_exception )
+                cmut_error("[byd][${package}] - BUILD_DIRECTIVE set to \"ALWAYS\" but package \"${package}\" is in list of BUILD_DIRECTIVE_ALWAYS_EXCEPTION, and no pre-build package is available.")
+            endif()
+
             cmut_debug("[byd] - [${package}] : include CMakeLists.txt")
             byd__package__apply_download_info(${package})
             byd__action__extract_archive(${package})
@@ -136,6 +175,21 @@ endfunction()
 
 function(byd__run)
 
+    cmut__utils__parse_arguments(
+        byd__run
+        ARG
+        ""
+        "BUILD_DIRECTIVE"
+        "BUILD_DIRECTIVE_NEVER_EXCEPTION;BUILD_DIRECTIVE_ALWAYS_EXCEPTION"
+        ${ARGN}
+        )
+
+    set(allowed_build_directive "NEVER;REQUIRED;ALWAYS")
+    if( ARG_BUILD_DIRECTIVE AND ( NOT ARG_BUILD_DIRECTIVE IN_LIST allowed_build_directive ) )
+        cmut_fatal("[byd] - BUILD_DIRECTIVE should be one of ${allowed_build_directive}")
+    endif()
+
+
     byd__initialize_if_not_done()
 
     cmut_info("[byd] -")
@@ -154,7 +208,7 @@ function(byd__run)
 
 
     foreach(package IN LISTS packages)
-        byd__build_package(${package})
+        byd__build_package(${package} ${ARGN})
     endforeach()
 
 
