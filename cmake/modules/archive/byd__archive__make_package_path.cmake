@@ -6,25 +6,10 @@
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
-function(byd__archive__get_hash str result)
-
-    string(LENGTH "${str}" str_length)
-    if(str_length EQUAL 0)
-        byd__func__return_value("0")
-        return()
-    endif()
-
-    string(SHA1 hash "${str}")
-    byd__func__return(hash)
-
-endfunction()
-
-##--------------------------------------------------------------------------------------------------------------------##
-
 function(byd__archive__get_dependencies_build_id package result)
 
     byd__package__collect_dependencies_abis(${package} abis)
-    byd__archive__get_hash("${abis}" dependencies_build_id)
+    byd__hashtag__compute_hashtag("${abis}" dependencies_build_id)
     byd__func__return(dependencies_build_id)
 
 endfunction()
@@ -48,7 +33,7 @@ endfunction()
 function(byd__archive__get_cmake_args_build_id result)
 
     byd__archive__collect_cmake_args_build_id( cmake_args )
-    byd__archive__get_hash("${cmake_args}" build_id)
+    byd__hashtag__compute_hashtag("${cmake_args}" build_id)
     byd__func__return(build_id)
 
 endfunction()

@@ -57,10 +57,8 @@ function(byd__initialize)
     byd__func__set_default(CMAKE_BUILD_TYPE Release)
 
 
-    if(APPLE)
-        cmut__system__get_osx_sdk_short_name(osx_sdk)
-        set(BYD_OSX_SDK ${osx_sdk} CACHE STRING "OSX SDK used.")
-    endif()
+    byd__variable__osx_sdk__define()
+    byd__variable__compiler_compatible_id__define()
 
 
     if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -87,6 +85,9 @@ function(byd__initialize)
     cmut_info("[byd] - BUILD_TESTING        = ${BUILD_TESTING}")
     cmut_info("[byd] - CMAKE_BUILD_TYPE     = ${CMAKE_BUILD_TYPE}")
     cmut_info("[byd] - CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+    cmut_info("[byd] - ")
+    cmut_info("[byd] - BYD__VARIABLE__C_COMPILER_COMPATIBLE_ID   = ${BYD__VARIABLE__C_COMPILER_COMPATIBLE_ID}")
+    cmut_info("[byd] - BYD__VARIABLE__CXX_COMPILER_COMPATIBLE_ID = ${BYD__VARIABLE__CXX_COMPILER_COMPATIBLE_ID}")
     cmut_info("[byd] - ")
     cmut_info("[byd] - ")
     cmut_info("[byd] - ----------------------------------------")
