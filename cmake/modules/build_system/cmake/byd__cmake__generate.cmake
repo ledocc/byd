@@ -27,12 +27,16 @@ endfunction()
 
 macro(__byd__cmake__add_variable_if_defined __list __variable)
     if(DEFINED ${__variable})
-        list(APPEND ${__list} "-D${__variable}=${${__variable}}")
+        __byd__cmake__add_variable("${__list}" "${__variable}" "${${__variable}}")
     endif()
 endmacro()
 
 macro(__byd__cmake__add_variable __list __variable __value)
-    list(APPEND ${__list} "-D${__variable}=${__value}")
+    # when __value is a list (like CMAKE_MODULE_PATH), we have to escaped each list separator to keep it unchanged until it is used in cmake command
+    # invocation to configure the cmake based project that this script generate. We need 15 \ to protect this list all along the assignment of
+    # the variable that store this list
+    string(REPLACE ";" "\\\\\\\\\\\\\\\;" escaped_value "${__value}")
+    list(APPEND ${__list} "-D${__variable}=${escaped_value}")
 endmacro()
 
 function(__byd__cmake__add_cmut_find_to_cmake_module_path)
