@@ -9,6 +9,11 @@ include("${CMUT_ROOT}/cmut_message.cmake")
 ##--------------------------------------------------------------------------------------------------------------------##
 ##--------------------------------------------------------------------------------------------------------------------##
 
+set(__ENV_BYD__EP__DEBUG $ENV{BYD__EP__DEBUG})
+if(__ENV_BYD__EP__DEBUG)
+    set(BYD__EP__DEBUG 1)
+endif()
+
 function(byd__EP__step__debug message)
 
     if(NOT BYD__EP__DEBUG)
