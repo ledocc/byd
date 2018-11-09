@@ -14,12 +14,16 @@ function(byd__private__find_package_directory package result)
 
 
     byd__get_package_repositories(repositories)
-    list(APPEND repositories "${BYD_ROOT}/packages")
+    byd__get_fallback_package_repositories(fallback_repositories)
+    cmut_debug("[byd] - in repositories : ")
+    foreach( dir IN LISTS repositories fallback_repositories )
+        cmut_debug("[byd] -   ${dir}")
+    endforeach()
 
 
     set(package_dir "")
 
-    foreach(dir IN LISTS repositories)
+    foreach( dir IN LISTS repositories fallback_repositories )
         cmut_debug("[byd] - test ${dir}/${package_name}")
 
         file(GLOB glob_result

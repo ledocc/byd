@@ -1,6 +1,7 @@
 
 
 
+include("${BYD_ROOT}/cmake/modules/byd__package_repositories.cmake")
 include("${BYD_ROOT}/cmake/modules/func.cmake")
 include("${BYD_ROOT}/cmake/modules/EP/byd__EP__define_step_info.cmake")
 include("${BYD_ROOT}/cmake/modules/option.cmake")
@@ -38,6 +39,8 @@ endfunction()
 function(byd__initialize)
 
     __byd__set_initialized()
+
+    byd__add_fallback_package_repositories( "${BYD_ROOT}/packages" )
 
 
     byd__option__build_shared_libs()
