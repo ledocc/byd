@@ -1,4 +1,5 @@
 
+include(CMakePrintHelpers)
 
 
 include("${BYD_ROOT}/cmake/modules/func.cmake")
@@ -52,6 +53,10 @@ endfunction()
 ##--------------------------------------------------------------------------------------------------------------------##
 
 function(__byd__BoostBuild__script__generate_user_config_jam)
+
+    byd__BoostBuild__get_toolset_detail( BOOST_TOOLSET_NAME BOOST_TOOLSET_VERSION )
+    byd__BoostBuild__get_toolset( BOOST_TOOLSET )
+
 
     if(ANDROID)
 
@@ -163,6 +168,7 @@ function(byd__BoostBuild__generate_build_command package)
         list(APPEND build_args "target-os=android")
     endif()
 
+    byd__BoostBuild__get_toolset( BOOST_TOOLSET )
     list(APPEND build_args "toolset=${BOOST_TOOLSET}")
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
