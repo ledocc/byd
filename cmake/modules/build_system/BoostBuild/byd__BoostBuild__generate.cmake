@@ -194,7 +194,7 @@ function(byd__BoostBuild__generate_build_command package)
     list(APPEND build_args "--debug-configuration")
     list(APPEND build_args "--build_type=minimal")
     list(APPEND build_args "--build_dir=../${package}-build")
-    list(APPEND build_args "--layout=tagged")
+    list(APPEND build_args "--layout=system")
 
 
     if(CMAKE_VERBOSE_MAKEFILE)
