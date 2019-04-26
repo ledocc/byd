@@ -14,7 +14,7 @@ function(byd__custom_patch package patchList__)
 
     foreach(patch IN LISTS ${patchList__})
         list(APPEND byd__custom_patch__command__${package}
-            COMMAND git apply --ignore-whitespace --ignore-space-change --verbose "${patch}"
+            COMMAND patch --ignore-whitespace -p1 -i "${patch}"
             )
     endforeach()
 
